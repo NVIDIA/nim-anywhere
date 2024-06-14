@@ -1,0 +1,319 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+BOOTUP=color
+RES_COL=60
+MOVE_TO_COL="echo -en \\033[${RES_COL}G"
+SETCOLOR_SUCCESS="echo -en \\033[1;32m"
+SETCOLOR_FAILURE="echo -en \\033[1;31m"
+SETCOLOR_WARNING="echo -en \\033[1;33m"
+SETCOLOR_NORMAL="echo -en \\033[0;39m"
+STOP_TIMEOUT=15  # seconds
+APP_SRC=$(readlink -f $0)
+
+if [ "$1" == "config" ]; then _CONFIG=1; else _CONFIG=0; fi
+
+###############################################################################
+# helper functions
+###############################################################################
+
+# resolve a mount point to the host's directory
+# usage: hostpath LOCAL_PATH
+function hostpath() {
+    local localpath
+    localpath=$(/bin/bash -c "cd $1; pwd")
+
+    docker inspect $(hostname) --format json | \
+        jq -r '.[0].HostConfig.Mounts[] | select(.Target | startswith("'$localpath'")).Source'
+}
+
+# extract settings from env variables
+# usage: config_lkp VAR DEFAULT
+function config_lkp() {
+    local varname default
+    varname="$1"
+    default="$2"
+
+    if [[ $_CONFIG == 1 ]]; then
+        echo "$varname=$default" >&2
+    fi
+
+    echo ${!varname:-$2}
+}
+
+###############################################################################
+# lifecycle functions
+###############################################################################
+
+# restart the contiainer
+# usage: restart CONTAINER_NAME
+function restart() {
+    stop "$1"
+    start "$1"
+}
+
+# local wrapper for docker run and stop that include logging
+function docker_run() {
+    exec "Starting the container" _docker_run $@
+}
+function docker_stop() {
+    exec "Stopping the container" _docker_stop $@
+}
+
+# ensure the container is started and running
+# usage: start CONTAINER_NAME
+function start() {
+    local status_code name
+    name="$1"
+    { status "$name" > /dev/null; status_code=$?; } || true
+    case $status_code in
+        0) success; echo "Container is already running." >&2 ;;
+        1) echo "Container is stopped. Recreating." >&2; docker_stop; docker_run ;;
+        2) echo "Container does not exist. Starting." >&2; docker_run ;;
+    esac
+}
+
+# ensure the container is stopped
+# usage: stop CONTAINER_NAME
+function stop() {
+    local status_code name
+    name="$1"
+    { status "$name" > /dev/null; status_code=$?; } || true
+    case $status_code in
+        0) echo "Container is running. Stopping." >&2; docker_stop;;
+        1) echo "Container is stopped. Removing." >&2; docker_stop;;
+        2) success; echo -n "Container does not exist.";;
+        *) ;;
+    esac
+}
+
+# check the status of the associated container image
+# usage: status CONTAINER_NAME
+# status codes:
+#   0: Container is running
+#   1: Container exists, but is not running
+#   2: Container does not exist
+function status() {
+    local name
+    name="$1"
+    state=$( (docker inspect \
+                 --format '{{.State.Status}}' \
+                 $name 2> /dev/null \
+                 || echo -n "stopped") | xargs echo)
+    echo "Container status: $state"
+
+    case "$state" in
+        stopped)
+            return 2
+            ;;
+        running)
+            health "$name"
+            ;;
+        created | exited | paused | dead)
+            return 1
+            ;;
+        *)
+            echo "Unrecognized container state: $state" >&2
+            exit 1
+            ;;
+    esac
+}
+
+# check the health of the associated container image
+# usage: health CONTAINER_NAME
+# status codes:
+#   0: Container is healthy or starting
+#   1: Container is not healthy
+function health() {
+    local name
+    name="$1"
+    state=$(docker inspect \
+                --format '{{.State.Health.Status}}' \
+                $name 2>&1 | head -n 1)
+    echo "Container health: $state"
+
+    case "$state" in
+        healthy | starting | "")
+            return 0
+            ;;
+        unhealthy)
+            return 1
+            ;;
+        *)
+            echo "Unrecognized container health state: $state" >&2
+            exit 1
+            ;;
+    esac
+
+}
+
+# wait for the container to finish starting
+# usage: wait_for CONTAINER_NAME
+function wait_for() {
+    local name
+    name="$1"
+    echo "Waiting for the container to finish starting."
+    while true; do
+        health "$name" | grep "starting" || return 0
+        sleep 5
+    done
+}
+
+# show the applications configuration parameters
+# usage: config
+function config() {
+    echo "$CONFIG_SCHEMA"
+}
+
+# show the application's metadata
+# uage: meta
+function meta() {
+    _meta >&2
+    echo "start_command: $APP_SRC start" >&2
+    echo "stop_command: $APP_SRC stop" >&2
+    echo "health_check_command: $APP_SRC status" >&2
+}
+
+# the main entrypoint for most applications
+# usage: main VERB CONTAINER_NAME
+function main() {
+    local name verb
+    verb=$1
+    name=$2
+    case "$verb" in
+        status | start | stop | restart | wait_for | meta)
+            $verb $name
+            ;;
+        config)
+            ;;
+        *)
+            echo "Usage: $0 {start|stop|restart|status|config}"
+            exit 1
+            ;;
+    esac
+}
+
+###############################################################################
+# abstract functions
+###############################################################################
+function _docker_stop() {
+    echo "$0 function is not defined in the application definition." >&2
+    exit 2
+}
+function _docker_run() {
+    echo "$0 function is not defined in the application definition." >&2
+    exit 2
+}
+_meta() {
+	cat <<-EOM
+		name: New Application
+		type: custom
+		class: process
+		user_msg: |-
+		  Milvus is now available at:
+		  localhost:19530
+		icon_url: "https://milvus.io/favicon-32x32.png"
+		EOM
+}
+
+
+###############################################################################
+# logging functions
+###############################################################################
+echo_success() {
+  [ "$BOOTUP" = "color" ] && $MOVE_TO_COL
+  echo -n "["
+  [ "$BOOTUP" = "color" ] && $SETCOLOR_SUCCESS
+  echo -n $"  OK  "
+  [ "$BOOTUP" = "color" ] && $SETCOLOR_NORMAL
+  echo -n "]"
+  echo -ne "\r"
+  return 0
+}
+
+echo_failure() {
+  [ "$BOOTUP" = "color" ] && $MOVE_TO_COL
+  echo -n "["
+  [ "$BOOTUP" = "color" ] && $SETCOLOR_FAILURE
+  echo -n $"FAILED"
+  [ "$BOOTUP" = "color" ] && $SETCOLOR_NORMAL
+  echo -n "]"
+  echo -ne "\r"
+  return 1
+}
+
+echo_passed() {
+  [ "$BOOTUP" = "color" ] && $MOVE_TO_COL
+  echo -n "["
+  [ "$BOOTUP" = "color" ] && $SETCOLOR_WARNING
+  echo -n $"PASSED"
+  [ "$BOOTUP" = "color" ] && $SETCOLOR_NORMAL
+  echo -n "]"
+  echo -ne "\r"
+  return 1
+}
+
+echo_warning() {
+  [ "$BOOTUP" = "color" ] && $MOVE_TO_COL
+  echo -n "["
+  [ "$BOOTUP" = "color" ] && $SETCOLOR_WARNING
+  echo -n $"WARNING"
+  [ "$BOOTUP" = "color" ] && $SETCOLOR_NORMAL
+  echo -n "]"
+  echo -ne "\r"
+  return 1
+}
+
+# Log that something succeeded
+success() {
+  echo_success
+  return 0
+}
+
+# Log that something failed
+failure() {
+  local rc=$?
+  echo_failure
+  return $rc
+}
+
+# Log that something passed, but may have had errors. Useful for fsck
+passed() {
+  local rc=$?
+  echo_passed
+  return $rc
+}
+
+# Log a warning
+warning() {
+  local rc=$?
+  echo_warning
+  return $rc
+}
+
+# run a command and log its result
+# usage: exec "LOG_MESSAGE" COMMAND TO EXEC
+function exec() {
+    local msg
+    msg="$1"
+    echo -n "$msg" >&2
+    shift
+
+    "$@" && success >&2 || failure >&2
+    retcode=$?
+
+    echo "$msg" >&2
+    return $retcode
+}

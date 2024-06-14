@@ -1,0 +1,153 @@
+/*
+SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+/* Page layout styling */
+.gradio-container {
+  max-width: 100%  !important;
+  padding: 10px !important;
+  height: 100% !important;
+}
+footer {
+  visibility: hidden;
+  display: none !important;
+}
+body {
+  overflow: hidden !important;
+}
+
+
+/* Gradio customization */
+small {
+  color: #444;
+}
+code {
+  color: #76b900;
+}
+.code_wrap pre {
+  background-color: #333 !important;
+  border-radius: 5px !important;
+}
+div.generating {
+  border-width: 0px !important;
+}
+
+
+/* Chatbox customization */
+#chat {
+  background-color: #333;
+  scrollbar-width: thin;
+  scrollbar-color: #76b900 #333333;
+}
+.avatar-container {
+  height: 50px !important;
+  width: 50px !important;
+}
+.bubble-gap {
+  gap: 0px !important;
+}
+/* make the mesages pretty */
+.message {
+  font-size: 1.25rem;
+  background-color: transparent !important;
+  border-width: 0px !important;
+}
+.message button {
+  border-radius: 1.15rem;
+  line-height: 1.25;
+  padding: 0.5rem .875rem;
+  position: relative;
+  max-width: 100%;
+}
+.message button::before, .message button::after {
+  bottom: -0.1rem;
+  content: "";
+  height: 1rem;
+  position: absolute;
+}
+.message.user button {
+  align-self: flex-end;
+  background-color: #890c58;
+  color: #fff;
+}
+.message.user button::before {
+  border-bottom-left-radius: 0.8rem 0.7rem;
+  border-right: 1rem solid #890c58;
+  right: -0.35rem;
+  transform: translate(0, -0.1rem);
+}
+.message.user button::after {
+  background-color: #333;
+  border-bottom-left-radius: 0.5rem;
+  right: -40px;
+  transform:translate(-30px, -2px);
+  width: 10px;
+}
+.message button {
+  margin: 0.5rem 0;
+  width: fit-content;
+}
+.message.bot button {
+  align-items: flex-start;
+  background-color: #8c8c8c;
+  color: #000;
+}
+.message.bot button::before {
+  border-bottom-right-radius: 0.8rem 0.7rem;
+  border-left: 1rem solid #8c8c8c;
+  left: -0.35rem;
+  transform: translate(0, -0.1rem);
+}
+.message.bot button::after {
+  background-color: #333;
+  border-bottom-right-radius: 0.5rem;
+  left: 20px;
+  transform: translate(-30px, -2px);
+  width: 10px;
+}
+
+
+/* Message text box customization */
+div#msg {
+  border-style: none !important;
+}
+div#input-row {
+  padding: 8px;
+  border-radius: 1em;
+  background: var(--input-background-fill);
+}
+div#input-row textarea {
+  resize: none;
+}
+
+
+/* Submit button customization */
+button#submit {
+  padding: 0px;
+  flex: 0;
+  height: 32px;
+  border-radius: 16px;
+  overflow: hidden;
+  display: block;
+  width: 32px;
+  min-width: 32px;
+  background-color: #76b900;
+  font-size: 16px;
+  margin-top: auto;
+}
+button#submit:hover {
+  background-color: #548500;
+}

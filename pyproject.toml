@@ -1,0 +1,41 @@
+# Pylint Configuration
+[tool.pylint.MAIN]
+load-plugins = "pylint.extensions.bad_builtin"
+
+[tool.pylint.'MESSAGES CONTROL']
+disable=["raw-checker-failed",
+         "bad-inline-option",
+        "locally-disabled",
+        "file-ignored",
+        "suppressed-message",
+        "useless-suppression",
+        "deprecated-pragma",
+        "use-symbolic-message-instead",
+        "wrong-spelling-in-comment",
+        "redefined-builtin",
+        "unsupported-binary-operation",
+        "duplicate-code"]
+enable=["c-extension-no-member", "broad-exception-caught"]
+
+[tool.pylint.FORMAT]
+max-line-length=120
+max-module-lines=500
+max-args=8
+
+[tool.pylint.DEPRECATED_BUILTINS]
+bad-functions=["print", "input"]
+
+# Flake8 Configuration
+[tool.flake8]
+max-line-length = 120
+ignore = ["E203", "W503"]
+enable = ["W504"]
+
+# mypy Configuration
+[tool.mypy]
+strict = true
+implicit_optional = true
+follow_imports = "silent"
+ignore_missing_imports = true
+show_column_numbers = true
+disable_error_code = ["no-untyped-call", "override", "misc", "import-untyped"]

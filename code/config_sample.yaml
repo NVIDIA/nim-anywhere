@@ -1,0 +1,8 @@
+chat_model:
+  name: "meta/llama3-8b-instruct"
+
+  # AI Catalog
+  url: "https://integrate.api.nvidia.com/v1"
+
+  # Locally running NIM
+  # url: "http://localhost:8000/v1"
