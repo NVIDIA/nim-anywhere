@@ -1,2 +1,9 @@
 # apt packages to install should be listed one per line
 less
+jq
+wget
+unzip
+make
+pandoc
+ca-certificates
+curl

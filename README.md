@@ -1,72 +1,510 @@
-  - [<span class="toc-section-number">1</span> NIM Anywhere Developer
-    Documentation](#nim-anywhere-developer-documentation)
-      - [<span class="toc-section-number">1.1</span> Project
-        Components](#project-components)
-      - [<span class="toc-section-number">1.2</span> Getting
-        Started](#getting-started)
-          - [<span class="toc-section-number">1.2.1</span>
-            Pre-requisites](#pre-requisites)
-          - [<span class="toc-section-number">1.2.2</span> AI Workbench
-            Quickstart](#ai-workbench-quickstart)
-          - [<span class="toc-section-number">1.2.3</span> Cloning the
-            project](#cloning-the-project)
-          - [<span class="toc-section-number">1.2.4</span> Running the
-            project](#running-the-project)
-          - [<span class="toc-section-number">1.2.5</span> Populating
-            the Knowledge Base](#populating-the-knowledge-base)
-  - [<span class="toc-section-number">2</span> Application
-    Configuration](#application-configuration)
-      - [<span class="toc-section-number">2.1</span> Config from a
-        file](#config-from-a-file)
-      - [<span class="toc-section-number">2.2</span> Config from a
-        custom file](#config-from-a-custom-file)
-      - [<span class="toc-section-number">2.3</span> Config from env
-        vars](#config-from-env-vars)
-      - [<span class="toc-section-number">2.4</span> Chain Server config
-        schema](#chain-server-config-schema)
-      - [<span class="toc-section-number">2.5</span> Chat Frontend
-        config schema](#chat-frontend-config-schema)
-  - [<span class="toc-section-number">3</span>
-    Contributing](#contributing)
-      - [<span class="toc-section-number">3.1</span> Updating the
-        frontend](#updating-the-frontend)
-          - [<span class="toc-section-number">3.1.1</span> Creating a
-            new page](#creating-a-new-page)
-          - [<span class="toc-section-number">3.1.2</span> Adding a
-            view](#adding-a-view)
-          - [<span class="toc-section-number">3.1.3</span> Frontend
-            branding](#frontend-branding)
-          - [<span class="toc-section-number">3.1.4</span> Messaging
-            between pages](#messaging-between-pages)
-      - [<span class="toc-section-number">3.2</span> Updating
-        documentation](#updating-documentation)
-          - [<span class="toc-section-number">3.2.1</span> Dynamic
-            documentation](#dynamic-documentation)
-          - [<span class="toc-section-number">3.2.2</span> HTML
-            template](#html-template)
-          - [<span class="toc-section-number">3.2.3</span> Publishing
-            documentation](#publishing-documentation)
-          - [<span class="toc-section-number">3.2.4</span> Mermaid
-            support](#mermaid-support)
-  - [<span class="toc-section-number">4</span> Managing your
-    Developement Environment](#managing-your-developement-environment)
-      - [<span class="toc-section-number">4.1</span> Environment
-        Variables](#environment-variables)
-      - [<span class="toc-section-number">4.2</span> Python Environment
-        Packages](#python-environment-packages)
-      - [<span class="toc-section-number">4.3</span> Operating System
-        Configuration](#operating-system-configuration)
+# NVIDIA NIM Anywhere
 
-# NIM Anywhere Developer Documentation
+An entrypoint for developing with NIMs that natively scales out to
+full-sized labs and up to production environments. NIM Anywhere is an
+integration of all the tooling required to start integrating NVIDIA
+enterprise-ready microservices.
 
-NIM Anywhere serves two purposes as a rapid NVIDIA NIM demonstrator as
-well as a starting point for developing with NIMs. The intention is to
-democratize access to NIMs and demonstrate the value of NIMs.
+Get started now with the [quick start](#quick-start) instructions.
 
 ![NIM Anywhere
-Screenshot](.static/93655863a6e68e34b4826ba3b92466415e83e248.png)
+Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
+ 
+  - [<span class="toc-section-number">1</span> Quick
+    Start](#quick-start)
+      - [<span class="toc-section-number">1.1</span> Generate your NGC
+        Personal Key](#generate-your-ngc-personal-key)
+      - [<span class="toc-section-number">1.2</span> Install AI
+        Workbench](#install-ai-workbench)
+      - [<span class="toc-section-number">1.3</span> Download this
+        project](#download-this-project)
+      - [<span class="toc-section-number">1.4</span> Start This
+        Project](#start-this-project)
+      - [<span class="toc-section-number">1.5</span> Populating the
+        Knowledge Base](#populating-the-knowledge-base)
+  - [<span class="toc-section-number">2</span> Developing Your Own
+    Applications](#developing-your-own-applications)
+  - [<span class="toc-section-number">3</span> Application
+    Configuration](#application-configuration)
+      - [<span class="toc-section-number">3.1</span> Config from a
+        file](#config-from-a-file)
+      - [<span class="toc-section-number">3.2</span> Config from a
+        custom file](#config-from-a-custom-file)
+      - [<span class="toc-section-number">3.3</span> Config from env
+        vars](#config-from-env-vars)
+      - [<span class="toc-section-number">3.4</span> Chain Server config
+        schema](#chain-server-config-schema)
+      - [<span class="toc-section-number">3.5</span> Chat Frontend
+        config schema](#chat-frontend-config-schema)
+  - [<span class="toc-section-number">4</span>
+    Contributing](#contributing)
+      - [<span class="toc-section-number">4.1</span> Updating the
+        frontend](#updating-the-frontend)
+      - [<span class="toc-section-number">4.2</span> Updating
+        documentation](#updating-documentation)
+  - [<span class="toc-section-number">5</span> Managing your
+    Developement Environment](#managing-your-developement-environment)
+      - [<span class="toc-section-number">5.1</span> Environment
+        Variables](#environment-variables)
+      - [<span class="toc-section-number">5.2</span> Python Environment
+        Packages](#python-environment-packages)
+      - [<span class="toc-section-number">5.3</span> Operating System
+        Configuration](#operating-system-configuration)
 
-## Project Components
+# Quick Start
+
+## Generate your NGC Personal Key
+
+To allow AI Workbench to access NVIDIA’s cloud resources, you’ll need to
+provide it with a Personal Key. These keys begin with `nvapi-`.
+
+<details>
+<summary>
+<b>Expand this section for instructions for creating this key.</b>
+</summary>
+
+1.  Go to the [NGC Personal Key
+    Manager](https://org.ngc.nvidia.com/setup/personal-keys). If you are
+    prompted to, then register for a new account and sign in.
+    
+    > **HINT** You can find this tool by logging into
+    > [ngc.nvidia.com](ngc.nvidia.com), expanding your profile menu on
+    > the top right, selecting *Setup*, and then selecting *Generate
+    > Personal Key*.
+
+2.  Select *Generate Personal Key*.
+    
+    ![Generate Personal
+    Key](.static/929e8801e7993066fa837f6f7e0293694006bc96.png)
+
+3.  Enter any value as the Key name, an expiration of 12 months is fine,
+    and select all four services. Press *Generate Personal Key* when you
+    are finished.
+    
+    ![Personal Key
+    Form](.static/9e175697ea16a4c1d1b0b6fac058cc45df0611ae.png)
+
+4.  Save your personal key for later. Workbench will need it and there
+    is no way to retrieve it later. If the key is lost, a new one must
+    be created. Protect this key as if it were a password.
+    
+    ![Personal
+    Key](.static/00560e8da8eab28d2ee4b9cc8257f82667b2cf79.png)
+
+</details>
+
+## Install AI Workbench
+
+This project is designed to be used with [NVIDIA AI
+Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/).
+While this is not a requirement, running this demo without AI Workbench
+will require manual work as the pre-configured automation and
+integrations may not be available.
+
+<details>
+<summary>
+<b>Expand this section for setup instructions.</b>
+</summary>
+
+### Overview
+
+Typicaly, there are two different styles of developing with AI
+Workbench. The first, and most simple is local only development. This is
+usually the starting point and AI Workbench allows for native scaling
+later. However, this style currently only supports Ubuntu.
+
+``` mermaid
+flowchart LR
+local
+```
+
+The second development style is using a remote lab machine for
+development and a thin-client for remotely accessing the development
+machine. This allows for compute resources to stay centrally located and
+for developers to be more portable. Note, the remote lab machine must
+run Ubuntu, but the local client can run Windows, MacOS, or Ubuntu.
+
+``` mermaid
+flowchart LR
+    local
+    subgraph lab environment
+        remote-machine
+    end
+
+    local <-.ssh.-> remote-machine
+```
+
+For this quick start guide, it is assumed that a remote lab environment
+is used. If the first development style is preferred, simply skip the
+remote installation steps and note the Ubuntu requirement for local
+development.
+
+### Client Machine Install
+
+Ubuntu is required if the local client will also be used for developent.
+
+<details>
+<summary>
+<b>Expand this section for a Windows install.</b>
+</summary>
+
+For full instructions, see the [NVIDIA AI Workbench User
+Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/windows.html).
+
+1.  Install Prerequisite Software
+    
+    1.  If this machine has an NVIDIA GPU, ensure the GPU drivers are
+        installed. It is recommended to use the [GeForce
+        Experience](https://www.nvidia.com/en-us/geforce/geforce-experience/)
+        tooling to manage the GPU drivers.
+    2.  Install [Docker
+        Desktop](https://www.docker.com/products/docker-desktop/) for
+        local container support. Please be mindful of Docker Desktop's
+        licensing for enterprise use. [Rancher
+        Desktop](https://rancherdesktop.io/) may be a viable
+        alternative.
+    3.  *\[OPTIONAL\]* If Visual Studio Code integration is desired,
+        install [Visual Studio Code](https://code.visualstudio.com/).
+
+2.  Download the [NVIDIA AI
+    Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/)
+    installer and execute it. Authorize Windows to allow the installer
+    to make changes.
+
+3.  Follow the instructions in the installation wizard. If you need to
+    install WSL2, authorize Windows to make the changes and reboot when
+    requested. When the system restarts, the NVIDIA AI Workbench
+    installer should automatically resume.
+
+4.  Select Docker as your container runtime.
+
+5.  Log into your GitHub Account by using the *Sign in through
+    GitHub.com* option.
+
+6.  Enter your git author information if requested.
+
+</details>
+
+<details>
+<summary>
+<b>Expand this section for a MacOS install.</b>
+</summary>
+
+For full instructions, see the [NVIDIA AI Workbench User
+Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/macos.html).
+
+1.  Install Prerequisite Software
+    
+    1.  Install [Docker
+        Desktop](https://www.docker.com/products/docker-desktop/) for
+        local container support. Please be mindful of Docker Desktop's
+        licensing for enterprise use. [Rancher
+        Desktop](https://rancherdesktop.io/) may be a viable
+        alternative.
+    2.  *\[OPTIONAL\]* If Visual Studio Code integration is desired,
+        install [Visual Studio Code](https://code.visualstudio.com/).
+        When using VSCode on a Mac, an a[dditional step must be
+        performed](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line)
+        to install the VSCode CLI interface used by Workbench.
+
+2.  Download the [NVIDIA AI
+    Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/)
+    disk image (*.dmg* file) and open it.
+
+3.  Drag AI Workbench into the Applications folder and run *NVIDIA AI
+    Workbench* from the application launcher. ![Mac DMG Install
+    Interface](.static/766b2c253ae6ae723d0c90d04ed9ed37f3ebf6d1.png)
+
+4.  Select Docker as your container runtime.
+
+5.  Log into your GitHub Account by using the *Sign in through
+    GitHub.com* option.
+
+6.  Enter your git author information if requested.
+
+</details>
+
+<details>
+<summary>
+<b>Expand this section for an Ubuntu install.</b>
+</summary>
+
+For full instructions, see the [NVIDIA AI Workbench User
+Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/ubuntu-local.html).
+Run this installation as the user who will be user Workbench. Do not run
+these steps as `root`.
+
+1.  Install Prerequisite Software
+    
+    1.  *\[OPTIONAL\]* If Visual Studio Code integration is desired,
+        install [Visual Studio Code](https://code.visualstudio.com/).
+
+2.  Download the [NVIDIA AI
+    Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/)
+    installer, make it executable, and then run it. You can make the
+    file executable with the following command:
+    
+    ``` bash
+    chmod +x NVIDIA-AI-Workbench-*.AppImage
+    ```
+
+3.  AI Workbench will install the NVIDIA drivers for you (if needed).
+    You will need to reboot your machine after the drivers are installed
+    and then restart the AI Workbench installation by double-clicking
+    the NVIDIA AI Workbench icon on your desktop.
+
+4.  Select Docker as your container runtime.
+
+5.  Log into your GitHub Account by using the *Sign in through
+    GitHub.com* option.
+
+6.  Enter your git author information if requested.
+
+</details>
+
+### Remote Machine Install
+
+Only Ubuntu is supported for remote machines.
+
+<details>
+<summary>
+<b>Expand this section for a remote Ubuntu install.</b>
+</summary>
+
+For full instructions, see the [NVIDIA AI Workbench User
+Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/ubuntu-remote.html).
+Run this installation as the user who will be using Workbench. Do not
+run these steps as `root`.
+
+1.  Ensure SSH Key based authentication, without a passphrase, is
+    enabled from the local machine to the remote machine. If this is not
+    currently enabled, the following commands will enable this is most
+    situations.
+    
+      - From a Windows local client, use the following PowerShell:
+        ``` powershell
+        ssh-keygen -f "C:\Users\local-user\.ssh\id_rsa" -t rsa -N '""'
+        type $env:USERPROFILE\.ssh\id_rsa.pub | ssh REMOTE_USER@REMOTE-MACHINE "cat >> .ssh/authorized_keys"
+        ```
+      - From a MacOS or Linux local client, use the following shell:
+        ``` bash
+        if [ ! -e ~/.ssh/id_rsa ]; then ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ""; fi
+        ssh-copy-id REMOTE_USER@REMOTE-MACHINE
+        ```
+
+2.  SSH into the remote host. Then, use the following commands to
+    download and execute the NVIDIA AI Workbench Installer.
+    
+    ``` bash
+    mkdir -p $HOME/.nvwb/bin && \
+    curl -L https://workbench.download.nvidia.com/stable/workbench-cli/$(curl -L -s https://workbench.download.nvidia.com/stable/workbench-cli/LATEST)/nvwb-cli-$(uname)-$(uname -m) --output $HOME/.nvwb/bin/nvwb-cli && \
+    chmod +x $HOME/.nvwb/bin/nvwb-cli && \
+    sudo -E $HOME/.nvwb/bin/nvwb-cli install
+    ```
+
+3.  AI Workbench will install the NVIDIA drivers for you (if needed).
+    You will need to reboot your machine after the drivers are installed
+    and then restart the AI Workbench installation by re-running the
+    commands in the previous step.
+
+4.  Select Docker as your container runtime.
+
+5.  Log into your GitHub Account by using the *Sign in through
+    GitHub.com* option.
+
+6.  Enter your git author information if requested.
+
+7.  Once the remote installation is complete, the Remote Location can be
+    added to the local AI Workbench instance. Open the AI Workbench
+    application, click *Add Remote Location*, and then enter the
+    required information. When finished, click *Add Location*.
+    
+      - \*Location Name: \* Any short name for this new location
+      - \*Description: \* Any breif metadata for this location.
+      - \*Hostname or IP Address: \* The hostname or address used to
+        remotely SSH. If step 1 was followed, this should be the same as
+        `REMOTE-MACHINE`.
+      - \*SSH Port: \* Usually left blank. If a nonstandard SSH port is
+        used, it can be configured here.
+      - \*SSH Username: \* The username used for making an SSH
+        connection. If step 1 was followed, this should be the same as
+        `REMOTE_USER`.
+      - \*SSH Key File: \* The path to the private key for making SSH
+        connections. If step 1 was followed, this should be:
+        `/home/USER/.ssh/id_rsa`.
+      - \*Workbench Directory: \* Usually left blank. This is where
+        Workbench will remotely save state.
+
+</details>
+
+</details>
+
+## Download this project
+
+There are two ways to download this project for local use: Cloning and
+Forking.
+
+Cloning this repository is the recomended way to start. This will not
+allow for local modifications, but is the fastest to get started. This
+also allows for the easiest way to pull updates.
+
+Forking this repository is recomended for development as changes will be
+able to be saved. However, to get updates, the fork maintainer will have
+to regularly pull from the upstream repo. To work from a fork, follow
+[GitHub's
+instructions](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
+and then reference the URL to your personal fork in the rest of this
+section.
+
+<details>
+<summary>
+<b>Expand this section for a details on downloading this project.</b>
+</summary>
+
+1.  Open the local NVIDIA AI Workbench window. From the list of
+    locations displayed, select one you would like to work in.
+    
+    ![AI Workbench Locations
+    Menu](.static/da9474cbe2ca0da073b0ced28dd1dc492dfb3cf5.png)
+
+2.  Once inside the location, select *Clone Project*.
+    
+    ![AI Workbench Projects
+    Menu](.static/966cc83638dc37035b6a544d0c76aaf7a55d3952.png)
+
+3.  Enter the URL of the project repository. You may leave the path as
+    the default value. Press *Clone*. If you are cloning this project,
+    the url will be: `https://github.com/NVIDIA/nim-anywhere.git`
+    
+    ![AI Workbnech Clone Project
+    Menu](.static/eb6d2e60199d06d752eb6e34478c683f2a084d28.png)
+
+4.  You will be redirected to the new project’s page. Workbench will
+    automatically bootstrap the development environment. You can view
+    real-time progress by expanding the Output from the bottom of the
+    window.
+    
+    ![AI Workbench Log
+    Viewer](.static/ad5c07bcfaa47cae8b5bbc617520bdc8921607b8.png)
+
+5.  Before running for the first time, project specific configuration
+    must be provided. Project configuration is done using the
+    *Environment* tab from the left-hand panel.
+    
+    ![AI Workbench Side
+    Menu](.static/c330ddf4e4f18b0bfef1bfe44a49af4b5d6ba377.png)
+
+6.  Scroll down to the **Secrets** section and find the *NGC\_API\_KEY*
+    entry. Press *Configure* and provide the personal key for NGC that
+    was generated earlier.
+
+7.  Scroll down to the **Mounts section**. Here, there are two mounts to
+    configure.
+    
+    a. Find the mount for /var/host-run. This is used to allow the
+    development environment to access the host’s Docker daemon in a
+    pattern called Docker out of Docker. Press **Configure** and provide
+    the directory `/var/run`.
+    
+    ![AI Workbench Mount
+    Menu](.static/5c2baccb9a9bb6bc75a6cb38635f966a1a7d5ce2.png)
+    
+    b. Find the mount for /home/workbench/.cache/nvidia-nims. This mount
+    is used as a runtime cache for NIMs where they can cache model
+    files. Sharing this cache with the host reduces disk usage and
+    network bandwidth.
+    
+    ![AI Workbench Mount
+    Menu](.static/893a44cffab7e4468cbfb410c2c7c114bdde48c5.png)
+    
+    If you don't already have a nim cache, or you aren't sure, use the
+    following commands to create one at `/home/USER/.cache/nvidia-nims`.
+    
+    ``` bash
+    mkdir -p ~/.cache/nvidia-nims
+    chmod 2777 ~/.cache/nvidia-nims
+    ```
+
+8.  Once the build completes with a *Build Ready* message, all
+    applications will be made available to you.
+
+</details>
+
+## Start This Project
+
+Even the most basic of LLM Chains depend on a few additional
+microservices. These can be ignored during development for in-memory
+alternatives, but then code changes are required to go to prodoction.
+Thankfully, Workbench manages those additional microservices for
+development environments.
+
+<details>
+<summary>
+<b>Expand this section for details on starting the demo application.</b>
+</summary>
+
+> **HINT:** For each application, the debug output can be monitored in
+> the UI by clicking the Output link in the lower left corner, selecting
+> the dropdown menu, and choosing the application of interest.
+
+1.  All applications bundled in this workspace can be controlled by
+    navigating to **Environment** \> **Applications**.
+
+2.  First, toggle on *Milvus Vector DB* and *Redis*. Milvus is used as
+    an unstructured knowledge base and Redis is used to store
+    conversation histories.
+
+3.  Once these services have been started, the *Chain Server* can safely
+    be started. This contains the custom LangChain code for performing
+    our reasoning chain. By default, it will use the local Milvus and
+    Redis, but use *ai.nvidia.com* for LLM and Embedding model
+    inferencing.
+
+4.  **\[OPTIONAL\]:** Next, start the *LLM NIM*. The first time the LLM
+    NIM is started, it will take some time to download the image and the
+    optimized models.
+    
+    a. During a long start, to confirm the LLM NIM is starting, the
+    progress can be observed by viewing the logs by using the *Output*
+    pane on the bottom left of the UI.
+    
+    b. If the logs indicate an authentication error, that means the
+    provided *NGC\_API\_KEY* does not have access to the NIMs. Please
+    verify it was generated correctly and in an NGC organization that
+    has NVIDIA AI Enterprise support or trial.
+    
+    c. If the logs appear to be stuck on `..........: Pull complete`.
+    `..........: Verifying complete`, or `..........: Download
+    complete`; this is all normal output from Docker that the various
+    layers of the container image have been downloaded.
+    
+    d. Any other failures here need to be addressed.
+
+5.  Once the *Chain Server* is up, the *Chat Interface* can be started.
+    Starting the interface will automatically open it in a browser
+    window.
+
+![NIM Anywhere
+Frontend](.static/8e77789ca322e118e3af6e0825f4aa42cc8bc95f.png)
+
+</details>
+
+## Populating the Knowledge Base
+
+To get started developing demos, a sample dataset ir provided along with
+a Jupyter Notebook showing how data is ingested into a Vector Databse.
+
+1.  To import PDF documentation into the vector databse, open Jupyter
+    using the app launcher in AI Workbench.
+
+2.  Use the Jupyter Notebook at `code/upload-pdfs.ipynb` to ingest the
+    default dataset. If using the default dataset, no changes are
+    necessary.
+
+3.  If using a custom dataset, upload it to the `data/` directory in
+    Jupyter and modify the provided notebook as necessary.
+
+# Developing Your Own Applications
 
 This project contains applications for a few demo services as well as
 integrations with external services. These are all orchestrated by
@@ -95,60 +533,6 @@ mindmap
         Milvus</br>Vector Database
         LLM NIM</br>Optimized LLMs
 ```
-
-## Getting Started
-
-This project is designed to be used with [NVIDIA AI
-Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/).
-While this is not a requirement, running this demo without AI Workbench
-will require manual work as the pre-configured automation and
-integrations may not be available.
-
-### Pre-requisites
-
-  - NVIDIA Driver
-  - Docker
-  - Ubuntu 22.04 on the developemnt machine
-
-### AI Workbench Quickstart
-
-1.  Download execute the NVIDIA AI Workbench Installer.
-2.  Run the installation
-      - Select Docker during the install
-      - Perform any manual installs that are requested
-3.  If you are working on a remote machine, run the remote install of
-    Workbench on that machine as well.
-4.  Open the Workbench UI
-5.  Go to the settings and configure the integration with GitHub.
-6.  If you are working on a remote machine, add the remote machine as a
-    location.
-
-### Cloning the project
-
-1.  Open the desired location in AI Workbench
-2.  Select `Clone Project`
-3.  Enter this repository in the repository URL
-4.  The default path is fine, but it can be modified as desired
-5.  Open the clonded project in the workbench UI then configure the
-    secrets and mounts
-
-### Running the project
-
-1.  In the Workbench project navigate to `Environment` -\> `Apps`
-2.  Start Redis, Milvus, and the NIM (if local execution is desired).
-    Wait for these to finish.
-3.  Start the Chain Server. The Chain Server has a UI that can be
-    launched from Workbench. This UI is good for development and shows
-    full chain traces.
-4.  Start the Chat Frontend. This will automatically open the UI.
-
-### Populating the Knowledge Base
-
-1.  To import PDF documentation into the vector databse, open Jupyter.
-2.  Use the `upload-pdfs.ipynb` notebook to ingest the default dataset.
-    If ussing the default dataset, no changes are necessary.
-3.  If using a custom dataset, upload it to the `data` directory in
-    Jupyter and modify the provided notebook as necessary.
 
 # Application Configuration
 
@@ -193,7 +577,7 @@ environment variables will take precedence over all values from files.
 # Your API key for authentication to AI Foundation.
 # ENV Variables: NGC_API_KEY, NVIDIA_API_KEY, APP_NVIDIA_API_KEY
 # Type: string, null
-nvidia_api_key: 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
+nvidia_api_key: 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
 
 # The Data Source Name for your Redis DB.
 # ENV Variables: APP_REDIS_DSN
@@ -235,6 +619,7 @@ milvus:
 # ENV Variables: APP_LOG_LEVEL
 log_level: WARNING
 
+
 ```
 
 ## Chat Frontend config schema
@@ -261,6 +646,7 @@ chain_config_file: ./config.yaml
 # Options for the logging levels.
 # ENV Variables: APP_LOG_LEVEL
 log_level: INFO
+
 
 ```
 
@@ -304,7 +690,7 @@ pages is in the `code/frontend/pages` directory. To create a new page:
 
 View consist of one or a few pages and should function independantly of
 each other. Views are all defined in the `code/frontend/server.py`
-module. All declared views will automatically be added to the Frontend’s
+module. All declared views will automatically be added to the Frontend's
 menu bar and made available in the UI.
 
 To define a new view, modify the list named `views`. This is a list of
@@ -400,7 +786,7 @@ more information on Gradio theming.
 > require.
 
 Occasionally, it may be necessary to have multiple pages in a view that
-communicate with each other. For this purpose, Javascript’s
+communicate with each other. For this purpose, Javascript's
 `postMessage` messaging framework is used. Any trusted message posted to
 the application shell will be forwarded to each iframe where the pages
 can handle the message as desired. The `control` page uses this feature
@@ -436,76 +822,49 @@ window.addEventListener(
 
 ## Updating documentation
 
-Documentation is written in Markdown format and then rendered to HTML
-using Pandoc. The documentation can be opened using the application
-drawer to start the Documentation server. Restarting the documentation
-server will update the documentation to reflect changes.
+Documentation is written in Github Flavored Markdown and then rendered
+to a final Markdown file by Pandoc. The documentation can be previewed
+in the Workbench file browser window.
 
-All documentation is in the `docs` folder. Any markdown files in this
-folder will be concatenated, in alphabetic order, to produce the full
-manual.
+### Table of Contents file
 
-Save all static content, including images, to the `_static` folder.
-Static content outside of this folder may work in Markdown format, but
-will break in HTML format.
+The most important file for the documentation is the table of contents
+file at `docs/_TOC.md`. This file defines a list of files that should be
+concatenated in order to generate the final README manual. Files must be
+on this list to be included.
+
+### Header file
+
+The only exception to the table of contents rule is the header file at
+`docs/_HEADER.md`. This file will preprend the README manual and exists
+before the Table of Contents. It will always be included and should not
+be included in the table of contents file.
+
+### Static Content
+
+Save all static content, including images, to the `_static` folder. This
+will help with organization.
 
 ### Dynamic documentation
 
 It may be helpful to have documents that update and write themselves. To
-create a dynamic document, simply create a Python script with the
-`.md.py` extension. The script must be executable and should write the
-Markdown formatted document to stdout. During build time, this script
-will be run to update the markdown file with the same name.
+create a dynamic document, simply create an executable file that writes
+the Markdown formatted document to stdout. During build time, if an
+entry in the table of contents file is executable, it will be executed
+and its stdout will be used in its place.
 
-### HTML template
+### Rendering documentation
 
-There are two files that control the template.
+`Make` is used to manage the generation of the `README.md` file. Running
+the following make commands from the `docs/` directory will perform the
+following actions.
 
-  - `.template.html` is the HTML template used by Pandoc. It is based
-    heavily on a project called [Easy Pandoc
-    Templates](https://github.com/ryangrose/easy-pandoc-templates). This
-    file can be customized or replaced to change how to documentation
-    looks. For tips on doing this, check out the [Pandoc
-    documentation](https://pandoc.org/MANUAL.html#templates).
-  - `.puppeteer.json` is a configuration file used in Mermaid rendering.
-    There is not likely to be a situation where modifying this is
-    necessary.
+  - `make` or `make ../README.md` will update the README file if any of
+    the pages have changed since it was last generated.
 
-### Publishing documentation
+  - `make clean` will cleanup the existing README and static assets.
 
-`Make` can be used to manage the lifecycle of the documentation.
-
-  - `make render` will render all of the dynamic documentation pages to
-    Markdown
-  - `make build` will build the documentation HTML from Markdown
-  - `make clean` will clean all cached builds
-  - `make serve` will start a local webserver for viewing the
-    documentation
-  - `make stop` will stop a running webserver
-  - `make status` will check the status of the webserver
-
-### Mermaid support
-
-The documentation supports creating dynamic flowcharts using mermaid.
-This is done using the
-[mermaid-filter](https://github.com/raghur/mermaid-filter) extension for
-Pandoc. To include a diagram in your documentation, include something
-like this:
-
-```` markdown
-```mermaid
-flowchart TD
-    A[Christmas] -->|Get money| B(Go shopping)
-    B --> C{Let me think}
-    C -->|One| D[Laptop]
-    C -->|Two| E[iPhone]
-    C -->|Three| F[fa:fa-car Car]
-```
-````
-
-For help with the Mermaid syntax, reference the [Mermaid
-documentation](https://mermaid.js.org/intro/) and check out the [Mermaid
-Live Editor](https://mermaid.live/).
+  - `make all` will force the generation of the README manual.
 
 # Managing your Developement Environment
 
@@ -531,5 +890,5 @@ has password-less sudo access, but all changes to the system will be
 ephemeral. To make permanent changes to installed packages, add them to
 the \[`apt.txt`\] file. To make other changes to the operating system
 such as manipulating files, adding environment variables, etc; use the
-[`podBuild.bash`](./postBuild.bash) and
+[`postBuild.bash`](./postBuild.bash) and
 [`preBuild.bash`](./preBuild.bash) files.

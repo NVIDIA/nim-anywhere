@@ -5,9 +5,6 @@
 # Note: This file may be removed if you don't need to use it
 
 # Add Docker's official GPG key:
-sudo apt-get update
-sudo apt-get install ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
@@ -42,11 +39,8 @@ EOM
 echo "workbench ALL=(ALL) NOPASSWD:ALL" | \
     sudo tee /etc/sudoers.d/00-workbench > /dev/null
 
-# Setup apps support
-sudo apt install -y jq
 
 # install ngc binary
-sudo apt-get install -y wget unzip
 cd /opt
 # commands from: https://org.ngc.nvidia.com/setup/installers/cli
 if [ "$(uname -i)" == "x86_64" ]; then
@@ -84,10 +78,7 @@ npm install -g @mermaid-js/mermaid-cli
 cat <<EOM | sudo tee /etc/profile.d/node.sh > /dev/null
 export PATH=\$PATH:~/.nvm/versions/node/v$NODE_VERSION/bin
 EOM
-
-# install pandoc and pandoc filters
 npm install -g mermaid-filter
-sudo apt-get install -y make pandoc
 
 # install scripts to initialize the development environment
 cat <<EOM | sudo tee /etc/profile.d/init-dev-env.sh > /dev/null

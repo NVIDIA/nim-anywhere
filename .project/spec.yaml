@@ -106,22 +106,6 @@ execution:
     logfile_path: ""
     timeout_seconds: 0
     icon_url: ""
-  - name: Documentation
-    type: custom
-    class: webapp
-    start_command: cd /project/docs && make serve
-    health_check_command: cd /project/docs && make status
-    stop_command: cd /project/docs && make stop
-    user_msg: ""
-    logfile_path: ""
-    timeout_seconds: 0
-    icon_url: ""
-    webapp_options:
-      autolaunch: true
-      port: "7777"
-      proxy:
-        trim_prefix: true
-      url: http://localhost:7777/
   - name: Chat Frontend
     type: custom
     class: webapp
