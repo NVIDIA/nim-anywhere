@@ -62,24 +62,6 @@ export PYTHONPATH=/project/code:\$PYTHONPATH
 if [ ! -x /usr/bin/python ]; then sudo ln -s `which python3` /usr/bin/python; fi
 EOM
 
-# setup documentation tooling
-export NODE_VERSION=20.13.1
-export NVM_VERSION=0.39.7
-# install nodejs
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v${NVM_VERSION}/install.sh | bash
-export PATH=$PATH:~/.nvm/versions/node/v$NODE_VERSION/bin
-# install mermaid
-sudo apt-get install -y \
-  ca-certificates fonts-liberation libasound2 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 \
-  libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 \
-  libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 \
-  libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils
-npm install -g @mermaid-js/mermaid-cli
-cat <<EOM | sudo tee /etc/profile.d/node.sh > /dev/null
-export PATH=\$PATH:~/.nvm/versions/node/v$NODE_VERSION/bin
-EOM
-npm install -g mermaid-filter
-
 # install scripts to initialize the development environment
 cat <<EOM | sudo tee /etc/profile.d/init-dev-env.sh > /dev/null
 if [ -f /project/code/config_sample.yaml ] && [ ! -f /project/code/config.yaml ]; then

@@ -14,7 +14,6 @@
 SHELL=/bin/bash
 PANDOC_HEADER_OPTS =--from gfm --to gfm --standalone --extract-media=.static --self-contained
 PANDOC_OPTS =--from gfm --to gfm --standalone --toc --toc-depth=2 --number-sections --extract-media=.static --self-contained
-PANDOC_FILTERS =--filter=mermaid-filter
 
 HEADER_FILE=_HEADER.md
 TOC_FILE=_TOC.md
@@ -31,7 +30,7 @@ TOC_FILE=_TOC.md
 _render: export MERMAID_FILTER_FORMAT=png
 _render: export MERMAID_FILTER_WIDTH=800
 _render:
-	pandoc $(PANDOC_HEADER_OPTS) $(PANDOC_FILTERS) $(HEADER_FILE); echo " "
+	pandoc $(PANDOC_HEADER_OPTS) $(HEADER_FILE); echo " "
 	set -eo pipefail; $(MAKE) --silent _markdown | pandoc $(PANDOC_OPTS)
 _markdown:
 	for page in $$(cat $(TOC_FILE)); do
