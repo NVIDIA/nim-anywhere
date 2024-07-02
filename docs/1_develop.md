@@ -1,11 +1,4 @@
-# NIM Anywhere Developer Documentation
-
-NIM Anywhere serves two purposes as a rapid NVIDIA NIM demonstrator as well as a starting point for developing with NIMs.
-The intention is to democratize access to NIMs and demonstrate the value of NIMs.
-
-![NIM Anywhere Screenshot](_static/screenshot.png)
-
-## Project Components
+# Developing Your Own Applications
 
 This project contains applications for a few demo services as well as integrations with external services. These are all orchestrated by [NVIDIA AI Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/).
 

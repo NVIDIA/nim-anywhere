@@ -1,66 +1,49 @@
-
+# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specifi
 SHELL=/bin/bash
+PANDOC_HEADER_OPTS =--from gfm --to gfm --standalone --extract-media=.static --self-contained
+PANDOC_OPTS =--from gfm --to gfm --standalone --toc --toc-depth=2 --number-sections --extract-media=.static --self-contained
 
-.PHONY: clean update serve stop status
-.SILENT: update serve stop status
-.ONESHELL: update serve stop status
+HEADER_FILE=_HEADER.md
+TOC_FILE=_TOC.md
 
-all: clean update build
 
-clean:
-	rm -rf ../README.md ../.static _build
+../README.md: *.md* ../code/*/configuration.py
+	make --silent _render > ../README.md
+	rm -rf ../.static; mv .static ..;
 
-# render all dynamic documentation. Convert .md.py to .md.
-render:
-	# find all executable python files
-	all_scripts=$$(find . -maxdepth 1 -perm -111 -type f -name '*.md.py')
 
-	# run each .py file found and save output to .md file
-	for script in $$all_scripts; do
-		echo "Running $$script"
-		fname=$(basename $${script::-3})
-
-		echo "↪ " $$fname
-		$$script > $$fname
-
-		echo ""
+.PHONY: _render _markdown
+.SILENT: _render _markdown
+.ONESHELL: _markdown
+_render: export MERMAID_FILTER_FORMAT=png
+_render: export MERMAID_FILTER_WIDTH=800
+_render:
+	pandoc $(PANDOC_HEADER_OPTS) $(HEADER_FILE); echo " "
+	set -eo pipefail; $(MAKE) --silent _markdown | pandoc $(PANDOC_OPTS)
+_markdown:
+	for page in $$(cat $(TOC_FILE)); do
+		if [[ -x "$$page" ]]; then
+			./$$page || exit 1;
+		else
+			cat $$page || exit 1;
+		fi
+		echo " "
 	done
 
-# build the html docs. convert .md to .html
-build: ../README.md _build/index.html _build/_static
-../README.md:
-	file_list=$$(ls *.md | grep -v README.md); \
-	pandoc \
-		--from markdown --to gfm \
-		--toc -sN \
-		-o ../README.md \
-		--extract-media=.static \
-		--self-contained \
-		$$file_list
-	mv .static ..
-_build/index.html:
-	mkdir -p _build
-	file_list=$$(ls *.md | grep -v README.md); \
-	export MERMAID_FILTER_FORMAT=png; export MERMAID_FILTER_WIDTH=1200; \
-	pandoc \
-		--from=markdown --to=html \
-		--template=.template.html \
-		--filter=mermaid-filter \
-		--standalone --toc \
-		--metadata title="User Guide" \
-		-o _build/index.html \
-		$$file_list
-_build/_static:
-	cp -rav ./_static _build/_static
 
-# force render and build the docs
-update: clean render build
-
-#  manage a local webserver for reading docs
-serve: all
-	cd _build
-	python3 -m http.server 7777
-stop:
-	kill -2 $$(ps -eo pid,command  | grep -P "^\s*\d+\s+python3 -m http.server 7777" | awk '{print $$1}') 2> /dev/null || true
-status:
-	curl localhost:7777 &> /dev/null
+.PHONY: clean all
+clean:
+	rm -rf ../README.md ../.static
+all: clean ../README.md
