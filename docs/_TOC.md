@@ -5,7 +5,6 @@
 0_2_2_macos.md
 0_2_3_ubuntu.md
 0_2_4_remote_ubuntu.md
-0_2_999_footer.md
 0_3_download.md
 0_4_start.md
 0_5_knowledgebase.md
