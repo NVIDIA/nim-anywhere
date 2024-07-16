@@ -147,6 +147,13 @@ execution:
     stop_command: /project/apps/llm-nim-0.sh stop
     type: custom
     user_msg: ''
+  - class: process
+    health_check_command: /project/apps/llm-nim-1.sh status
+    icon_url: www.nvidia.com/favicon.ico
+    name: 'LLM NIM: llm-nim-1'
+    start_command: /project/apps/llm-nim-1.sh start
+    stop_command: /project/apps/llm-nim-1.sh stop
+    type: custom
   mounts:
   - description: Project directory
     options: rw
