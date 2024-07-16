@@ -29,6 +29,16 @@ if [ "$1" == "config" ]; then _CONFIG=1; else _CONFIG=0; fi
 # helper functions
 ###############################################################################
 
+# Infer if this is in Workbench by scanning the networks.
+IN_NVWB=$(docker container inspect `hostname` | jq '.[0].NetworkSettings.Networks.workbench or false')
+if [ "$IN_NVWB" == "true" ]; then
+    # Determine the network config for apps
+    DOCKER_NETWORK=" --network=workbench "
+    # Determine the best prefix for the app name
+else
+    DOCKER_NETWORK=" "
+fi
+
 # resolve a mount point to the host's directory
 # usage: hostpath LOCAL_PATH
 function hostpath() {
