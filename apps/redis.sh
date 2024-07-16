@@ -16,10 +16,9 @@
 
 source  $(dirname $0)/functions
 
-SVC_NAME="redis"
+NAME="redis"
 IMAGE="redis"
 TAG=$(config_lkp "REDIS_VERSION" "7")
-NAME="$(hostname)-$SVC_NAME"
 
 # This function is responsible for running creating a running the container
 # and its dependencies.
@@ -28,8 +27,7 @@ _docker_run() {
 	docker run \
 		--name $NAME \
 		--mount src=$NAME,target=/data \
-		--network=container:`hostname` \
-		$IMAGE:$TAG \
+		$DOCKER_NETWORK $IMAGE:$TAG \
         redis-server --save 20 1 --loglevel warning > /dev/null
 }
 

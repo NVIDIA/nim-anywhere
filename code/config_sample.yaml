@@ -6,3 +6,5 @@ chat_model:
 
   # Locally running NIM
   # url: "http://llm-nim-0:8000/v1"
+
+# Milvus and Redis have been configured with env variables.

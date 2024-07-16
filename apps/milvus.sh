@@ -16,10 +16,9 @@
 
 source  $(dirname $0)/functions
 
-SVC_NAME="milvus-standalone"
+NAME="milvus"
 IMAGE="milvusdb/milvus"
 TAG=$(config_lkp "MILVUS_VERSION" "v2.4.0")
-NAME="$(hostname)-$SVC_NAME"
 
 # This function is responsible for running creating a running the container
 # and its dependencies.
@@ -37,8 +36,7 @@ _docker_run() {
 		--health-start-period=90s \
 		--health-timeout=20s \
 		--health-retries=3 \
-		--network=container:`hostname` \
-		$IMAGE:$TAG \
+        $DOCKER_NETWORK $IMAGE:$TAG \
 		milvus run standalone > /dev/null
 }
 
