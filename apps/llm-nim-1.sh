@@ -17,16 +17,17 @@
 source  $(dirname $0)/functions
 
 # NIM options
-SVC_NAME="meta-llama3-8b-instruct"
+SVC_NAME="llm-nim-1"
 
 # NIM constants
 SLUG=$(echo ${SVC_NAME^^} | tr - _)
-IMAGE="nvcr.io/nim/meta/llama3-8b-instruct"
-NAME="$(hostname)-$SVC_NAME"
+NAME="${SVC_NAME}"
 
 # workspace configuration options
+MODEL=$(config_lkp "${SLUG}_MODEL" "meta/llama3-8b-instruct")
 TAG=$(config_lkp "${SLUG}_NIM_VERSION" "1.0.0")
 GPUS=$(config_lkp "${SLUG}_NIM_GPUS" "all")
+IMAGE="nvcr.io/nim/meta/llama3-8b-instruct"
 
 # This function is responsible for running creating a running the container
 # and its dependencies.
@@ -44,8 +45,7 @@ _docker_run() {
         --health-start-period=600s \
         --health-timeout=20s \
         --health-retries=3 \
-        --network=container:"$(hostname)" \
-        $IMAGE:$TAG
+        $DOCKER_NETWORK $IMAGE:$TAG
 }
 
 # stop and remove the running container
@@ -60,7 +60,6 @@ _meta() {
 		name: "LLM NIM: $SVC_NAME"
 		type: custom
 		class: process
-		user_msg: $SVC_NAME is now available.
 		icon_url: www.nvidia.com/favicon.ico
 		EOM
 }

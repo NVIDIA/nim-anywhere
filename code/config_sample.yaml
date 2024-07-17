@@ -5,4 +5,6 @@ chat_model:
   url: "https://integrate.api.nvidia.com/v1"
 
   # Locally running NIM
-  # url: "http://localhost:8000/v1"
+  # url: "http://llm-nim-0:8000/v1"
+
+# Milvus and Redis have been configured with env variables.

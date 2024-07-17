@@ -16,19 +16,36 @@
 
 source  $(dirname $0)/functions
 
-NAME="redis"
-IMAGE="redis"
-TAG=$(config_lkp "REDIS_VERSION" "7")
+# NIM options
+SVC_NAME="llm-nim-0"
+
+# NIM constants
+SLUG=$(echo ${SVC_NAME^^} | tr - _)
+NAME="${SVC_NAME}"
+
+# workspace configuration options
+MODEL=$(config_lkp "${SLUG}_MODEL" "meta/llama3-8b-instruct")
+TAG=$(config_lkp "${SLUG}_NIM_VERSION" "1.0.0")
+GPUS=$(config_lkp "${SLUG}_NIM_GPUS" "all")
+IMAGE="nvcr.io/nim/meta/llama3-8b-instruct"
 
 # This function is responsible for running creating a running the container
 # and its dependencies.
 _docker_run() {
-	docker volume create $NAME > /dev/null
-	docker run \
-		--name $NAME \
-		--mount src=$NAME,target=/data \
-		$DOCKER_NETWORK $IMAGE:$TAG \
-        redis-server --save 20 1 --loglevel warning > /dev/null
+    docker run \
+        --name=$NAME \
+        --runtime=nvidia \
+        --gpus "$GPUS" \
+        --ipc host \
+        -e NGC_API_KEY \
+        -v $(hostpath $NGC_HOME):/opt/nim/.cache \
+        -u $(id -u) \
+        --health-cmd="python -c \"import requests; resp = requests.get('http://localhost:8000/v1/health/ready'); resp.raise_for_status()\"" \
+        --health-interval=30s \
+        --health-start-period=600s \
+        --health-timeout=20s \
+        --health-retries=3 \
+        $DOCKER_NETWORK $IMAGE:$TAG
 }
 
 # stop and remove the running container
@@ -40,10 +57,10 @@ _docker_stop() {
 # print the project's metadata
 _meta() {
 	cat <<-EOM
-		name: Redis
+		name: "LLM NIM: $SVC_NAME"
 		type: custom
 		class: process
-		icon_url: redis.io/favicon.ico
+		icon_url: www.nvidia.com/favicon.ico
 		EOM
 }
 
