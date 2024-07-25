@@ -15,10 +15,25 @@
 
 """The collection of prompts used in this application."""
 
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.prompts import PromptTemplate, ChatPromptTemplate, MessagesPlaceholder
+
+
+CONDENSE_QUESTION_TEMPLATE = PromptTemplate.from_template(
+    """Given a chat history and the latest user question
+    which might reference context in the chat history, formulate a standalone question
+    which can be understood without the chat history. Do NOT answer the question,
+    just reformulate it if needed and otherwise return it as is.
+    Chat History:
+    {history}
+    Follow Up question: {question}
+    Standalone question:"""
+)
+
+
+
 
 # Primary Chat Prompt template
-chat_prompt = ChatPromptTemplate.from_messages(
+CHAT_PROMPT = ChatPromptTemplate.from_messages(
     [
         (
             "system",
@@ -29,4 +44,3 @@ chat_prompt = ChatPromptTemplate.from_messages(
         ("human", "{question}"),
     ]
 )
-
