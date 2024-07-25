@@ -68,7 +68,7 @@ async def retrieve_context(msg, config) -> str:
         return (retriever | format_docs).invoke(question, config)
     return ""
 
-# create a question+history condensing chain
+# create a question and history condensing chain
 @chain
 async def question_parsing(msg, config) -> str:
     """Condense the question with chat history"""
