@@ -45,6 +45,7 @@ retriever = vector_store.as_retriever()
 
 def format_docs(docs: list[Document]) -> str:
     """Take in a list of docs and concatenate the content, separating by newlines."""
+    print("formatting docs")
     return "\n\n".join(doc.page_content for doc in docs)
 
 
