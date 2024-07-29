@@ -23,7 +23,7 @@ import yaml
 from chain_server.configuration import Configuration as ChainConfiguration
 
 from ... import mermaid
-from ...common import IMG_DIR, THEME, USE_KB_INITIAL
+from ...common import IMG_DIR, THEME, USE_KB_INITIAL, USE_RERANKER_INITIAL
 from ...configuration import config
 
 # load custom style and scripts
@@ -49,11 +49,24 @@ _MMD = [
 
     classDef nvidia fill:#76b900,stroke:#333,stroke-width:1px;""",
 ]
+
 _KB_TOGGLE_JS = """
 async(val) => {
     window.top.postMessage({"use_kb": val}, '*');
 }
 """
+_RERANKER_TOGGLE_JS = """
+async(val) => {
+    window.top.postMessage({"use_reranker": val}, '*');
+}
+"""
+
+KB_RERANKER_TOGGLE_JS = """
+async(val) => {
+    window.top.postMessage({"use_reranker": val}, '*');
+}
+"""
+
 _CONFIG_CHANGES_JS = """
 async() => {
     title = document.querySelector("div#config-toolbar p");
@@ -79,7 +92,9 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
         # %% architecture control box
         with gr.Accordion(label="Retrieval Configuration"):
             with gr.Row(elem_id="kb-row"):
-                use_kb = gr.Checkbox(USE_KB_INITIAL, label="Use knowledge base")
+                with gr.Column():
+                    use_kb = gr.Checkbox(USE_KB_INITIAL, label="Use knowledge base", interactive=True)
+                    use_reranker = gr.Checkbox(USE_RERANKER_INITIAL, label="Use reranker", interactive=True)
             with gr.Row(elem_id="mmd-row"):
                 mmd = mermaid.to_gradio(_MMD[USE_KB_INITIAL])
 
@@ -108,6 +123,11 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
             with open(config.chain_config_file, "r", encoding="UTF-8") as cf:
                 return cf.read()
 
+        # %% updates a checkbox to be off and non-interactive
+        def toggle_checkbox_interactivity(use_kb_value):
+            # Enable or disable the second checkbox based on the first checkbox's value
+            return gr.Checkbox(interactive=use_kb_value, value=False)
+
         # %% configure page events
         mermaid.init(page)
         page.load(read_chain_config, outputs=editor)
@@ -115,10 +135,16 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
         # %% use kb toggle actions
         @use_kb.change(inputs=use_kb, outputs=mmd)
         def kb_toggle(val: bool) -> str:
-            """Toggle the knowledge base."""
+            """Toggle the knowledge base."""            
             return mermaid.to_html(_MMD[val])
 
         use_kb.change(None, use_kb, None, js=_KB_TOGGLE_JS)
+
+        # %% turn off reranker option when knowledge base is not selected
+        use_kb.change(fn=toggle_checkbox_interactivity, inputs=use_kb, outputs=use_reranker)
+
+        # %% use reranker toggle actions
+        use_reranker.change(None, use_reranker, None, js=_RERANKER_TOGGLE_JS)
 
         # %% undo button actions
         undo_btn.click(read_chain_config, outputs=editor)

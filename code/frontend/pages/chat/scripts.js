@@ -31,8 +31,14 @@ window.addEventListener(
   "message",
   (event) => {
       if (event.isTrusted) {
-          use_kb = gradio_config.components.find((element) => element.props.elem_id == "use_kb");
-          use_kb.props.value = event.data["use_kb"];
+          if ("use_kb" in event.data) {
+              use_kb = gradio_config.components.find((element) => element.props.elem_id == "use_kb");
+              use_kb.props.value = event.data["use_kb"];
+          }
+          if ("use_reranker" in event.data){
+              use_reranker = gradio_config.components.find((element) => element.props.elem_id == "use_reranker");
+              use_reranker.props.value = event.data["use_reranker"];
+          }
       };
   },
   false);
