@@ -19,6 +19,7 @@
 from pathlib import Path
 
 import gradio as gr
+import jinja2
 import yaml
 from chain_server.configuration import Configuration as ChainConfiguration
 
@@ -29,26 +30,9 @@ from ...configuration import config
 # load custom style and scripts
 _CSS_FILE = Path(__file__).parent.joinpath("style.css")
 _CSS = open(_CSS_FILE, "r", encoding="UTF-8").read()
-_MMD = [
-    """flowchart LR
-    query(fa:fa-user Query) -->
-    prompt(LLM Context) -->
-    llm(LLM NIM):::nvidia -->
-    answer(fa:fa-comment-dots Answer)
-
-    classDef nvidia fill:#76b900,stroke:#333,stroke-width:1px;""",
-    """flowchart LR
-    ret <-....-> db[(fa:fa-building\nEnterprise\nData)]
-
-    query(fa:fa-user\nQuery) --> prompt
-    query -->
-    ret(Retrieval NIM):::nvidia -->
-    prompt(LLM Context) -->
-    llm(LLM NIM):::nvidia -->
-    answer(fa:fa-comment-dots\nAnswer)
-
-    classDef nvidia fill:#76b900,stroke:#333,stroke-width:1px;""",
-]
+_MMD_FILE = Path(__file__).parent.joinpath("diagram.mmd.j2")
+_MMD_TEMPLATE = open(_MMD_FILE, "r", encoding="UTF-8").read()
+_MMD = environment = jinja2.Environment().from_string(_MMD_TEMPLATE)
 
 _KB_TOGGLE_JS = """
 async(val) => {
@@ -96,7 +80,7 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
                     use_kb = gr.Checkbox(USE_KB_INITIAL, label="Use knowledge base", interactive=True)
                     use_reranker = gr.Checkbox(USE_RERANKER_INITIAL, label="Use reranker", interactive=True)
             with gr.Row(elem_id="mmd-row"):
-                mmd = mermaid.to_gradio(_MMD[USE_KB_INITIAL])
+                mmd = mermaid.to_gradio(_MMD.render(use_kb=use_kb, use_reranker=use_reranker, use_rewrite=False))
 
         # %% chain server configuration text box
         with gr.Accordion(label="Chain Server Configuration"):
@@ -125,7 +109,7 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
 
         # %% updates a checkbox to be off and non-interactive
         def toggle_checkbox_interactivity(use_kb_value):
-            # Enable or disable the second checkbox based on the first checkbox's value
+            """Enable or disable the second checkbox based on the first checkbox's value."""
             return gr.Checkbox(interactive=use_kb_value, value=False)
 
         # %% configure page events
@@ -133,10 +117,10 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
         page.load(read_chain_config, outputs=editor)
 
         # %% use kb toggle actions
-        @use_kb.change(inputs=use_kb, outputs=mmd)
-        def kb_toggle(val: bool) -> str:
-            """Toggle the knowledge base."""            
-            return mermaid.to_html(_MMD[val])
+        @gr.on(triggers=[use_kb.change, use_reranker.change], inputs=[use_kb, use_reranker], outputs=mmd)
+        def kb_toggle(kb: bool, rerank: bool) -> str:
+            """Toggle the knowledge base."""
+            return mermaid.to_html(_MMD.render(use_kb=kb, use_reranker=rerank, use_rewrite=False))
 
         use_kb.change(None, use_kb, None, js=_KB_TOGGLE_JS)
 
