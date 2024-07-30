@@ -1,44 +1,78 @@
+specVersion: v2
+specMinorVersion: 1
+meta:
+  name: nim-anywhere
+  image: project-nim-anywhere
+  description: Accelerate Your AI Deployment With NVIDIA NIM.
+  labels:
+  - RAG
+  - NIM
+  createdOn: "2024-05-02T19:47:52Z"
+  defaultBranch: main
+layout:
+- path: code/
+  type: code
+  storage: git
+- path: docs/
+  type: code
+  storage: git
+- path: apps/
+  type: code
+  storage: git
+- path: data/
+  type: data
+  storage: gitlfs
+- path: data/scratch/
+  type: data
+  storage: gitignore
 environment:
   base:
+    registry: nvcr.io
+    image: nvidia/ai-workbench/python-cuda122:1.0.3
+    build_timestamp: "20231214221614"
+    name: Python with CUDA 12.2
+    supported_architectures: []
+    cuda_version: "12.2"
+    description: A Python Base with CUDA 12.2
+    entrypoint_script: ""
+    labels:
+    - cuda12.2
     apps:
-    - class: webapp
+    - name: jupyterlab
+      type: jupyterlab
+      class: webapp
+      start_command: jupyter lab --allow-root --port 8888 --ip 0.0.0.0 --no-browser
+        --NotebookApp.base_url=\$PROXY_PREFIX --NotebookApp.default_url=/lab --NotebookApp.allow_origin='*'
       health_check_command: '[ \$(echo url=\$(jupyter lab list | head -n 2 | tail
         -n 1 | cut -f1 -d'' '' | grep -v ''Currently'' | sed "s@/?@/lab?@g") | curl
         -o /dev/null -s -w ''%{http_code}'' --config -) == ''200'' ]'
-      icon_url: ''
-      logfile_path: ''
-      name: jupyterlab
-      start_command: jupyter lab --allow-root --port 8888 --ip 0.0.0.0 --no-browser
-        --NotebookApp.base_url=\$PROXY_PREFIX --NotebookApp.default_url=/lab --NotebookApp.allow_origin='*'
       stop_command: jupyter lab stop 8888
+      user_msg: ""
+      logfile_path: ""
       timeout_seconds: 0
-      type: jupyterlab
-      user_msg: ''
+      icon_url: ""
       webapp_options:
         autolaunch: true
-        port: '8888'
+        port: "8888"
         proxy:
           trim_prefix: false
         url_command: jupyter lab list | head -n 2 | tail -n 1 | cut -f1 -d' ' | grep
           -v 'Currently'
-    build_timestamp: '20231214221614'
-    cuda_version: '12.2'
-    description: A Python Base with CUDA 12.2
-    entrypoint_script: ''
-    icon_url: ''
-    image: nvidia/ai-workbench/python-cuda122:1.0.3
+    programming_languages:
+    - python3
+    icon_url: ""
     image_version: 1.0.3
-    labels:
-    - cuda12.2
-    name: Python with CUDA 12.2
     os: linux
     os_distro: ubuntu
-    os_distro_release: '22.04'
-    package_manager_environment:
-      name: ''
-      target: ''
+    os_distro_release: "22.04"
+    schema_version: v2
+    user_info:
+      uid: ""
+      gid: ""
+      username: ""
     package_managers:
-    - binary_path: /usr/bin/apt
+    - name: apt
+      binary_path: /usr/bin/apt
       installed_packages:
       - curl
       - git
@@ -51,153 +85,124 @@ environment:
       - less
       - jq
       - ssh
-      name: apt
-    - binary_path: /usr/local/bin/pip
+    - name: pip
+      binary_path: /usr/local/bin/pip
       installed_packages:
       - jupyterlab==4.0.7
-      name: pip
-    programming_languages:
-    - python3
-    registry: nvcr.io
-    schema_version: v2
-    supported_architectures: []
-    user_info:
-      gid: ''
-      uid: ''
-      username: ''
+    package_manager_environment:
+      name: ""
+      target: ""
 execution:
   apps:
-  - class: native
+  - name: Visual Studio Code
+    type: vs-code
+    class: native
+    start_command: ""
     health_check_command: '[ \$(ps aux | grep ".vscode-server" | grep -v grep | wc
       -l ) -gt 4 ] && [ \$(ps aux | grep "/.vscode-server/bin/.*/node .* net.createConnection"
       | grep -v grep | wc -l) -gt 0 ]'
-    icon_url: ''
-    logfile_path: ''
-    name: Visual Studio Code
-    start_command: ''
-    stop_command: ''
+    stop_command: ""
+    user_msg: ""
+    logfile_path: ""
     timeout_seconds: 0
-    type: vs-code
-    user_msg: ''
-  - class: webapp
-    health_check_command: curl localhost:7070/healthz > /dev/null
-    icon_url: ''
-    logfile_path: ''
-    name: Chat Frontend
+    icon_url: ""
+  - name: Chat Frontend
+    type: custom
+    class: webapp
     start_command: export PROXY_PREFIX && cd /project/code && uvicorn --log-level
       info --reload frontend.server:app --reload-dir frontend --port 7070 --host 0.0.0.0
       --timeout-graceful-shutdown 10
+    health_check_command: curl localhost:7070/healthz > /dev/null
     stop_command: ps aux | grep frontend.server:app | grep -v grep | awk '{print $2}'
       | xargs kill
+    user_msg: ""
+    logfile_path: ""
     timeout_seconds: 0
-    type: custom
-    user_msg: ''
+    icon_url: ""
     webapp_options:
       autolaunch: true
-      port: '7070'
+      port: "7070"
       proxy:
         trim_prefix: false
       url: http://localhost:7070/
-  - class: process
-    health_check_command: /project/apps/milvus.sh status
-    icon_url: milvus.io/favicon-32x32.png
-    logfile_path: ''
-    name: Milvus Vector DB
+  - name: Milvus Vector DB
+    type: custom
+    class: process
     start_command: /project/apps/milvus.sh start
+    health_check_command: /project/apps/milvus.sh status
     stop_command: /project/apps/milvus.sh stop
+    user_msg: ""
+    logfile_path: ""
     timeout_seconds: 0
+    icon_url: milvus.io/favicon-32x32.png
+  - name: Redis
     type: custom
-    user_msg: ''
-  - class: process
-    health_check_command: /project/apps/redis.sh status
-    icon_url: redis.io/favicon.ico
-    logfile_path: ''
-    name: Redis
+    class: process
     start_command: /project/apps/redis.sh start
+    health_check_command: /project/apps/redis.sh status
     stop_command: /project/apps/redis.sh stop
+    user_msg: ""
+    logfile_path: ""
     timeout_seconds: 0
+    icon_url: redis.io/favicon.ico
+  - name: Chain Server
     type: custom
-    user_msg: ''
-  - class: webapp
-    health_check_command: ps aux |grep -v grep | grep chain_server.server:app
-    icon_url: avatars.githubusercontent.com/u/126733545
-    logfile_path: ''
-    name: Chain Server
+    class: webapp
     start_command: export PROXY_PREFIX && export NGC_API_KEY && cd /project/code &&
       APP_LOG_LEVEL=DEBUG uvicorn --log-level info --reload chain_server.server:app
       --port 3030 --host 0.0.0.0 --timeout-graceful-shutdown 10 --reload-exclude 'frontend/*'
       --reload-exclude 'evaluation/*' --reload-include '*.html' --reload-include '*.css'
       --reload-include '*.yaml' --reload-include '*.js'
+    health_check_command: ps aux |grep -v grep | grep chain_server.server:app
     stop_command: ps aux | grep chain_server.server:app | grep -v grep | awk '{print
       $2}' | xargs kill
+    user_msg: ""
+    logfile_path: ""
     timeout_seconds: 0
-    type: custom
-    user_msg: ''
+    icon_url: avatars.githubusercontent.com/u/126733545
     webapp_options:
       autolaunch: false
-      port: '3030'
+      port: "3030"
       proxy:
         trim_prefix: true
       url: http://localhost:3030
-  - class: process
-    health_check_command: /project/apps/llm-nim-0.sh status
-    icon_url: www.nvidia.com/favicon.ico
-    name: 'LLM NIM: llm-nim-0'
+  - name: 'LLM NIM: llm-nim-0'
+    type: custom
+    class: process
     start_command: /project/apps/llm-nim-0.sh start
+    health_check_command: /project/apps/llm-nim-0.sh status
     stop_command: /project/apps/llm-nim-0.sh stop
-    type: custom
-    user_msg: ''
-  - class: process
-    health_check_command: /project/apps/llm-nim-1.sh status
+    user_msg: ""
+    logfile_path: ""
+    timeout_seconds: 0
     icon_url: www.nvidia.com/favicon.ico
-    name: 'LLM NIM: llm-nim-1'
-    start_command: /project/apps/llm-nim-1.sh start
-    stop_command: /project/apps/llm-nim-1.sh stop
+  - name: 'LLM NIM: llm-nim-1'
     type: custom
-  mounts:
-  - description: Project directory
-    options: rw
-    target: /project/
-    type: project
-  - description: Host's runtime files for Docker in Docker support.
-    options: ''
-    target: /var/host-run/
-    type: host
-  - description: A path where NIM containers can store and share their cache.
-    options: ''
-    target: /home/workbench/.cache/nvidia-nims/
-    type: host
+    class: process
+    start_command: /project/apps/llm-nim-1.sh start
+    health_check_command: /project/apps/llm-nim-1.sh status
+    stop_command: /project/apps/llm-nim-1.sh stop
+    user_msg: ""
+    logfile_path: ""
+    timeout_seconds: 0
+    icon_url: www.nvidia.com/favicon.ico
   resources:
     gpu:
       requested: 0
     sharedMemoryMB: 1024
   secrets:
-  - description: NGC Personal Key from https://org.ngc.nvidia.com/setup/personal-keys
-    variable: NGC_API_KEY
-layout:
-- path: code/
-  storage: git
-  type: code
-- path: docs/
-  storage: git
-  type: code
-- path: apps/
-  storage: git
-  type: code
-- path: data/
-  storage: gitlfs
-  type: data
-- path: data/scratch/
-  storage: gitignore
-  type: data
-meta:
-  createdOn: '2024-05-02T19:47:52Z'
-  defaultBranch: main
-  description: Accelerate Your AI Deployment With NVIDIA NIM.
-  image: project-nim-anywhere
-  labels:
-  - RAG
-  - NIM
-  name: nim-anywhere
-specMinorVersion: 1
-specVersion: v2
+  - variable: NGC_API_KEY
+    description: NGC Personal Key from https://org.ngc.nvidia.com/setup/personal-keys
+  mounts:
+  - type: project
+    target: /project/
+    description: Project directory
+    options: rw
+  - type: host
+    target: /var/host-run/
+    description: Host's runtime files for Docker in Docker support.
+    options: ""
+  - type: host
+    target: /home/workbench/.cache/nvidia-nims/
+    description: A path where NIM containers can store and share their cache.
+    options: ""

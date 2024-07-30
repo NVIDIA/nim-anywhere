@@ -27,14 +27,13 @@ NAME="${SVC_NAME}"
 MODEL=$(config_lkp "${SLUG}_MODEL" "meta/llama3-8b-instruct")
 TAG=$(config_lkp "${SLUG}_NIM_VERSION" "1.0.0")
 GPUS=$(config_lkp "${SLUG}_NIM_GPUS" "all")
-IMAGE="nvcr.io/nim/meta/llama3-8b-instruct"
+IMAGE="nvcr.io/nim/$MODEL"
 
 # This function is responsible for running creating a running the container
 # and its dependencies.
 _docker_run() {
     docker run \
         --name=$NAME \
-        --runtime=nvidia \
         --gpus "$GPUS" \
         --ipc host \
         -e NGC_API_KEY \
