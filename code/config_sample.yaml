@@ -7,4 +7,22 @@ chat_model:
   # Locally running NIM
   # url: "http://llm-nim-0:8000/v1"
 
+embedding_model:
+  name: "nvidia/nv-embedqa-e5-v5"
+  
+  # AI Catalog
+  url: "https://integrate.api.nvidia.com/v1"
+  
+  # Locally running NIM
+  #url: "http://nv-embedqa-e5-v5:8000/v1"
+
+reranking_model:  
+  # AI Catalog
+  name: "nv-rerank-qa-mistral-4b:1"
+  url: "https://integrate.api.nvidia.com/v1"
+
+  # Locally running NIM
+  #name: "nvidia/nv-rerankqa-mistral-4b-v3"  
+  #url: "http://nv-rerankqa-mistral-4b-v3:8000/v1/"
+
 # Milvus and Redis have been configured with env variables.

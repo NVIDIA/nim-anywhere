@@ -19,41 +19,38 @@
 from pathlib import Path
 
 import gradio as gr
+import jinja2
 import yaml
 from chain_server.configuration import Configuration as ChainConfiguration
 
 from ... import mermaid
-from ...common import IMG_DIR, THEME, USE_KB_INITIAL
+from ...common import IMG_DIR, THEME, USE_KB_INITIAL, USE_RERANKER_INITIAL
 from ...configuration import config
 
 # load custom style and scripts
 _CSS_FILE = Path(__file__).parent.joinpath("style.css")
 _CSS = open(_CSS_FILE, "r", encoding="UTF-8").read()
-_MMD = [
-    """flowchart LR
-    query(fa:fa-user Query) -->
-    prompt(LLM Context) -->
-    llm(LLM NIM):::nvidia -->
-    answer(fa:fa-comment-dots Answer)
+_MMD_FILE = Path(__file__).parent.joinpath("diagram.mmd.j2")
+_MMD_TEMPLATE = open(_MMD_FILE, "r", encoding="UTF-8").read()
+_MMD = environment = jinja2.Environment().from_string(_MMD_TEMPLATE)
 
-    classDef nvidia fill:#76b900,stroke:#333,stroke-width:1px;""",
-    """flowchart LR
-    ret <-....-> db[(fa:fa-building\nEnterprise\nData)]
-
-    query(fa:fa-user\nQuery) --> prompt
-    query -->
-    ret(Retrieval NIM):::nvidia -->
-    prompt(LLM Context) -->
-    llm(LLM NIM):::nvidia -->
-    answer(fa:fa-comment-dots\nAnswer)
-
-    classDef nvidia fill:#76b900,stroke:#333,stroke-width:1px;""",
-]
 _KB_TOGGLE_JS = """
 async(val) => {
     window.top.postMessage({"use_kb": val}, '*');
 }
 """
+_RERANKER_TOGGLE_JS = """
+async(val) => {
+    window.top.postMessage({"use_reranker": val}, '*');
+}
+"""
+
+KB_RERANKER_TOGGLE_JS = """
+async(val) => {
+    window.top.postMessage({"use_reranker": val}, '*');
+}
+"""
+
 _CONFIG_CHANGES_JS = """
 async() => {
     title = document.querySelector("div#config-toolbar p");
@@ -79,9 +76,11 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
         # %% architecture control box
         with gr.Accordion(label="Retrieval Configuration"):
             with gr.Row(elem_id="kb-row"):
-                use_kb = gr.Checkbox(USE_KB_INITIAL, label="Use knowledge base")
+                with gr.Column():
+                    use_kb = gr.Checkbox(USE_KB_INITIAL, label="Use knowledge base", interactive=True)
+                    use_reranker = gr.Checkbox(USE_RERANKER_INITIAL, label="Use reranker", interactive=True)
             with gr.Row(elem_id="mmd-row"):
-                mmd = mermaid.to_gradio(_MMD[USE_KB_INITIAL])
+                mmd = mermaid.to_gradio(_MMD.render(use_kb=use_kb, use_reranker=use_reranker, use_rewrite=False))
 
         # %% chain server configuration text box
         with gr.Accordion(label="Chain Server Configuration"):
@@ -108,17 +107,28 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
             with open(config.chain_config_file, "r", encoding="UTF-8") as cf:
                 return cf.read()
 
+        # %% updates a checkbox to be off and non-interactive
+        def toggle_checkbox_interactivity(use_kb_value):
+            """Enable or disable the second checkbox based on the first checkbox's value."""
+            return gr.Checkbox(interactive=use_kb_value, value=False)
+
         # %% configure page events
         mermaid.init(page)
         page.load(read_chain_config, outputs=editor)
 
         # %% use kb toggle actions
-        @use_kb.change(inputs=use_kb, outputs=mmd)
-        def kb_toggle(val: bool) -> str:
+        @gr.on(triggers=[use_kb.change, use_reranker.change], inputs=[use_kb, use_reranker], outputs=mmd)
+        def kb_toggle(kb: bool, rerank: bool) -> str:
             """Toggle the knowledge base."""
-            return mermaid.to_html(_MMD[val])
+            return mermaid.to_html(_MMD.render(use_kb=kb, use_reranker=rerank, use_rewrite=False))
 
         use_kb.change(None, use_kb, None, js=_KB_TOGGLE_JS)
+
+        # %% turn off reranker option when knowledge base is not selected
+        use_kb.change(fn=toggle_checkbox_interactivity, inputs=use_kb, outputs=use_reranker)
+
+        # %% use reranker toggle actions
+        use_reranker.change(None, use_reranker, None, js=_RERANKER_TOGGLE_JS)
 
         # %% undo button actions
         undo_btn.click(read_chain_config, outputs=editor)

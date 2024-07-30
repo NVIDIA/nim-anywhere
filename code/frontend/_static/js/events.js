@@ -18,8 +18,8 @@ window.addEventListener(
   "message",
   (event) => {
       if (event.isTrusted) {
-          document.getElementById("left-pane").contentWindow.postMessage(event.data, '*');
-          document.getElementById("right-pane").contentWindow.postMessage(event.data, '*');
+          document.getElementById("left-pane").contentWindow.postMessage(event.data, location.origin);
+          document.getElementById("right-pane").contentWindow.postMessage(event.data, location.origin);
       };
   },
   false);

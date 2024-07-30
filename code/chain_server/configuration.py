@@ -99,6 +99,24 @@ class ChatModelConfig(BaseModel):
         ),
     ]
 
+class RerankingModelConfig(BaseModel):
+    """Configuration for connecting to a reranker model."""
+
+    name: Annotated[
+        str,
+        Field(
+            "nv-rerank-qa-mistral-4b:1",
+            description="The name of the model to request.",
+        ),
+    ]
+    url: Annotated[
+        HttpUrl,
+        Field(
+            "https://integrate.api.nvidia.com/v1",
+            description="The URL to the model API.",
+        ),
+    ]
+
 
 class EmbeddingModelConfig(BaseModel):
     """Configuration for connecting to an embedding model."""
@@ -106,18 +124,17 @@ class EmbeddingModelConfig(BaseModel):
     name: Annotated[
         str,
         Field(
-            "NV-Embed-QA",
+            "nvidia/nv-embedqa-e5-v5",
             description="The name of the model to request.",
         ),
     ]
-    # url: Annotated[
-    #     HttpUrl,
-    #     Field(
-    #         "https://api.nvcf.nvidia.com/v2/nvcf",
-    #         description="The URL to the model API.",
-    #     ),
-    # ]
-
+    url: Annotated[
+        HttpUrl,
+        Field(
+            "https://integrate.api.nvidia.com/v1",
+            description="The URL to the model API.",
+        ),
+    ]
 
 class Configuration(BaseConfig):
     """Configuration for this microservice."""
@@ -147,6 +164,13 @@ class Configuration(BaseConfig):
         Field(
             default_factory=EmbeddingModelConfig,
             description=EmbeddingModelConfig.__doc__,
+        ),
+    ]
+    reranking_model: Annotated[
+        RerankingModelConfig,
+        Field(
+            default_factory=RerankingModelConfig,
+            description=RerankingModelConfig.__doc__,
         ),
     ]
     milvus: Annotated[
