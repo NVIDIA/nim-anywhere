@@ -50,7 +50,7 @@ reranker = NVIDIARerank(
     base_url=str(app_config.reranking_model.url),
     api_key=app_config.nvidia_api_key,
 )
-compression_retriever = ContextualCompressionRetriever(
+reranking_retriever = ContextualCompressionRetriever(
     base_compressor=reranker,
     base_retriever=retriever
 )
@@ -83,7 +83,7 @@ async def retrieve_context(msg, config) -> str:
         return ""
     
     if use_reranker:
-        return (compression_retriever | format_docs).invoke(question, config)
+        return (reranking_retriever | format_docs).invoke(question, config)
 
     return (retriever | format_docs).invoke(question, config)
 

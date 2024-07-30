@@ -25,18 +25,15 @@ NAME="${SVC_NAME}"
 
 # workspace configuration options
 MODEL="nv-rerankqa-mistral-4b-v3"
-TAG="1.0.0-rc6"
-#TAG="1.0.0"
-GPUS="all"
-IMAGE="nvcr.io/nvidian/nemo-llm/nv-rerankqa-mistral-4b-v3"
-#IMAGE="nvcr.io/nim/nvidia/nv-rerankqa-mistral-4b-v3"
+TAG=$(config_lkp "${SLUG}_NIM_VERSION" "1.0.1")
+GPUS=$(config_lkp "${SLUG}_NIM_GPUS" "all")
+IMAGE="nvcr.io/nim/nvidia/nv-rerankqa-mistral-4b-v3"
 
 # This function is responsible for running creating a running the container
 # and its dependencies.
 _docker_run() {
     docker run \
         --name=$NAME \
-        --runtime=nvidia \
         --gpus "$GPUS" \
         --ipc host \
         -e NGC_API_KEY \

@@ -105,7 +105,7 @@ class RerankingModelConfig(BaseModel):
     name: Annotated[
         str,
         Field(
-            "nv-rerankqa-mistral-4b-v3",
+            "nv-rerank-qa-mistral-4b:1",
             description="The name of the model to request.",
         ),
     ]
@@ -124,7 +124,7 @@ class EmbeddingModelConfig(BaseModel):
     name: Annotated[
         str,
         Field(
-            "nv-embedqa-e5-v5",
+            "nvidia/nv-embedqa-e5-v5",
             description="The name of the model to request.",
         ),
     ]
