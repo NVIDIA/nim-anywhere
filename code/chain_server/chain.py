@@ -22,6 +22,7 @@ from langchain_core.documents import Document
 from langchain_core.runnables import RunnablePassthrough, chain
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_nvidia_ai_endpoints import ChatNVIDIA, NVIDIAEmbeddings
+from langchain_core.output_parsers import StrOutputParser
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain_nvidia_ai_endpoints import NVIDIARerank
 
@@ -87,15 +88,26 @@ async def retrieve_context(msg, config) -> str:
 
     return (retriever | format_docs).invoke(question, config)
 
+# create a question and history condensing chain
+@chain
+async def question_parsing(msg, config) -> str:
+    """Condense the question with chat history"""
+    
+    condense_question_prompt = prompts.CONDENSE_QUESTION_TEMPLATE.with_config(run_name="condense_question_prompt")
+    condensed_chain = condense_question_prompt | llm | StrOutputParser().with_config(run_name="condense_question_chain")
+    if msg["history"]:
+        return condensed_chain.invoke(msg, config)
+    else:
+        return msg["question"]
 
 my_chain = (
     {
         "context": retrieve_context,
-        "question": itemgetter("question"),
+        "question": question_parsing,
         "history": itemgetter("history", []),
     }
     | RunnablePassthrough().with_config(run_name="LLM Prompt Input")
-    | prompts.chat_prompt
+    | prompts.CHAT_PROMPT
     | llm
 )
 
