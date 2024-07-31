@@ -14,20 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-source  $(dirname $0)/functions
+source $(dirname $0)/functions
 
 # NIM options
-SVC_NAME="llm-nim-1"
+SVC_NAME="nv-rerankqa-mistral-4b-v3"
 
 # NIM constants
 SLUG=$(echo ${SVC_NAME^^} | tr - _)
 NAME="${SVC_NAME}"
 
 # workspace configuration options
-MODEL=$(config_lkp "${SLUG}_MODEL" "meta/llama3-8b-instruct")
-TAG=$(config_lkp "${SLUG}_NIM_VERSION" "1.0.0")
+MODEL="nv-rerankqa-mistral-4b-v3"
+TAG=$(config_lkp "${SLUG}_NIM_VERSION" "1.0.1")
 GPUS=$(config_lkp "${SLUG}_NIM_GPUS" "all")
-IMAGE="nvcr.io/nim/$MODEL"
+IMAGE="nvcr.io/nim/nvidia/nv-rerankqa-mistral-4b-v3"
 
 # This function is responsible for running creating a running the container
 # and its dependencies.
@@ -39,11 +39,7 @@ _docker_run() {
         -e NGC_API_KEY \
         -v $(hostpath $NGC_HOME):/opt/nim/.cache \
         -u $(id -u) \
-        --health-cmd="python -c \"import requests; resp = requests.get('http://localhost:8000/v1/health/ready'); resp.raise_for_status()\"" \
-        --health-interval=30s \
-        --health-start-period=600s \
-        --health-timeout=20s \
-        --health-retries=3 \
+        -p 8000:8000 \
         $DOCKER_NETWORK $IMAGE:$TAG
 }
 
@@ -56,12 +52,11 @@ _docker_stop() {
 # print the project's metadata
 _meta() {
 	cat <<-EOM
-		name: "LLM NIM: $SVC_NAME"
+		name: "Reranker NIM: $SVC_NAME"
 		type: custom
 		class: process
 		icon_url: www.nvidia.com/favicon.ico
 		EOM
 }
-
 
 main "$1" "$NAME"

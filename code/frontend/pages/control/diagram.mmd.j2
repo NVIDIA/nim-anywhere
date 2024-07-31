@@ -1,0 +1,24 @@
+flowchart LR
+
+    %% rag retrieval
+    {% if use_kb %}ret <-....-> db[(fa:fa-building\nEnterprise\nData)]{% endif %}
+
+
+    %% priamry chain
+    query(fa:fa-user Query) -->
+    {% if use_rewrite %}rewrite(Prompt\nRewrite) -->{% endif %}
+    %% optional retrieval step
+    {% if use_kb %}ret(Retrieval NIM):::nvidia -->{% endif %}
+    {% if use_reranker %}rerank(Reranker NIM):::nvidia -->{% endif %}
+    dot0(( )) --> prompt(LLM Context) -->
+    llm(LLM NIM):::nvidia -->
+    answer(fa:fa-comment-dots Answer)
+
+
+    %% history injection
+    hist[(Chat\nHistory)] --> dot0
+    {% if use_rewrite %}hist --> rewrite{% endif %}
+
+
+    %% styles
+    classDef nvidia fill:#76b900,stroke:#333,stroke-width:1px;
