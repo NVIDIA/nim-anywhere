@@ -118,7 +118,13 @@ div.generating {
   transform: translate(-30px, -2px);
   width: 10px;
 }
-
+.message-row div {
+  border: 0px !important;
+  background: none !important;
+}
+.bubble-wrap {
+  background: none !important;
+}
 
 /* Message text box customization */
 div#msg {

@@ -6,3 +6,4 @@ make
 pandoc
 ca-certificates
 curl
+skopeo
