@@ -58,7 +58,7 @@ def to_yaml(schema, level=0, env_var_prefixes=[("APP_", "__")]):
     return out
 
 
-environment = jinja2.Environment(loader=jinja2.BaseLoader)
+environment = jinja2.Environment(loader=jinja2.BaseLoader, autoescape=True)
 environment.filters["to_yaml"] = to_yaml
 
 doc_page = environment.from_string(
