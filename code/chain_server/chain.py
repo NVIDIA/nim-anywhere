@@ -15,27 +15,26 @@
 
 """This module defines the application's chain."""
 
+from operator import itemgetter
+
 from langchain.pydantic_v1 import BaseModel
+from langchain.retrievers import ContextualCompressionRetriever
 from langchain_community.chat_message_histories import RedisChatMessageHistory
-from langchain_community.vectorstores.milvus import Milvus
 from langchain_core.documents import Document
+from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, chain
 from langchain_core.runnables.history import RunnableWithMessageHistory
-from langchain_nvidia_ai_endpoints import ChatNVIDIA, NVIDIAEmbeddings
-from langchain_core.output_parsers import StrOutputParser
-from langchain.retrievers import ContextualCompressionRetriever
-from langchain_nvidia_ai_endpoints import NVIDIARerank
+from langchain_milvus.vectorstores.milvus import Milvus
+from langchain_nvidia_ai_endpoints import ChatNVIDIA, NVIDIAEmbeddings, NVIDIARerank
 
 from . import prompts
 from .configuration import config as app_config
-from .utils import itemgetter
-import requests
 
 # %% unstructured data retrieval components
 embedding_model = NVIDIAEmbeddings(
     model=app_config.embedding_model.name,
     base_url=str(app_config.embedding_model.url),
-    api_key=app_config.nvidia_api_key
+    api_key=app_config.nvidia_api_key,
 )
 vector_store = Milvus(
     embedding_function=embedding_model,
@@ -51,10 +50,8 @@ reranker = NVIDIARerank(
     base_url=str(app_config.reranking_model.url),
     api_key=app_config.nvidia_api_key,
 )
-reranking_retriever = ContextualCompressionRetriever(
-    base_compressor=reranker,
-    base_retriever=retriever
-)
+reranking_retriever = ContextualCompressionRetriever(base_compressor=reranker, base_retriever=retriever)
+
 
 def format_docs(docs: list[Document]) -> str:
     """Take in a list of docs and concatenate the content, separating by newlines."""
@@ -72,6 +69,7 @@ llm = ChatNVIDIA(
 
 # %% define the llm powered chain
 
+
 # document retrieval
 @chain
 async def retrieve_context(msg, config) -> str:
@@ -82,17 +80,18 @@ async def retrieve_context(msg, config) -> str:
 
     if not use_kb:
         return ""
-    
+
     if use_reranker:
         return (reranking_retriever | format_docs).invoke(question, config)
 
     return (retriever | format_docs).invoke(question, config)
 
+
 # create a question and history condensing chain
 @chain
 async def question_parsing(msg, config) -> str:
     """Condense the question with chat history"""
-    
+
     condense_question_prompt = prompts.CONDENSE_QUESTION_TEMPLATE.with_config(run_name="condense_question_prompt")
     condensed_chain = condense_question_prompt | llm | StrOutputParser().with_config(run_name="condense_question_chain")
     if msg["history"]:
@@ -100,11 +99,12 @@ async def question_parsing(msg, config) -> str:
     else:
         return msg["question"]
 
+
 my_chain = (
     {
         "context": retrieve_context,
         "question": question_parsing,
-        "history": itemgetter("history", []),
+        "history": itemgetter("history"),
     }
     | RunnablePassthrough().with_config(run_name="LLM Prompt Input")
     | prompts.CHAT_PROMPT
