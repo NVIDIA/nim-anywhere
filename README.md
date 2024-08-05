@@ -910,6 +910,13 @@ testing after the patch to ensure nothing has broken in the update.
     manually check their default tag and compare to the latest. Update
     where appropriate and ensure that the applications still start up
     successfully.
-4.  **Regression testing:** Run through the entire demo, from document
+4.  **Restart and rebuild the environment.**
+5.  **Audit Python Envitonment:** It is now best to check the installed
+    versions of ALL Python packages, not just the direct dependencies.
+    To accomplish this, run `/project/code/tools/audit.sh`. This script
+    will print out a report of all Python packages in a warning state
+    and all packages in an error state. Anything in an error state must
+    be resolved as it will have active CVEs and known vulnerabilities.
+6.  **Regression testing:** Run through the entire demo, from document
     ingesting to the frontend, and ensure it is still functional and
     that the GUI looks correct.

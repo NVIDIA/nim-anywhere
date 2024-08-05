@@ -55,7 +55,9 @@ def _parse_arguments() -> argparse.Namespace:
 
 def _read_dependencies() -> Tuple[List[Tuple[str, str]], Dict[str, List[str]]]:
     """Find all the dependencies of this project."""
-    dep_tree = json.loads(subprocess.run(["pipdeptree", "--json"], check=True, capture_output=True).stdout)
+    dep_tree = json.loads(
+        subprocess.run(["pipdeptree", "--json", "--python", sys.executable], check=True, capture_output=True).stdout
+    )
 
     all_deps = [(row["package"]["key"], row["package"]["installed_version"]) for row in dep_tree]
     dep_map: Dict[str, List[str]] = defaultdict(list)

@@ -1,9 +1,9 @@
 confz==2.0.1
-fastapi==0.111.1
+fastapi==0.112.0
 gradio==4.40.0
 grandalf==0.8
 jupyterlab>3.0
-langchain==0.2.11
+langchain==0.2.12
 langchain-nvidia-ai-endpoints==0.2.0
 langchain-openai==0.1.20
 langserve==0.2.2
@@ -12,4 +12,4 @@ pydantic
 pymilvus==2.4.4
 redis==5.0.8
 sse-starlette==2.1.3
-uvicorn==0.30.4
+uvicorn==0.30.5
