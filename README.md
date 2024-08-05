@@ -893,10 +893,11 @@ such as manipulating files, adding environment variables, etc; use the
 
 ## Updating Dependencies
 
-It is typically good practice to update dependencies mothly to ensure no
-CVEs are exposed through misused dependencies. The following process can
-be used to patch this project. It is recommended to run the regression
-testing after the patch to ensure nothing has broken in the update.
+It is typically good practice to update dependencies monthly to ensure
+no CVEs are exposed through misused dependencies. The following process
+can be used to patch this project. It is recommended to run the
+regression testing after the patch to ensure nothing has broken in the
+update.
 
 1.  **Update Environment:** In the workbench GUI, open the project and
     navigate to the Environment pane. Check if there is an update
@@ -917,6 +918,9 @@ testing after the patch to ensure nothing has broken in the update.
     will print out a report of all Python packages in a warning state
     and all packages in an error state. Anything in an error state must
     be resolved as it will have active CVEs and known vulnerabilities.
-6.  **Regression testing:** Run through the entire demo, from document
+6.  **Check Dependabot Alerts:** Check all of the
+    [Dependabot](https://github.com/NVIDIA/nim-anywhere/security/dependabot)
+    alerts and ensure they should be resolved.
+7.  **Regression testing:** Run through the entire demo, from document
     ingesting to the frontend, and ensure it is still functional and
     that the GUI looks correct.
