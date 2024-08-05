@@ -48,14 +48,21 @@ The variable names will be in the form: `APP_FIELD__SUB_FIELD`
 Values specified as environment variables will take precedence over all values from files.
 
 """
-
 import logging
 import os
 from enum import Enum
-from typing import Annotated, Callable, Optional, cast
+from typing import Annotated, Any, Callable, Optional, cast
 
 from confz import BaseConfig, EnvSource, FileSource
-from pydantic import BaseModel, Field, HttpUrl, RedisDsn, field_validator
+from pydantic import (
+    BaseModel,
+    Field,
+    HttpUrl,
+    RedisDsn,
+    ValidationError,
+    field_validator,
+    model_validator,
+)
 
 _ENV_VAR_PREFIX = "APP_"
 _CONFIG_FILE_ENV_VAR: str = f"{_ENV_VAR_PREFIX}CONFIG"
@@ -99,6 +106,7 @@ class ChatModelConfig(BaseModel):
         ),
     ]
 
+
 class RerankingModelConfig(BaseModel):
     """Configuration for connecting to a reranker model."""
 
@@ -136,6 +144,7 @@ class EmbeddingModelConfig(BaseModel):
         ),
     ]
 
+
 class Configuration(BaseConfig):
     """Configuration for this microservice."""
 
@@ -143,7 +152,7 @@ class Configuration(BaseConfig):
     nvidia_api_key: Annotated[
         Optional[str],
         Field(
-            os.environ.get("NGC_API_KEY"),
+            None,
             description="Your API key for authentication to AI Foundation.",
             json_schema_extra={"extra_env_vars": ["NGC_API_KEY", "NVIDIA_API_KEY"]},
         ),
@@ -193,6 +202,30 @@ class Configuration(BaseConfig):
         FileSource(file_from_env=_CONFIG_FILE_ENV_VAR, optional=True),
         EnvSource(allow_all=True, prefix=_ENV_VAR_PREFIX, nested_separator="__"),
     ]
+
+    # validate the extra env vars
+    @model_validator(mode="before")
+    @classmethod
+    def _check_env_vars(cls, val: Any) -> Any:
+        """Check extra env vars for config."""
+        if val is None:
+            val = {}
+        if isinstance(val, dict):
+            val["nvidia_api_key"] = (
+                val.get("nvidia_api_key") or os.environ.get("NGC_API_KEY") or os.environ.get("NVIDIA_API_KEY")
+            )
+        return val
+
+    # validate nvidia api key
+    @field_validator("nvidia_api_key", check_fields=False)
+    @classmethod
+    def _check_api_key(cls, val: str | None) -> str | None:
+        """Check the NVIDIA API Key format."""
+        # if the key is set, ensure it is an nvapi key
+        if val and not val.startswith("nvapi-"):
+            raise ValidationError("NVIDIA API Key must be a personal key starting with `nvapi-`.")
+
+        return val
 
     # automatically set log level on config load
     @field_validator("log_level", mode="after")

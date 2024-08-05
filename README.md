@@ -558,7 +558,7 @@ environment variables will take precedence over all values from files.
 # Your API key for authentication to AI Foundation.
 # ENV Variables: NGC_API_KEY, NVIDIA_API_KEY, APP_NVIDIA_API_KEY
 # Type: string, null
-nvidia_api_key: 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
+nvidia_api_key: ~
 
 # The Data Source Name for your Redis DB.
 # ENV Variables: APP_REDIS_DSN
@@ -636,7 +636,7 @@ chain_url: http://localhost:3030/
 # Type: string
 proxy_prefix: /
 
-# Path to the chain server's config.
+# Path to the chain server&#39;s config.
 # ENV Variables: APP_CHAIN_CONFIG_FILE
 # Type: string
 chain_config_file: ./config.yaml
