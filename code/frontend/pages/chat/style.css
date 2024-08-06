@@ -73,7 +73,7 @@ div.generating {
   max-width: 100%;
 }
 .message button::before, .message button::after {
-  bottom: -0.1rem;
+  top: -0.1rem;
   content: "";
   height: 1rem;
   position: absolute;
@@ -84,16 +84,16 @@ div.generating {
   color: #fff;
 }
 .message.user button::before {
-  border-bottom-left-radius: 0.8rem 0.7rem;
+  border-top-left-radius: 0.8rem 0.7rem;
   border-right: 1rem solid #890c58;
   right: -0.35rem;
-  transform: translate(0, -0.1rem);
+  transform: translate(0, 0.1rem);
 }
 .message.user button::after {
   background-color: #333;
-  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
   right: -40px;
-  transform:translate(-30px, -2px);
+  transform:translate(-30px, 2px);
   width: 10px;
 }
 .message button {
@@ -106,16 +106,16 @@ div.generating {
   color: #000;
 }
 .message.bot button::before {
-  border-bottom-right-radius: 0.8rem 0.7rem;
+  border-top-right-radius: 0.8rem 0.7rem;
   border-left: 1rem solid #8c8c8c;
   left: -0.35rem;
-  transform: translate(0, -0.1rem);
+  transform: translate(0, 0.1rem);
 }
 .message.bot button::after {
   background-color: #333;
-  border-bottom-right-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
   left: 20px;
-  transform: translate(-30px, -2px);
+  transform: translate(-30px, 2px);
   width: 10px;
 }
 .message-row div {
