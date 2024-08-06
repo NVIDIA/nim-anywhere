@@ -50,6 +50,8 @@ Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
         Packages](#python-environment-packages)
       - [<span class="toc-section-number">5.3</span> Operating System
         Configuration](#operating-system-configuration)
+      - [<span class="toc-section-number">5.4</span> Updating
+        Dependencies](#updating-dependencies)
 
 # Quick Start
 
@@ -556,7 +558,7 @@ environment variables will take precedence over all values from files.
 # Your API key for authentication to AI Foundation.
 # ENV Variables: NGC_API_KEY, NVIDIA_API_KEY, APP_NVIDIA_API_KEY
 # Type: string, null
-nvidia_api_key: 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
+nvidia_api_key: ~
 
 # The Data Source Name for your Redis DB.
 # ENV Variables: APP_REDIS_DSN
@@ -579,7 +581,24 @@ embedding_model:
     # The name of the model to request.
     # ENV Variables: APP_EMBEDDING_MODEL__NAME
     # Type: string
-    name: NV-Embed-QA
+    name: nvidia/nv-embedqa-e5-v5
+
+    # The URL to the model API.
+    # ENV Variables: APP_EMBEDDING_MODEL__URL
+    # Type: string
+    url: https://integrate.api.nvidia.com/v1
+
+
+reranking_model: 
+    # The name of the model to request.
+    # ENV Variables: APP_RERANKING_MODEL__NAME
+    # Type: string
+    name: nv-rerank-qa-mistral-4b:1
+
+    # The URL to the model API.
+    # ENV Variables: APP_RERANKING_MODEL__URL
+    # Type: string
+    url: https://integrate.api.nvidia.com/v1
 
 
 milvus: 
@@ -617,7 +636,7 @@ chain_url: http://localhost:3030/
 # Type: string
 proxy_prefix: /
 
-# Path to the chain server's config.
+# Path to the chain server&#39;s config.
 # ENV Variables: APP_CHAIN_CONFIG_FILE
 # Type: string
 chain_config_file: ./config.yaml
@@ -871,3 +890,37 @@ the \[`apt.txt`\] file. To make other changes to the operating system
 such as manipulating files, adding environment variables, etc; use the
 [`postBuild.bash`](./postBuild.bash) and
 [`preBuild.bash`](./preBuild.bash) files.
+
+## Updating Dependencies
+
+It is typically good practice to update dependencies monthly to ensure
+no CVEs are exposed through misused dependencies. The following process
+can be used to patch this project. It is recommended to run the
+regression testing after the patch to ensure nothing has broken in the
+update.
+
+1.  **Update Environment:** In the workbench GUI, open the project and
+    navigate to the Environment pane. Check if there is an update
+    available for the base image. If an updated base image is available,
+    apply the update and rebuild the environment. Address any build
+    errors. Ensure that all of the applications can start.
+2.  **Update Python Packages and NIMs:** The Python dependencies and NIM
+    applications can be updated automtically by running the
+    `/project/code/tools/bump.sh` script.
+3.  **Update Remaining applications:** For the remaining applications,
+    manually check their default tag and compare to the latest. Update
+    where appropriate and ensure that the applications still start up
+    successfully.
+4.  **Restart and rebuild the environment.**
+5.  **Audit Python Envitonment:** It is now best to check the installed
+    versions of ALL Python packages, not just the direct dependencies.
+    To accomplish this, run `/project/code/tools/audit.sh`. This script
+    will print out a report of all Python packages in a warning state
+    and all packages in an error state. Anything in an error state must
+    be resolved as it will have active CVEs and known vulnerabilities.
+6.  **Check Dependabot Alerts:** Check all of the
+    [Dependabot](https://github.com/NVIDIA/nim-anywhere/security/dependabot)
+    alerts and ensure they should be resolved.
+7.  **Regression testing:** Run through the entire demo, from document
+    ingesting to the frontend, and ensure it is still functional and
+    that the GUI looks correct.

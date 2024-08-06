@@ -25,7 +25,7 @@ NAME="${SVC_NAME}"
 
 # workspace configuration options
 MODEL=$(config_lkp "${SLUG}_MODEL" "meta/llama3-8b-instruct")
-TAG=$(config_lkp "${SLUG}_NIM_VERSION" "1.0.0")
+TAG=$(config_lkp "${SLUG}_NIM_VERSION" "1")
 GPUS=$(config_lkp "${SLUG}_NIM_GPUS" "all")
 IMAGE="nvcr.io/nim/$MODEL"
 

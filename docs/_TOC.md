@@ -14,4 +14,5 @@
 3.1_frontend.md
 3.2_docs.md
 3.3_environment.md
+3.4_bumping_dependencies.md
 9_footer.md

@@ -29,6 +29,14 @@ html {
   overflow: auto !important;
 }
 
+/* custom scroll bars */
+html {
+  height: 100% !important;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  scrollbar-color: #76b900 #333333 !important;
+}
+
 
 /* Gradio customization */
 small {

@@ -1,18 +1,16 @@
-# required by the chain server
-confz~=2.0.1
-fastapi~=0.111
-gradio~=4.31.5
-grandalf~=0.8
-langchain-nvidia-ai-endpoints~=0.1.0
-langchain-openai~=0.1.7
-langchain~=0.1.20
-langserve~=0.1.1
-opentelemetry-instrumentation-fastapi==0.45b0
-pydantic
-pymilvus~=2.4.0
-redis~=5.0.4
-sse_starlette~=2.1.0
-uvicorn
-
-# required by workbench
+confz==2.0.1
+fastapi==0.112.0
+gradio==4.40.0
+grandalf==0.8
 jupyterlab>3.0
+langchain==0.2.12
+langchain-milvus==0.1.3
+langchain-nvidia-ai-endpoints==0.2.0
+langchain-openai==0.1.20
+langserve==0.2.2
+opentelemetry-instrumentation-fastapi==0.47b0
+pydantic
+pymilvus==2.4.4
+redis==5.0.8
+sse-starlette==2.1.3
+uvicorn==0.30.5

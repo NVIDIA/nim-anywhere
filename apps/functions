@@ -196,6 +196,18 @@ function meta() {
     echo "health_check_command: $APP_SRC status" >&2
 }
 
+# show the applications container image
+# usage: image
+function image() {
+    echo $IMAGE
+}
+
+# show the applications default tag
+# usage: tag
+function tag() {
+    echo $TAG
+}
+
 # the main entrypoint for most applications
 # usage: main VERB CONTAINER_NAME
 function main() {
@@ -203,7 +215,7 @@ function main() {
     verb=$1
     name=$2
     case "$verb" in
-        status | start | stop | restart | wait_for | meta)
+        status | start | stop | restart | wait_for | meta | image | tag)
             $verb $name
             ;;
         config)
