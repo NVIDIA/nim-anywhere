@@ -60,9 +60,9 @@ def format_docs(docs: list[Document]) -> str:
 
 # %% language model components
 llm = ChatNVIDIA(
-    model=app_config.chat_model.name,
+    model=app_config.llm_model.name,
     curr_mode="nim",
-    base_url=str(app_config.chat_model.url),
+    base_url=str(app_config.llm_model.url),
     api_key=app_config.nvidia_api_key,
 )
 
