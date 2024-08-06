@@ -55,6 +55,7 @@ div.generating {
 .avatar-container {
   height: 50px !important;
   width: 50px !important;
+  align-self: flex-end;
 }
 .bubble-gap {
   gap: 0px !important;
@@ -73,7 +74,7 @@ div.generating {
   max-width: 100%;
 }
 .message button::before, .message button::after {
-  top: -0.1rem;
+  bottom: -0.1rem;
   content: "";
   height: 1rem;
   position: absolute;
@@ -84,16 +85,16 @@ div.generating {
   color: #fff;
 }
 .message.user button::before {
-  border-top-left-radius: 0.8rem 0.7rem;
+  border-bottom-left-radius: 0.8rem 0.7rem;
   border-right: 1rem solid #890c58;
   right: -0.35rem;
-  transform: translate(0, 0.1rem);
+  transform: translate(0, -0.1rem);
 }
 .message.user button::after {
   background-color: #333;
-  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
   right: -40px;
-  transform:translate(-30px, 2px);
+  transform:translate(-30px, -2px);
   width: 10px;
 }
 .message button {
@@ -106,16 +107,16 @@ div.generating {
   color: #000;
 }
 .message.bot button::before {
-  border-top-right-radius: 0.8rem 0.7rem;
+  border-bottom-right-radius: 0.8rem 0.7rem;
   border-left: 1rem solid #8c8c8c;
   left: -0.35rem;
-  transform: translate(0, 0.1rem);
+  transform: translate(0, -0.1rem);
 }
 .message.bot button::after {
   background-color: #333;
-  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
   left: 20px;
-  transform: translate(-30px, 2px);
+  transform: translate(-30px, -2px);
   width: 10px;
 }
 .message-row div {
