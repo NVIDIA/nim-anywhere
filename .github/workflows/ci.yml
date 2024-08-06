@@ -26,31 +26,31 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-        
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        
+        grep -vf req.filters.txt requirements.txt | pip install -r /dev/stdin
+
     - name: Check Python syntax with Pylint
       run: |
         cd code
         pip install pylint
-        pylint --rc-file ../pyproject.toml $(git ls-files '*.py') || echo
+        pylint --rc-file ../pyproject.toml $(git ls-files '*.py')
 
     - name: Check Type Hints with MyPy
       run: |
         cd code
         pip install mypy
-        mypy --config-file ../pyproject.toml || echo 
-        
+        mypy --config-file ../pyproject.toml
+
     - name: Check code formatting with Black
       run: |
         cd code
         pip install black
-        black --check . --line-length 120 || echo 
- 
-    
-    
-        
+        black --check . --line-length 120
+
+
+
+
 
