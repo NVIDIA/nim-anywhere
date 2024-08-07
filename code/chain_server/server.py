@@ -24,14 +24,14 @@ from langserve import add_routes
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 from . import errors
-from .chain import my_chain
+from .chain import my_chain  # type: ignore
 
 PROXY_PREFIX = os.environ.get("PROXY_PREFIX", None)
 app = FastAPI(
     title="NVIDIA Conversational RAG",
     version="0.1.0",
     description="More advanced conversational RAG using NVIDIA components.",
-    root_path=PROXY_PREFIX,
+    root_path=PROXY_PREFIX or "",
     middleware=[Middleware(errors.ErrorHandlerMiddleware)],
 )
 

@@ -47,7 +47,7 @@ class View:
         return None
 
     @property
-    def json(self) -> dict[str, str]:
+    def json(self) -> dict[str, str | None]:
         """Represent the view as dictionary for json."""
         return {"name": self.name, "left": self.left_url, "right": self.right_url}
 

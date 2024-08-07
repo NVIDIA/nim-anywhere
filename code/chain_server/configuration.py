@@ -236,7 +236,7 @@ class Configuration(BaseConfig):
         log_level = logging.getLevelName(val.value)
         loggers = [logging.getLogger()] + [
             logging.getLogger(name)
-            for name in logging.root.manager.loggerDict  # pylint: disable=no-member
+            for name in logging.root.manager.loggerDict
             if not (name.startswith("uvicorn") or name.startswith("aiohttp"))
         ]
         for logger in loggers:

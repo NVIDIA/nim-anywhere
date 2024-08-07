@@ -21,15 +21,16 @@ import logging
 from pathlib import Path
 import sys
 import subprocess
-from typing import Any, Optional,  TypeVar
+from typing import Any, Optional, TypeVar
 import yaml
 
 
 logging.basicConfig()
 _LOGGER = logging.getLogger("manager")
-EMPTY =  "__empty__"
+EMPTY = "__empty__"
 
-def run_or_die(cmd: list[str], error_msg: str="Error running command.") -> tuple[bytes, bytes]:
+
+def run_or_die(cmd: list[str], error_msg: str = "Error running command.") -> tuple[bytes, bytes]:
     """Run a command and raise a RuntimeError if there is a problem."""
     proc = subprocess.run(cmd, capture_output=True)
     if proc.returncode != 0:
@@ -53,19 +54,15 @@ class RuntimeEnvironment:
     """The possible runtime options."""
 
     uninstall: bool = False
-    app: str =  ""
+    app: str = ""
     verbose: bool = False
 
     @classmethod
     def from_args(cls) -> "RuntimeEnvironment":
         """Parse the CLI Arguments."""
         parser = argparse.ArgumentParser(prog="NVWB App Manager")
-        parser.add_argument(
-            "-u", "--uninstall", help="Uninstall the application from the menu.", action="store_true"
-        )
-        parser.add_argument(
-            "-v", "--verbose", help="Increase output verbosity.", action="store_true"
-        )
+        parser.add_argument("-u", "--uninstall", help="Uninstall the application from the menu.", action="store_true")
+        parser.add_argument("-v", "--verbose", help="Increase output verbosity.", action="store_true")
         parser.add_argument("app", type=str, help="Path to the application to install/uninstall.")
         args = parser.parse_args()
         opts = RuntimeEnvironment(**vars(args))
@@ -99,7 +96,7 @@ class App:
 
     def __init__(self, path: str) -> None:
         """Initialize the class."""
-        self._path =  Path(path).absolute()
+        self._path = Path(path).absolute()
 
         if not self._path.exists():
             raise RuntimeError(f"The specified application does not exist: {str(self._path)}")
@@ -110,12 +107,7 @@ class App:
         _LOGGER.info("Reading configuration for %s", str(self._path))
         _, stderr = run_or_die([(self._path), "config"], "Unable to read config from application.")
 
-        return dict(
-            [
-                list(map(lambda x: x.decode("ascii"), line.split(b"=")))
-                for line in stderr.strip().split(b"\n")
-            ]
-        )
+        return dict([list(map(lambda x: x.decode("ascii"), line.split(b"="))) for line in stderr.strip().split(b"\n")])
 
     @cached_property
     def meta(self) -> dict[str, Any]:
@@ -125,18 +117,17 @@ class App:
         return yaml.safe_load(stderr)
 
 
-
 def update_variables(path: Path, config: dict[str, str], uninstall=False) -> None:
     """Update the variables file with the app's config."""
     existing_lines = open(path, "r").readlines()
     existing_lines_index = [line.split("=")[0] for line in existing_lines]
     if not existing_lines[-1].endswith("\n"):
-        existing_lines[-1] =  existing_lines[-1] + "\n"
+        existing_lines[-1] = existing_lines[-1] + "\n"
     file_changed = False
 
     for new_var, new_value in config.items():
         exists_line_ind = safe_index(new_var, existing_lines_index)
-        exists =  exists_line_ind is not None
+        exists = exists_line_ind is not None
 
         if exists and uninstall:
             # remove the line from existing lines
@@ -164,7 +155,7 @@ def update_variables(path: Path, config: dict[str, str], uninstall=False) -> Non
 def update_spec(path: Path, app_meta: dict[str, str], uninstall=False) -> None:
     """Update the projects specfile for this application."""
     with open(path, "r") as spec_file:
-        spec  = yaml.load(spec_file, Loader=yaml.SafeLoader)
+        spec = yaml.load(spec_file, Loader=yaml.SafeLoader)
     changed = False
 
     found = False
@@ -180,7 +171,7 @@ def update_spec(path: Path, app_meta: dict[str, str], uninstall=False) -> None:
 
     elif not found and not uninstall:
         _LOGGER.debug("Adding the application to the spec file.")
-        execution =  spec.get("execution", {})
+        execution = spec.get("execution", {})
         execution["apps"] = execution.get("apps", [])
         execution["apps"].append(app_meta)
         changed = True

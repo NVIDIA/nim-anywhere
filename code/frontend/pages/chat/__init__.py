@@ -17,10 +17,10 @@
 
 import uuid
 from pathlib import Path
-from typing import AsyncGenerator, Union
+from typing import AsyncGenerator, Any
 
 import gradio as gr
-from httpx import HTTPStatusError, ConnectError
+from httpx import ConnectError, HTTPStatusError
 from langserve import RemoteRunnable
 
 from ...common import IMG_DIR, THEME, USE_KB_INITIAL, USE_RERANKER_INITIAL
@@ -28,16 +28,17 @@ from ...configuration import config
 
 # load custom style and scripts
 _CSS_FILE = Path(__file__).parent.joinpath("style.css")
-_CSS = open(_CSS_FILE, "r", encoding="UTF-8").read()
+with open(_CSS_FILE, "r", encoding="UTF-8") as css_file:
+    _CSS = css_file.read()
 _AVATAR_IMAGES = (
     IMG_DIR.joinpath("user_icon.svg"),
     IMG_DIR.joinpath("bot_icon.svg"),
 )
 _JS_FILE = Path(__file__).parent.joinpath("scripts.js")
-_HEAD = "<script>" + open(_JS_FILE, "r", encoding="UTF-8").read() + "</script>"
+with open(_JS_FILE, "r", encoding="UTF-8") as js_file:
+    _HEAD = "<script>" + js_file.read() + "</script>"
 _ONLOAD = "async()=>{ registerHandlers(); chatResize(); }"
-_CHAIN = RemoteRunnable(config.chain_url)
-_ChatHistoryT = list[Union[tuple[str, str], list[str]]]
+_CHAIN: RemoteRunnable[dict[str, Any], str] = RemoteRunnable(str(config.chain_url))
 
 
 # web ui definition
@@ -60,27 +61,28 @@ with gr.Blocks(theme=THEME, css=_CSS, head=_HEAD) as page:
         msg = gr.Textbox(container=False, elem_id="msg")
         submit = gr.Button("➤", elem_id="submit")
 
-    # pylint: disable-next=no-member # false positive)
     page.load(None, js=_ONLOAD)
 
-    # pylint: disable-next=no-member # false positive)
     @page.load(outputs=session_id)
     def sid_generator() -> str:
         """Generate a new session id."""
         return str(uuid.uuid4())
 
-    # pylint: disable-next=no-member # false positive)
-    @gr.on(triggers=[msg.submit, submit.click], inputs=[session_id, msg, chatbot, use_kb, use_reranker], outputs=[msg, chatbot])
+    @gr.on(
+        triggers=[msg.submit, submit.click],
+        inputs=[session_id, msg, chatbot, use_kb, use_reranker],
+        outputs=[msg, chatbot],
+    )
     async def stream_chain(
-        sid: str, message: str, chat: _ChatHistoryT, kb: bool, reranker: bool
-    ) -> AsyncGenerator[tuple[str, _ChatHistoryT], None]:
+        sid: str, message: str, chat: list[list[str]], kb: bool, reranker: bool
+    ) -> AsyncGenerator[tuple[str, list[list[str]]], None]:
         """Call the chain and stream the result back to Gradio."""
         chat += [[message, ""]]
         chain = _CHAIN.with_config(configurable={"session_id": sid})
 
         try:
-            async for chunk in chain.astream({"question": message, "use_kb": kb, "use_reranker":reranker}):
-                chat[-1][1] += chunk.content
+            async for chunk in chain.astream({"question": message, "use_kb": kb, "use_reranker": reranker}):
+                chat[-1][1] += chunk.content  # type: ignore  # langchain quirkiness
                 yield "", chat
         except (HTTPStatusError, ConnectError) as exc:
             if isinstance(exc, ConnectError) or 400 <= exc.response.status_code < 500:

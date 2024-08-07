@@ -31,24 +31,23 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         grep -vf req.filters.txt requirements.txt | pip install -r /dev/stdin
+        ./code/toosl/lint.sh deps
 
     - name: Check Python syntax with Pylint
       run: |
-        cd code
-        pip install pylint
-        pylint --rc-file ../pyproject.toml $(git ls-files '*.py')
+        ./code/tools/lint.sh pylint
 
     - name: Check Type Hints with MyPy
       run: |
-        cd code
-        pip install mypy
-        mypy --config-file ../pyproject.toml
+        ./code/tools/lint.sh mypy
 
     - name: Check code formatting with Black
       run: |
-        cd code
-        pip install black
-        black --check . --line-length 120
+        ./code/tools/lint.sh black
+
+    - name: Ensure Notebooks have no output
+      run: |
+        ./code/tools/lint.sh ipynb
 
 
 

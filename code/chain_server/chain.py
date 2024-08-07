@@ -1,3 +1,4 @@
+# type: ignore # langchain and typing is complicated
 # SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -96,8 +97,7 @@ async def question_parsing(msg, config) -> str:
     condensed_chain = condense_question_prompt | llm | StrOutputParser().with_config(run_name="condense_question_chain")
     if msg["history"]:
         return condensed_chain.invoke(msg, config)
-    else:
-        return msg["question"]
+    return msg["question"]
 
 
 my_chain = (

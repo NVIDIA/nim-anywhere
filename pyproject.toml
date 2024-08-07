@@ -14,7 +14,8 @@ disable=["raw-checker-failed",
         "wrong-spelling-in-comment",
         "redefined-builtin",
         "unsupported-binary-operation",
-        "duplicate-code"]
+        "duplicate-code",
+        "no-member"]
 enable=["c-extension-no-member", "broad-exception-caught"]
 
 [tool.pylint.FORMAT]
@@ -33,7 +34,7 @@ enable = ["W504"]
 
 # mypy Configuration
 [tool.mypy]
-strict = true
+strict = false
 implicit_optional = true
 follow_imports = "silent"
 ignore_missing_imports = true

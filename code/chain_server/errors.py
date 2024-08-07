@@ -26,6 +26,7 @@ _SSE_ERROR_MESSAGE = {
 }
 
 
+# pylint: disable-next=too-few-public-methods # interface defined by starlette
 class ErrorHandlerMiddleware:
     """A starlette middleware class for rewriting langserve sse errors."""
 
