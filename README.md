@@ -1,5 +1,16 @@
 # NVIDIA NIM Anywhere
 
+[![CI Pipeline
+Status](.static/7b0fff02eb9fd5f5fb14415b6e8410edb3bbb780.svg)](https://github.com/NVIDIA/nim-anywhere/actions/workflows/ci.yml?query=branch%3Amain)
+[![NVIDIA: LLM
+NIM](.static/8eb7cc4d787a68cbb5b5affb208ad39641637021.svg)](https://www.nvidia.com/en-us/ai/)
+[![NVIDIA: Embedding
+NIM](.static/84a565521f5789d09a6663ffff25fd1659cf4b70.svg)](https://www.nvidia.com/en-us/ai/)
+[![NVIDIA: Reranker
+NIM](.static/98efb60fe8d5d58738d23e47a6f6baa3f68f8b1e.svg)](https://www.nvidia.com/en-us/ai/)
+![Python: 3.10 | 3.11 |
+3.12](.static/5cf84222946aa44c39b19b03a36fd643a82cf039.svg)
+
 An entrypoint for developing with NIMs that natively scales out to
 full-sized labs and up to production environments. NIM Anywhere is an
 integration of all the tooling required to start integrating NVIDIA

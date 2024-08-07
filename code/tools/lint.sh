@@ -57,5 +57,17 @@ if [ -z "$1" ] || [ "$1" = "ipynb" ]; then
     echo -e "\n\n\n"
 fi
 
+if [ -z "$1" ] || [ "$1" = "docs" ]; then
+    echo "Checking if the Documentation is up to date."
+    cd docs;
+    if ! make -q; then
+        echo 'fail: in the docs folder run `make all` to update the readme' >&2
+        exit 1
+    fi
+    echo "pass"
+    cd ..
+    echo -e "\n\n\n"
+fi
+
 echo -e "Success."
 
