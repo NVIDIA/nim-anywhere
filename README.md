@@ -38,9 +38,11 @@ Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
         config schema](#chat-frontend-config-schema)
   - [<span class="toc-section-number">4</span>
     Contributing](#contributing)
-      - [<span class="toc-section-number">4.1</span> Updating the
+      - [<span class="toc-section-number">4.1</span> Code
+        Style](#code-style)
+      - [<span class="toc-section-number">4.2</span> Updating the
         frontend](#updating-the-frontend)
-      - [<span class="toc-section-number">4.2</span> Updating
+      - [<span class="toc-section-number">4.3</span> Updating
         documentation](#updating-documentation)
   - [<span class="toc-section-number">5</span> Managing your
     Developement Environment](#managing-your-developement-environment)
@@ -654,6 +656,28 @@ All feedback and contributions to this project are welcome. When making
 changes to this project, either for personal use or for contributing, it
 is recomended to work on a fork on this project. Once the changes have
 been completed on the fork, a Merge Request should be opened.
+
+## Code Style
+
+This project has been configured with Linters that have been tuned to
+help the code remain consistent while not being overly burdensome. We
+use the following Linters:
+
+  - Bandit is used for security scanning
+  - Pylint is used for Python Syntax Linting
+  - MyPy is used for type hint linting
+  - Black is configured for code styling
+  - A custom script is run to ensure Jupyter Notebooks do not have any
+    output
+
+The embedded VSCode environment is configured to run the linting and
+checking in realtime.
+
+To manually run the linting that is done by the CI pipelines, execute
+`/project/code/tools/lint.sh`. Individual tests can be run be specifying
+them by name: `/project code/tools/lint.sh
+[deps|pylint|mypy|black|fix]`. Running the lint tool in fix mode will
+automatically correct any code style issues that are found.
 
 ## Updating the frontend
 
