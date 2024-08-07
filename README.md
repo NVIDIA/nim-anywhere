@@ -10,48 +10,32 @@ Get started now with the [quick start](#quick-start) instructions.
 ![NIM Anywhere
 Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
  
-  - [<span class="toc-section-number">1</span> Quick
-    Start](#quick-start)
-      - [<span class="toc-section-number">1.1</span> Generate your NGC
-        Personal Key](#generate-your-ngc-personal-key)
-      - [<span class="toc-section-number">1.2</span> Install AI
-        Workbench](#install-ai-workbench)
-      - [<span class="toc-section-number">1.3</span> Download this
-        project](#download-this-project)
-      - [<span class="toc-section-number">1.4</span> Start This
-        Project](#start-this-project)
-      - [<span class="toc-section-number">1.5</span> Populating the
-        Knowledge Base](#populating-the-knowledge-base)
-  - [<span class="toc-section-number">2</span> Developing Your Own
+  - [Quick Start](#quick-start)
+      - [Generate your NGC Personal
+        Key](#generate-your-ngc-personal-key)
+      - [Install AI Workbench](#install-ai-workbench)
+      - [Download this project](#download-this-project)
+      - [Configure this project](#configure-this-project)
+      - [Start This Project](#start-this-project)
+      - [Populating the Knowledge Base](#populating-the-knowledge-base)
+  - [Developing Your Own
     Applications](#developing-your-own-applications)
-  - [<span class="toc-section-number">3</span> Application
-    Configuration](#application-configuration)
-      - [<span class="toc-section-number">3.1</span> Config from a
-        file](#config-from-a-file)
-      - [<span class="toc-section-number">3.2</span> Config from a
-        custom file](#config-from-a-custom-file)
-      - [<span class="toc-section-number">3.3</span> Config from env
-        vars](#config-from-env-vars)
-      - [<span class="toc-section-number">3.4</span> Chain Server config
-        schema](#chain-server-config-schema)
-      - [<span class="toc-section-number">3.5</span> Chat Frontend
-        config schema](#chat-frontend-config-schema)
-  - [<span class="toc-section-number">4</span>
-    Contributing](#contributing)
-      - [<span class="toc-section-number">4.1</span> Updating the
-        frontend](#updating-the-frontend)
-      - [<span class="toc-section-number">4.2</span> Updating
-        documentation](#updating-documentation)
-  - [<span class="toc-section-number">5</span> Managing your
-    Developement Environment](#managing-your-developement-environment)
-      - [<span class="toc-section-number">5.1</span> Environment
-        Variables](#environment-variables)
-      - [<span class="toc-section-number">5.2</span> Python Environment
-        Packages](#python-environment-packages)
-      - [<span class="toc-section-number">5.3</span> Operating System
+  - [Application Configuration](#application-configuration)
+      - [Config from a file](#config-from-a-file)
+      - [Config from a custom file](#config-from-a-custom-file)
+      - [Config from env vars](#config-from-env-vars)
+      - [Chain Server config schema](#chain-server-config-schema)
+      - [Chat Frontend config schema](#chat-frontend-config-schema)
+  - [Contributing](#contributing)
+      - [Updating the frontend](#updating-the-frontend)
+      - [Updating documentation](#updating-documentation)
+  - [Managing your Developement
+    Environment](#managing-your-developement-environment)
+      - [Environment Variables](#environment-variables)
+      - [Python Environment Packages](#python-environment-packages)
+      - [Operating System
         Configuration](#operating-system-configuration)
-      - [<span class="toc-section-number">5.4</span> Updating
-        Dependencies](#updating-dependencies)
+      - [Updating Dependencies](#updating-dependencies)
 
 # Quick Start
 
@@ -366,20 +350,36 @@ section.
     window.
     
     ![AI Workbench Log
-    Viewer](.static/ad5c07bcfaa47cae8b5bbc617520bdc8921607b8.png)
+    Viewer](.static/89b9f6c5319f5bade204e0014a0886ba80ab7ce8.png)
 
-5.  Before running for the first time, project specific configuration
+</details>
+
+## Configure this project
+
+The project must be confugred to work with local machine resources.
+
+<details>
+<summary>
+<b>Expand this section for a details on configuring this project.</b>
+</summary>
+
+1.  Before running for the first time, project specific configuration
     must be provided. Project configuration is done using the
     *Environment* tab from the left-hand panel.
     
     ![AI Workbench Side
-    Menu](.static/c330ddf4e4f18b0bfef1bfe44a49af4b5d6ba377.png)
+    Menu](.static/97f6bf8a475ba1c4e3d4299616333b74f3943889.png)
 
-6.  Scroll down to the **Secrets** section and find the *NGC\_API\_KEY*
+2.  Scroll down to the **Variables** section and find *NGC\_HOME* entry.
+    It should be set to something like `~/.cache/nvidia-nims`. The value
+    here is used by workbench. This same location also appears in the
+    **Mounts** section that mounts this directory into the container.
+
+3.  Scroll down to the **Secrets** section and find the *NGC\_API\_KEY*
     entry. Press *Configure* and provide the personal key for NGC that
-    was generated earlier.
+    as generated earlier.
 
-7.  Scroll down to the **Mounts section**. Here, there are two mounts to
+4.  Scroll down to the **Mounts** section. Here, there are two mounts to
     configure.
     
     a. Find the mount for /var/host-run. This is used to allow the
@@ -396,7 +396,7 @@ section.
     network bandwidth.
     
     ![AI Workbench Mount
-    Menu](.static/893a44cffab7e4468cbfb410c2c7c114bdde48c5.png)
+    Menu](.static/bc3f12445b37de968726f09ebe59bb861186e010.png)
     
     If you don't already have a nim cache, or you aren't sure, use the
     following commands to create one at `/home/USER/.cache/nvidia-nims`.
@@ -406,7 +406,9 @@ section.
     chmod 2777 ~/.cache/nvidia-nims
     ```
 
-8.  Once the build completes with a *Build Ready* message, all
+5.  A rebuild will occur after these settings have been changed.
+
+6.  Once the build completes with a *Build Ready* message, all
     applications will be made available to you.
 
 </details>
@@ -565,14 +567,14 @@ nvidia_api_key: ~
 # Type: string
 redis_dsn: redis://localhost:6379/0
 
-chat_model: 
+llm_model: 
     # The name of the model to request.
-    # ENV Variables: APP_CHAT_MODEL__NAME
+    # ENV Variables: APP_LLM_MODEL__NAME
     # Type: string
     name: meta/llama3-70b-instruct
 
     # The URL to the model API.
-    # ENV Variables: APP_CHAT_MODEL__URL
+    # ENV Variables: APP_LLM_MODEL__URL
     # Type: string
     url: https://integrate.api.nvidia.com/v1
 
