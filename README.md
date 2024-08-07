@@ -1,7 +1,7 @@
 # NVIDIA NIM Anywhere
 
 [![CI Pipeline
-Status](.static/7b0fff02eb9fd5f5fb14415b6e8410edb3bbb780.svg)](https://github.com/NVIDIA/nim-anywhere/actions/workflows/ci.yml?query=branch%3Amain)
+Status](.static/e6914a8ba0a3d705d73fe883e745b6d3f1cc6258.svg)](https://github.com/NVIDIA/nim-anywhere/actions/workflows/ci.yml?query=branch%3Amain)
 [![NVIDIA: LLM
 NIM](.static/8eb7cc4d787a68cbb5b5affb208ad39641637021.svg)](https://www.nvidia.com/en-us/ai/)
 [![NVIDIA: Embedding
