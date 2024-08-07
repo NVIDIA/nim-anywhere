@@ -5,7 +5,8 @@
 0_2_2_macos.md
 0_2_3_ubuntu.md
 0_2_4_remote_ubuntu.md
-0_3_download.md
+0_3_0_download.md
+0_3_1_configure.md
 0_4_start.md
 0_5_knowledgebase.md
 1_develop.md
