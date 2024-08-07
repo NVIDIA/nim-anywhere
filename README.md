@@ -678,8 +678,10 @@ use the following Linters:
   - Pylint is used for Python Syntax Linting
   - MyPy is used for type hint linting
   - Black is configured for code styling
-  - A custom script is run to ensure Jupyter Notebooks do not have any
+  - A custom check is run to ensure Jupyter Notebooks do not have any
     output
+  - Another custom check is run to ensure the README.md file is up to
+    date
 
 The embedded VSCode environment is configured to run the linting and
 checking in realtime.
@@ -687,8 +689,9 @@ checking in realtime.
 To manually run the linting that is done by the CI pipelines, execute
 `/project/code/tools/lint.sh`. Individual tests can be run be specifying
 them by name: `/project code/tools/lint.sh
-[deps|pylint|mypy|black|fix]`. Running the lint tool in fix mode will
-automatically correct any code style issues that are found.
+[deps|pylint|mypy|black|docs|fix]`. Running the lint tool in fix mode
+will automatically correct what it can by running Black, updating the
+README, and clearing the cell output on all Jupyter Notebooks.
 
 ## Updating the frontend
 

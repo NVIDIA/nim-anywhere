@@ -29,12 +29,6 @@ if [ -z "$1" ] || [ "$1" = "black" ]; then
     echo -e "\n\n\n"
 fi
 
-if [ "$1" = "fix" ]; then
-    echo "Fixing code formatting with Black"
-    black . --line-length 120 $(git ls-files 'code/*.py')
-    echo -e "\n\n\n"
-fi
-
 if [ -z "$1" ] || [ "$1" = "ipynb" ]; then
     echo "Checking Notebooks for cells with output."
     fail_count=0
@@ -66,6 +60,27 @@ if [ -z "$1" ] || [ "$1" = "docs" ]; then
     fi
     echo "pass"
     cd ..
+    echo -e "\n\n\n"
+fi
+
+if [ "$1" = "fix" ]; then
+    echo "Fixing code formatting with Black"
+    black . --line-length 120 $(git ls-files 'code/*.py')
+    echo -e "\n\n\n"
+
+    echo "Ensuring the README.md is up to date"
+    cd docs
+    make
+    cd ..
+
+    echo "Clearing Jupyter Notebook cell output."
+    for ipynb in $(git ls-files 'code/*.ipynb'); do
+        if cat "$ipynb" | jq '.cells[].outputs' | grep -Pv '(null|\[\])' > /dev/null ; then
+            echo "$ipynb"
+            jupyter nbconvert "$ipynb" --ClearOutputPreprocessor.enabled=True --to=notebook --inplace --log-level=ERROR
+        fi
+    done
+
     echo -e "\n\n\n"
 fi
 
