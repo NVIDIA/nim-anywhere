@@ -16,7 +16,12 @@
 """A fastapi server to host gradio interface."""
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, PlainTextResponse
+from fastapi.responses import (
+    FileResponse,
+    JSONResponse,
+    PlainTextResponse,
+    RedirectResponse,
+)
 from fastapi.staticfiles import StaticFiles
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
@@ -61,6 +66,7 @@ app.mount(f"{config.proxy_prefix}static", StaticFiles(directory=STATIC_DIR), nam
 
 # %% enable telemetry
 FastAPIInstrumentor.instrument_app(app)
+
 
 # %% add a health check
 @app.get("/healthz", response_class=PlainTextResponse)

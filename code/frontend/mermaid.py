@@ -43,13 +43,11 @@ config:
 def to_gradio(mmd: str, theme: str = "dark") -> gr.HTML:
     """Create a Gradio HTML component for a mermaid graph."""
     html = to_html(mmd, theme)
-    mmd = gr.HTML(html)
-    # pylint: disable-next=no-member # false positive
-    mmd.change(None, js="mermaid.init")
-    return mmd
+    mmd_component = gr.HTML(html)
+    mmd_component.change(None, js="mermaid.init")
+    return mmd_component
 
 
 def init(gr_blks: gr.Blocks) -> None:
     """Initialize the mermaid diagram."""
-    # pylint: disable-next=no-member # false positive
     gr_blks.load(None, js=_ONLOAD)

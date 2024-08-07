@@ -12,10 +12,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specifi
 SHELL=/bin/bash
-PANDOC_HEADER_OPTS =--from gfm --to gfm --standalone --extract-media=.static --self-contained
-PANDOC_OPTS =--from gfm --to gfm --standalone --toc --toc-depth=2 --number-sections --extract-media=.static --self-contained
+PANDOC_HEADER_OPTS =--from gfm --to gfm --extract-media=.static --self-contained --standalone
+PANDOC_OPTS =--from gfm --to gfm --standalone --toc --toc-depth=2 --extract-media=.static --self-contained
 
 HEADER_FILE=_HEADER.md
+SUMMARY_FILE=_SUMMARY.md
 TOC_FILE=_TOC.md
 
 
@@ -30,7 +31,8 @@ TOC_FILE=_TOC.md
 _render: export MERMAID_FILTER_FORMAT=png
 _render: export MERMAID_FILTER_WIDTH=800
 _render:
-	pandoc $(PANDOC_HEADER_OPTS) $(HEADER_FILE); echo " "
+	cat $(HEADER_FILE); echo " "
+	pandoc $(PANDOC_HEADER_OPTS) $(SUMMARY_FILE); echo " "
 	set -eo pipefail; $(MAKE) --silent _markdown | pandoc $(PANDOC_OPTS)
 _markdown:
 	for page in $$(cat $(TOC_FILE)); do

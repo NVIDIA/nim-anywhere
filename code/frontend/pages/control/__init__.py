@@ -15,7 +15,6 @@
 
 """The control panel web app."""
 
-# pylint: disable=no-member # This causes a lot of false positives with Gradio events.
 from pathlib import Path
 
 import gradio as gr
@@ -29,9 +28,11 @@ from ...configuration import config
 
 # load custom style and scripts
 _CSS_FILE = Path(__file__).parent.joinpath("style.css")
-_CSS = open(_CSS_FILE, "r", encoding="UTF-8").read()
+with open(_CSS_FILE, "r", encoding="UTF-8") as css_file:
+    _CSS = css_file.read()
 _MMD_FILE = Path(__file__).parent.joinpath("diagram.mmd.j2")
-_MMD_TEMPLATE = open(_MMD_FILE, "r", encoding="UTF-8").read()
+with open(_MMD_FILE, "r", encoding="UTF-8") as mmd_file:
+    _MMD_TEMPLATE = mmd_file.read()
 _MMD = environment = jinja2.Environment().from_string(_MMD_TEMPLATE)
 
 _KB_TOGGLE_JS = """
@@ -67,7 +68,8 @@ _SAVE_IMG = IMG_DIR.joinpath("floppy.svg")
 _UNDO_IMG = IMG_DIR.joinpath("undo.svg")
 _HISTORY_IMG = IMG_DIR.joinpath("history.svg")
 _PSEUDO_FILE_NAME = "config.yaml 🟢"
-_STARTING_CONFIG = open(config.chain_config_file, "r", encoding="UTF-8").read()
+with open(config.chain_config_file, "r", encoding="UTF-8") as config_file:
+    _STARTING_CONFIG = config_file.read()
 
 # web ui definition
 with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:

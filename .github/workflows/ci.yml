@@ -1,0 +1,55 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        grep -vf req.filters.txt requirements.txt | pip install -r /dev/stdin
+        ./code/tools/lint.sh deps
+
+    - name: Check Python syntax with Pylint
+      run: |
+        ./code/tools/lint.sh pylint
+
+    - name: Check Type Hints with MyPy
+      run: |
+        ./code/tools/lint.sh mypy
+
+    - name: Check code formatting with Black
+      run: |
+        ./code/tools/lint.sh black
+
+    - name: Ensure Notebooks have no output
+      run: |
+        ./code/tools/lint.sh ipynb
+
+
+
+
+

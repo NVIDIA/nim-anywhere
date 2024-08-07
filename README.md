@@ -1,5 +1,13 @@
 # NVIDIA NIM Anywhere
 
+[![CI Pipeline Status](https://github.com/nvidia/nim-anywhere/actions/workflows/ci.yml/badge.svg?query=branch%3Amain)](https://github.com/NVIDIA/nim-anywhere/actions/workflows/ci.yml?query=branch%3Amain)
+[![NVIDIA: LLM NIM](https://img.shields.io/badge/NVIDIA-LLM%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#large-language-models)
+[![NVIDIA: Embedding NIM](https://img.shields.io/badge/NVIDIA-Embedding%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#nemo-retriever)
+[![NVIDIA: Reranker NIM](https://img.shields.io/badge/NVIDIA-Reranker%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#nemo-retriever)
+![Python: 3.10 | 3.11 | 3.12](https://img.shields.io/badge/Python-3.10%20|%203.11%20|%203.12-yellow?logo=python&logoColor=white&color=%23ffde57)
+
+
+ 
 An entrypoint for developing with NIMs that natively scales out to
 full-sized labs and up to production environments. NIM Anywhere is an
 integration of all the tooling required to start integrating NVIDIA
@@ -27,6 +35,7 @@ Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
       - [Chain Server config schema](#chain-server-config-schema)
       - [Chat Frontend config schema](#chat-frontend-config-schema)
   - [Contributing](#contributing)
+      - [Code Style](#code-style)
       - [Updating the frontend](#updating-the-frontend)
       - [Updating documentation](#updating-documentation)
   - [Managing your Developement
@@ -657,6 +666,31 @@ changes to this project, either for personal use or for contributing, it
 is recomended to work on a fork on this project. Once the changes have
 been completed on the fork, a Merge Request should be opened.
 
+## Code Style
+
+This project has been configured with Linters that have been tuned to
+help the code remain consistent while not being overly burdensome. We
+use the following Linters:
+
+  - Bandit is used for security scanning
+  - Pylint is used for Python Syntax Linting
+  - MyPy is used for type hint linting
+  - Black is configured for code styling
+  - A custom check is run to ensure Jupyter Notebooks do not have any
+    output
+  - Another custom check is run to ensure the README.md file is up to
+    date
+
+The embedded VSCode environment is configured to run the linting and
+checking in realtime.
+
+To manually run the linting that is done by the CI pipelines, execute
+`/project/code/tools/lint.sh`. Individual tests can be run be specifying
+them by name: `/project code/tools/lint.sh
+[deps|pylint|mypy|black|docs|fix]`. Running the lint tool in fix mode
+will automatically correct what it can by running Black, updating the
+README, and clearing the cell output on all Jupyter Notebooks.
+
 ## Updating the frontend
 
 The frontend has been designed in an effort to minimize the required
@@ -826,19 +860,27 @@ Documentation is written in Github Flavored Markdown and then rendered
 to a final Markdown file by Pandoc. The documentation can be previewed
 in the Workbench file browser window.
 
+### Header file
+
+The header file is the first file used to compile the documentation.
+This file can be found at `docs/_HEADER.md`. The contents of this file
+will be written verbatim, without any manipulation, to the README before
+anything else.
+
+### Summary file
+
+The summary file contains quick description and graphic that describe
+this project. The contents of this file will be added to the README
+immediately after the header and just before the table of contents. This
+file is processed by Pandoc to embed images before writing to the
+README.
+
 ### Table of Contents file
 
 The most important file for the documentation is the table of contents
 file at `docs/_TOC.md`. This file defines a list of files that should be
 concatenated in order to generate the final README manual. Files must be
 on this list to be included.
-
-### Header file
-
-The only exception to the table of contents rule is the header file at
-`docs/_HEADER.md`. This file will preprend the README manual and exists
-before the Table of Contents. It will always be included and should not
-be included in the table of contents file.
 
 ### Static Content
 

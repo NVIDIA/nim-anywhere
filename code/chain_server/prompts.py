@@ -15,8 +15,11 @@
 
 """The collection of prompts used in this application."""
 
-from langchain_core.prompts import PromptTemplate, ChatPromptTemplate, MessagesPlaceholder
-
+from langchain_core.prompts import (
+    ChatPromptTemplate,
+    MessagesPlaceholder,
+    PromptTemplate,
+)
 
 CONDENSE_QUESTION_TEMPLATE = PromptTemplate.from_template(
     """Given a chat history and the latest user question
@@ -28,8 +31,6 @@ CONDENSE_QUESTION_TEMPLATE = PromptTemplate.from_template(
     Follow Up question: {question}
     Standalone question:"""
 )
-
-
 
 
 # Primary Chat Prompt template

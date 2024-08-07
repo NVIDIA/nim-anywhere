@@ -57,13 +57,13 @@
     //  Comment out this settings to disable auto-formatting
     "editor.formatOnSave": true
   },
-  "mypy-type-checker.severity": {
-    "error": "Hint",
-    "note": "Hint"
-  },
+
   "black-formatter.serverTransport": "stdio",
   "black-formatter.args": [
     "--line-length",
     "120"
   ],
+  "pylint.severity": {
+    "refactor": "Information",
+  },
 }
