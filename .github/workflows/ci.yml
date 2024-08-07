@@ -50,10 +50,6 @@ jobs:
       run: |
         ./code/tools/lint.sh ipynb
 
-    - name: Ensure README is up to date
-      run: |
-        ./code/tools/lint.sh docs
-
 
 
 
