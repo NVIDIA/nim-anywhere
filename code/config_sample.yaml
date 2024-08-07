@@ -1,4 +1,4 @@
-chat_model:
+llm_model:
   name: "meta/llama3-8b-instruct"
 
   # AI Catalog

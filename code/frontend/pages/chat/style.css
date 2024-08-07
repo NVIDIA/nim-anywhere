@@ -55,6 +55,7 @@ div.generating {
 .avatar-container {
   height: 50px !important;
   width: 50px !important;
+  align-self: flex-end;
 }
 .bubble-gap {
   gap: 0px !important;

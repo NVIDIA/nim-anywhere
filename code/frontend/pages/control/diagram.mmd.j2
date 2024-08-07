@@ -1,17 +1,17 @@
 flowchart LR
 
     %% rag retrieval
-    {% if use_kb %}ret <-....-> db[(fa:fa-building\nEnterprise\nData)]{% endif %}
+    {% if use_kb %}ret <-....-> db[("fa:fa-building\nEnterprise\nData (Milvus)")]{% endif %}
 
 
-    %% priamry chain
+    %% primary chain
     query(fa:fa-user Query) -->
     {% if use_rewrite %}rewrite(Prompt\nRewrite) -->{% endif %}
     %% optional retrieval step
-    {% if use_kb %}ret(Retrieval NIM):::nvidia -->{% endif %}
-    {% if use_reranker %}rerank(Reranker NIM):::nvidia -->{% endif %}
+    {% if use_kb %}ret(Embedding):::nvidia -->{% endif %}
+    {% if use_reranker %}rerank(Reranker):::nvidia -->{% endif %}
     dot0(( )) --> prompt(LLM Context) -->
-    llm(LLM NIM):::nvidia -->
+    llm(LLM):::nvidia -->
     answer(fa:fa-comment-dots Answer)
 
 

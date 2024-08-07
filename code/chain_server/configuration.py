@@ -88,7 +88,7 @@ class MilvusConfig(BaseModel):
     collection_name: str = Field("collection_1", description="The name of the Milvus collection.")
 
 
-class ChatModelConfig(BaseModel):
+class LLMModelConfig(BaseModel):
     """Configuration for connecting the an LLM chat model."""
 
     name: Annotated[
@@ -164,9 +164,9 @@ class Configuration(BaseConfig):
             description="The Data Source Name for your Redis DB.",
         ),
     ]
-    chat_model: Annotated[
-        ChatModelConfig,
-        Field(default_factory=ChatModelConfig, description=ChatModelConfig.__doc__),
+    llm_model: Annotated[
+        LLMModelConfig,
+        Field(default_factory=LLMModelConfig, description=LLMModelConfig.__doc__),
     ]
     embedding_model: Annotated[
         EmbeddingModelConfig,
