@@ -1,7 +1,7 @@
 <h1>
     NVIDIA NIM Anywhere&emsp;
     <a href="nvwb://localhost/import?projectURL=https://github.com/nvidia/nim-anywhere">
-        <img style="width:100%;max-width:250px;" alt="Clone Me with AI Workbench" src="https://img.shields.io/badge/Clone%20Me%20in%20AI%20Workbench-76b900?style=flat-square" />
+        <img style="width:250px;" alt="Clone Me with AI Workbench" src="https://img.shields.io/badge/Clone%20Me%20in%20AI%20Workbench-76b900?style=flat-square" />
     </a>
 </h1>
 
