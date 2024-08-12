@@ -1,9 +1,8 @@
-<h1>
-    NVIDIA NIM Anywhere&emsp;
-    <a href="nvwb://localhost/import?projectURL=https://github.com/nvidia/nim-anywhere">
-        <img style="width:250px;" alt="Clone Me with AI Workbench" src="https://img.shields.io/badge/Clone%20Me%20in%20AI%20Workbench-76b900?style=flat-square" />
-    </a>
-</h1>
+# NVIDIA NIM Anywhere
+
+<a href="nvwb://localhost/import?projectURL=https://github.com/nvidia/nim-anywhere">
+    <img style="width:250px;" alt="Clone Me with AI Workbench" src="https://img.shields.io/badge/Clone%20Me%20in%20AI%20Workbench-76b900?style=flat-square" />
+</a>
 
 [![NVIDIA: LLM NIM](https://img.shields.io/badge/NVIDIA-LLM%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#large-language-models)
 [![NVIDIA: Embedding NIM](https://img.shields.io/badge/NVIDIA-Embedding%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#nemo-retriever)
