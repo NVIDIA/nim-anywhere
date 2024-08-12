@@ -1,12 +1,14 @@
-# NVIDIA NIM Anywhere [![Static Badge](https://img.shields.io/badge/Clone%20Me%20with%20AI%20Workbench-76b900?style=flat-square&logo=nvidia&logoColor=white)](nvwb://localhost/import?projectURL=https://github.com/nvidia/nim-anywhere)
+<h1>
+    NVIDIA NIM Anywhere&emsp;
+    <a href="nvwb://localhost/import?projectURL=https://github.com/nvidia/nim-anywhere">
+        <img style="width:100%;max-width:250px;" alt="Clone Me with AI Workbench" src="https://img.shields.io/badge/Clone%20Me%20in%20AI%20Workbench-76b900?style=flat-square" />
+    </a>
+</h1>
 
-[![CI Pipeline Status](https://github.com/nvidia/nim-anywhere/actions/workflows/ci.yml/badge.svg?query=branch%3Amain)](https://github.com/NVIDIA/nim-anywhere/actions/workflows/ci.yml?query=branch%3Amain)
 [![NVIDIA: LLM NIM](https://img.shields.io/badge/NVIDIA-LLM%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#large-language-models)
 [![NVIDIA: Embedding NIM](https://img.shields.io/badge/NVIDIA-Embedding%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#nemo-retriever)
 [![NVIDIA: Reranker NIM](https://img.shields.io/badge/NVIDIA-Reranker%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#nemo-retriever)
-![Python: 3.10 | 3.11 | 3.12](https://img.shields.io/badge/Python-3.10%20|%203.11%20|%203.12-yellow?logo=python&logoColor=white&color=%23ffde57)
-
-
+[![CI Pipeline Status](https://github.com/nvidia/nim-anywhere/actions/workflows/ci.yml/badge.svg?query=branch%3Amain)](https://github.com/NVIDIA/nim-anywhere/actions/workflows/ci.yml?query=branch%3Amain)
 
 An entrypoint for developing with NIMs that natively scales out to
 full-sized labs and up to production environments. NIM Anywhere is an
