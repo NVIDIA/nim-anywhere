@@ -36,11 +36,7 @@ _render:
 	set -eo pipefail; $(MAKE) --silent _markdown | pandoc $(PANDOC_OPTS)
 _markdown:
 	for page in $$(cat $(TOC_FILE)); do
-		if [[ -x "$$page" ]]; then
-			./$$page || exit 1;
-		else
-			cat $$page || exit 1;
-		fi
+		./$$page 2> /dev/null || cat $$page || exit 1;
 		echo " "
 	done
 

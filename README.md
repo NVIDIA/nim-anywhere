@@ -5,7 +5,10 @@
 [![NVIDIA: Embedding NIM](https://img.shields.io/badge/NVIDIA-Embedding%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#nemo-retriever)
 [![NVIDIA: Reranker NIM](https://img.shields.io/badge/NVIDIA-Reranker%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#nemo-retriever)
 [![CI Pipeline Status](https://github.com/nvidia/nim-anywhere/actions/workflows/ci.yml/badge.svg?query=branch%3Amain)](https://github.com/NVIDIA/nim-anywhere/actions/workflows/ci.yml?query=branch%3Amain)
+![Python: 3.10 | 3.11 | 3.12](https://img.shields.io/badge/Python-3.10%20|%203.11%20|%203.12-yellow?logo=python&logoColor=white&color=%23ffde57)
 
+
+ 
 An entrypoint for developing with NIMs that natively scales out to
 full-sized labs and up to production environments. NIM Anywhere is an
 integration of all the tooling required to start integrating NVIDIA
@@ -15,7 +18,7 @@ Get started now with the [quick start](#quick-start) instructions.
 
 ![NIM Anywhere
 Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
-
+ 
   - [Quick Start](#quick-start)
       - [Generate your NGC Personal
         Key](#generate-your-ngc-personal-key)
@@ -59,28 +62,28 @@ provide it with a Personal Key. These keys begin with `nvapi-`.
 1.  Go to the [NGC Personal Key
     Manager](https://org.ngc.nvidia.com/setup/personal-keys). If you are
     prompted to, then register for a new account and sign in.
-
+    
     > **HINT** You can find this tool by logging into
     > [ngc.nvidia.com](ngc.nvidia.com), expanding your profile menu on
     > the top right, selecting *Setup*, and then selecting *Generate
     > Personal Key*.
 
 2.  Select *Generate Personal Key*.
-
+    
     ![Generate Personal
     Key](.static/929e8801e7993066fa837f6f7e0293694006bc96.png)
 
 3.  Enter any value as the Key name, an expiration of 12 months is fine,
     and select all four services. Press *Generate Personal Key* when you
     are finished.
-
+    
     ![Personal Key
     Form](.static/9e175697ea16a4c1d1b0b6fac058cc45df0611ae.png)
 
 4.  Save your personal key for later. Workbench will need it and there
     is no way to retrieve it later. If the key is lost, a new one must
     be created. Protect this key as if it were a password.
-
+    
     ![Personal
     Key](.static/00560e8da8eab28d2ee4b9cc8257f82667b2cf79.png)
 
@@ -126,7 +129,7 @@ For full instructions, see the [NVIDIA AI Workbench User
 Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/windows.html).
 
 1.  Install Prerequisite Software
-
+    
     1.  If this machine has an NVIDIA GPU, ensure the GPU drivers are
         installed. It is recommended to use the [GeForce
         Experience](https://www.nvidia.com/en-us/geforce/geforce-experience/)
@@ -168,7 +171,7 @@ For full instructions, see the [NVIDIA AI Workbench User
 Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/macos.html).
 
 1.  Install Prerequisite Software
-
+    
     1.  Install [Docker
         Desktop](https://www.docker.com/products/docker-desktop/) for
         local container support. Please be mindful of Docker Desktop's
@@ -209,7 +212,7 @@ Run this installation as the user who will be user Workbench. Do not run
 these steps as `root`.
 
 1.  Install Prerequisite Software
-
+    
     1.  *\[OPTIONAL\]* If Visual Studio Code integration is desired,
         install [Visual Studio Code](https://code.visualstudio.com/).
 
@@ -217,7 +220,7 @@ these steps as `root`.
     Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/)
     installer, make it executable, and then run it. You can make the
     file executable with the following command:
-
+    
     ``` bash
     chmod +x NVIDIA-AI-Workbench-*.AppImage
     ```
@@ -254,7 +257,7 @@ run these steps as `root`.
     enabled from the local machine to the remote machine. If this is not
     currently enabled, the following commands will enable this is most
     situations.
-
+    
       - From a Windows local client, use the following PowerShell:
         ``` powershell
         ssh-keygen -f "C:\Users\local-user\.ssh\id_rsa" -t rsa -N '""'
@@ -268,7 +271,7 @@ run these steps as `root`.
 
 2.  SSH into the remote host. Then, use the following commands to
     download and execute the NVIDIA AI Workbench Installer.
-
+    
     ``` bash
     mkdir -p $HOME/.nvwb/bin && \
     curl -L https://workbench.download.nvidia.com/stable/workbench-cli/$(curl -L -s https://workbench.download.nvidia.com/stable/workbench-cli/LATEST)/nvwb-cli-$(uname)-$(uname -m) --output $HOME/.nvwb/bin/nvwb-cli && \
@@ -292,7 +295,7 @@ run these steps as `root`.
     added to the local AI Workbench instance. Open the AI Workbench
     application, click *Add Remote Location*, and then enter the
     required information. When finished, click *Add Location*.
-
+    
       - \*Location Name: \* Any short name for this new location
       - \*Description: \* Any breif metadata for this location.
       - \*Hostname or IP Address: \* The hostname or address used to
@@ -335,19 +338,19 @@ section.
 
 1.  Open the local NVIDIA AI Workbench window. From the list of
     locations displayed, select one you would like to work in.
-
+    
     ![AI Workbench Locations
     Menu](.static/da9474cbe2ca0da073b0ced28dd1dc492dfb3cf5.png)
 
 2.  Once inside the location, select *Clone Project*.
-
+    
     ![AI Workbench Projects
     Menu](.static/966cc83638dc37035b6a544d0c76aaf7a55d3952.png)
 
 3.  Enter the URL of the project repository. You may leave the path as
     the default value. Press *Clone*. If you are cloning this project,
     the url will be: `https://github.com/NVIDIA/nim-anywhere.git`
-
+    
     ![AI Workbnech Clone Project
     Menu](.static/eb6d2e60199d06d752eb6e34478c683f2a084d28.png)
 
@@ -355,7 +358,7 @@ section.
     automatically bootstrap the development environment. You can view
     real-time progress by expanding the Output from the bottom of the
     window.
-
+    
     ![AI Workbench Log
     Viewer](.static/89b9f6c5319f5bade204e0014a0886ba80ab7ce8.png)
 
@@ -373,7 +376,7 @@ The project must be confugred to work with local machine resources.
 1.  Before running for the first time, project specific configuration
     must be provided. Project configuration is done using the
     *Environment* tab from the left-hand panel.
-
+    
     ![AI Workbench Side
     Menu](.static/97f6bf8a475ba1c4e3d4299616333b74f3943889.png)
 
@@ -388,26 +391,26 @@ The project must be confugred to work with local machine resources.
 
 4.  Scroll down to the **Mounts** section. Here, there are two mounts to
     configure.
-
+    
     a. Find the mount for /var/host-run. This is used to allow the
     development environment to access the host’s Docker daemon in a
     pattern called Docker out of Docker. Press **Configure** and provide
     the directory `/var/run`.
-
+    
     ![AI Workbench Mount
     Menu](.static/5c2baccb9a9bb6bc75a6cb38635f966a1a7d5ce2.png)
-
+    
     b. Find the mount for /home/workbench/.cache/nvidia-nims. This mount
     is used as a runtime cache for NIMs where they can cache model
     files. Sharing this cache with the host reduces disk usage and
     network bandwidth.
-
+    
     ![AI Workbench Mount
     Menu](.static/bc3f12445b37de968726f09ebe59bb861186e010.png)
-
+    
     If you don't already have a nim cache, or you aren't sure, use the
     following commands to create one at `/home/USER/.cache/nvidia-nims`.
-
+    
     ``` bash
     mkdir -p ~/.cache/nvidia-nims
     chmod 2777 ~/.cache/nvidia-nims
@@ -453,21 +456,21 @@ development environments.
 4.  **\[OPTIONAL\]:** Next, start the *LLM NIM*. The first time the LLM
     NIM is started, it will take some time to download the image and the
     optimized models.
-
+    
     a. During a long start, to confirm the LLM NIM is starting, the
     progress can be observed by viewing the logs by using the *Output*
     pane on the bottom left of the UI.
-
+    
     b. If the logs indicate an authentication error, that means the
     provided *NGC\_API\_KEY* does not have access to the NIMs. Please
     verify it was generated correctly and in an NGC organization that
     has NVIDIA AI Enterprise support or trial.
-
+    
     c. If the logs appear to be stuck on `..........: Pull complete`.
     `..........: Verifying complete`, or `..........: Download
     complete`; this is all normal output from Docker that the various
     layers of the container image have been downloaded.
-
+    
     d. Any other failures here need to be addressed.
 
 5.  Once the *Chain Server* is up, the *Chat Interface* can be started.
@@ -574,7 +577,7 @@ nvidia_api_key: ~
 # Type: string
 redis_dsn: redis://localhost:6379/0
 
-llm_model:
+llm_model: 
     # The name of the model to request.
     # ENV Variables: APP_LLM_MODEL__NAME
     # Type: string
@@ -586,7 +589,7 @@ llm_model:
     url: https://integrate.api.nvidia.com/v1
 
 
-embedding_model:
+embedding_model: 
     # The name of the model to request.
     # ENV Variables: APP_EMBEDDING_MODEL__NAME
     # Type: string
@@ -598,7 +601,7 @@ embedding_model:
     url: https://integrate.api.nvidia.com/v1
 
 
-reranking_model:
+reranking_model: 
     # The name of the model to request.
     # ENV Variables: APP_RERANKING_MODEL__NAME
     # Type: string
@@ -610,7 +613,7 @@ reranking_model:
     url: https://integrate.api.nvidia.com/v1
 
 
-milvus:
+milvus: 
     # The host machine running Milvus vector DB.
     # ENV Variables: APP_MILVUS__URL
     # Type: string
