@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="style.css">
         <script>
             url="nvwb://localhost/import?projectURL=https://github.com/nvidia/nim-anywhere";
-            window.open(url, '_blank').focus();
+            // window.open(url, '_blank').focus();
         </script>
     </head>
 
@@ -27,7 +27,12 @@
                 <img alt="Cloning with NVIDIA AI Workbench..." src="./aiwb.jpg" style="max-width:100%;max-height:400px;" />
             </div>
 
-            <div class="pane dark stretch">
+            <div class="pane light"><div class="paneHelper">
+                <h1>Not Working?</h1>
+                <p>Ensure popups are not blocked or try <a href="nvwb://localhost/import?projectURL=https://github.com/nvidia/nim-anywhere">clicking here</a>.</p>
+            </div></div>
+
+            <div class="pane dark stretch"><div class="paneHelper">
                 <h1>Don't have AI Workbench yet?</h1>
                 <p>Use AI Workbench for free. Support is available with an <a href=https://www.nvidia.com/en-us/data-center/products/ai-enterprise/">NVIDIA AI Enterprise</a> license.</p>
 
@@ -40,7 +45,7 @@
                 </div>
 
                 <p>Check out the <a href="https://docs.nvidia.com/ai-workbench/user-guide/latest/overview/introduction.html">NVIDIA AI Workbench User Guide.</a></p>
-            </div>
+            </div></div>
 
     </div></body>
 </html>

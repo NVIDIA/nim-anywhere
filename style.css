@@ -84,12 +84,26 @@ body {
     width: 100%;
     text-align: center;
   }
+  .paneHelper {
+    max-width: 850px;
+    margin: auto;
+  }
+  .light {
+    background-color: #fff;
+    color: #000;
+  }
   .dark {
     background-color: #000;
     color: #fff;
   }
   .stretch {
     flex: 1;
+  }
+  .light a {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #000;
+    text-decoration-color: #76b900;
   }
   .dark a {
     margin-top: 20px;
@@ -112,4 +126,9 @@ body {
     max-width: 250px;
     margin: 20px;
     font-weight: bold;
+  }
+  h1 {
+    width: 100%;
+    display: block;
+    text-align: left;
   }
