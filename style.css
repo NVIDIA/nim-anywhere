@@ -132,3 +132,7 @@ body {
     display: block;
     text-align: left;
   }
+  small {
+    display: block;
+    margin: 10px;
+  }
