@@ -186,6 +186,26 @@ execution:
     logfile_path: ""
     timeout_seconds: 0
     icon_url: www.nvidia.com/favicon.ico
+  - name: 'embed'
+    type: custom
+    class: process
+    start_command: /project/apps/embedder_ms.sh start
+    health_check_command: /project/apps/embedder_ms.sh status
+    stop_command: /project/apps/embeder_ms.sh stop
+    user_msg: ""
+    logfile_path: ""
+    timeout_seconds: 0
+    icon_url: www.nvidia.com/favicon.ico
+  - name: 'reranker'
+    type: custom
+    class: process
+    start_command: /project/apps/reranker_ms.sh start
+    health_check_command: /project/apps/reranker_ms.sh status
+    stop_command: /project/apps/reranker_ms.sh stop
+    user_msg: ""
+    logfile_path: ""
+    timeout_seconds: 0
+    icon_url: www.nvidia.com/favicon.ico
   resources:
     gpu:
       requested: 0
@@ -193,6 +213,8 @@ execution:
   secrets:
   - variable: NGC_API_KEY
     description: NGC Personal Key from https://org.ngc.nvidia.com/setup/personal-keys
+  - variable: NGC_API_KEY_2
+    description: NVAPI key from https://org.ngc.nvidia.com/setup/api-key required for local reranker/embedding
   mounts:
   - type: project
     target: /project/

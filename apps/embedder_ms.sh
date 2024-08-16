@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-source $(dirname $0)/functions
+source  $(dirname $0)/functions
 
 # NIM options
 SVC_NAME="nv-embedqa-e5-v5"
@@ -24,11 +24,13 @@ SLUG=$(echo ${SVC_NAME^^} | tr - _)
 NAME="${SVC_NAME}"
 
 # workspace configuration options
-MODEL="nv-embedqa-e5-v5"
+MODEL=$(config_lkp "${SLUG}_MODEL" "nvidia/nv-embedqa-e5-v5")
 TAG=$(config_lkp "${SLUG}_NIM_VERSION" "1.0.1")
 GPUS=$(config_lkp "${SLUG}_NIM_GPUS" "all")
-IMAGE="nvcr.io/nim/nvidia/nv-embedqa-e5-v5"
+IMAGE="nvcr.io/nim/$MODEL"
 
+# This is a HACK becuase of the different meaning of the same env variable
+export NGC_API_KEY=$NGC_API_KEY_2
 # This function is responsible for running creating a running the container
 # and its dependencies.
 _docker_run() {
@@ -37,9 +39,13 @@ _docker_run() {
         --gpus "$GPUS" \
         --ipc host \
         -e NGC_API_KEY \
-        -p 4000:8000 \
         -v $(hostpath $NGC_HOME):/opt/nim/.cache \
         -u $(id -u) \
+        --health-cmd="python3 -c \"import requests; resp = requests.get('http://localhost:8000/v1/health/ready'); resp.raise_for_status()\"" \
+        --health-interval=30s \
+        --health-start-period=600s \
+        --health-timeout=20s \
+        --health-retries=3 \
         $DOCKER_NETWORK $IMAGE:$TAG
 }
 
@@ -58,5 +64,6 @@ _meta() {
 		icon_url: www.nvidia.com/favicon.ico
 		EOM
 }
+
 
 main "$1" "$NAME"
