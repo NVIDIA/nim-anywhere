@@ -29,8 +29,6 @@ TAG=$(config_lkp "${SLUG}_NIM_VERSION" "1.0.1")
 GPUS=$(config_lkp "${SLUG}_NIM_GPUS" "all")
 IMAGE="nvcr.io/nim/$MODEL"
 
-# This is a HACK becuase of the different meaning of the same env variable
-export NGC_API_KEY=$NGC_API_KEY_2
 # This function is responsible for running creating a running the container
 # and its dependencies.
 _docker_run() {

@@ -212,9 +212,7 @@ execution:
     sharedMemoryMB: 1024
   secrets:
   - variable: NGC_API_KEY
-    description: NGC Personal Key from https://org.ngc.nvidia.com/setup/personal-keys
-  - variable: NGC_API_KEY_2
-    description: NVAPI key from https://org.ngc.nvidia.com/setup/api-key required for local reranker/embedding
+    description: NGC Personal Key from https://org.ngc.nvidia.com/setup/personal-keys - This may need to be a team service key to run local reranker and embed https://org.ngc.nvidia.com/service-keys
   mounts:
   - type: project
     target: /project/
