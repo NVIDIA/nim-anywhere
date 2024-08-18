@@ -213,8 +213,6 @@ execution:
   secrets:
   - variable: NGC_API_KEY
     description: NGC Personal Key from https://org.ngc.nvidia.com/setup/personal-keys
-  - variable: NGC_API_KEY_2
-    description: NVAPI key from https://org.ngc.nvidia.com/setup/api-key required for local reranker/embedding
   mounts:
   - type: project
     target: /project/
