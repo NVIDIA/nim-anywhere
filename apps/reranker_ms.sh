@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-source  $(dirname $0)/functions
+source $(dirname $0)/functions
 
 # NIM options
 SVC_NAME="nv-rerankqa-mistral-4b-v3"
@@ -39,6 +39,7 @@ _docker_run() {
         -e NGC_API_KEY \
         -v $(hostpath $NGC_HOME):/opt/nim/.cache \
         -u $(id -u) \
+        -p 8000:8000 \
         --health-cmd="python3 -c \"import requests; resp = requests.get('http://localhost:8000/v1/health/ready'); resp.raise_for_status()\"" \
         --health-interval=30s \
         --health-start-period=600s \
@@ -62,6 +63,5 @@ _meta() {
 		icon_url: www.nvidia.com/favicon.ico
 		EOM
 }
-
 
 main "$1" "$NAME"
