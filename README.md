@@ -39,8 +39,8 @@ Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
       - [Code Style](#code-style)
       - [Updating the frontend](#updating-the-frontend)
       - [Updating documentation](#updating-documentation)
-  - [Managing your Developement
-    Environment](#managing-your-developement-environment)
+  - [Managing your Development
+    Environment](#managing-your-Development-environment)
       - [Environment Variables](#environment-variables)
       - [Python Environment Packages](#python-environment-packages)
       - [Operating System
@@ -909,7 +909,7 @@ following actions.
 
   - `make all` will force the generation of the README manual.
 
-# Managing your Developement Environment
+# Managing your Development Environment
 
 ## Environment Variables
 
