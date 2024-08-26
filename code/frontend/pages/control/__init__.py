@@ -82,7 +82,9 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
                     use_kb = gr.Checkbox(USE_KB_INITIAL, label="Use knowledge base", interactive=True)
                     use_reranker = gr.Checkbox(USE_RERANKER_INITIAL, label="Use reranker", interactive=True)
             with gr.Row(elem_id="mmd-row"):
-                mmd = mermaid.to_gradio(_MMD.render(use_kb=use_kb, use_reranker=use_reranker, use_rewrite=False))
+                mmd = mermaid.to_gradio(
+                    _MMD.render(use_kb=USE_KB_INITIAL, use_reranker=USE_RERANKER_INITIAL, use_rewrite=False)
+                )
 
         # %% chain server configuration text box
         with gr.Accordion(label="Chain Server Configuration"):
