@@ -27,6 +27,11 @@ _docker_run() {
 	docker run \
 		--name $NAME \
 		--mount src=$NAME,target=/data \
+		--health-cmd "redis-cli ping" \
+        --health-interval=30s \
+		--health-start-period=30s \
+        --health-timeout=5s \
+        --health-retries=5 \
 		$DOCKER_NETWORK $IMAGE:$TAG \
         redis-server --save 20 1 --loglevel warning > /dev/null
 }
