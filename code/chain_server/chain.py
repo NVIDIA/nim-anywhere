@@ -117,8 +117,8 @@ class ChainInputs(BaseModel):
     """Declaration of the chain's input values."""
 
     question: str
-    use_kb: bool = True
-    use_reranker: bool = True
+    use_kb: bool = False
+    use_reranker: bool = False
 
 
 ChainOutputs = str
