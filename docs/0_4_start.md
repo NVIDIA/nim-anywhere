@@ -1,6 +1,6 @@
 ## Start This Project
 
-Even the most basic of LLM Chains depend on a few additional microservices. These can be ignored during development for in-memory alternatives, but then code changes are required to go to prodoction. Thankfully, Workbench manages those additional microservices for development environments.
+Even the most basic of LLM Chains depend on a few additional microservices. These can be ignored during development for in-memory alternatives, but then code changes are required to go to production. Thankfully, Workbench manages those additional microservices for development environments.
 
 <details>
 <summary>

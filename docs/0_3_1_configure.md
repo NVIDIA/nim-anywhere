@@ -1,5 +1,5 @@
 ## Configure this project
-The project must be confugred to work with local machine resources.
+The project must be configured to work with local machine resources.
 
 <details>
 <summary>
