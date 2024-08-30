@@ -74,7 +74,7 @@ doc_page = environment.from_string(
 
 ## Chat Frontend config schema
 
-The chat frontend has a few configuraiton options as well. They can be set in the same manner as the chain server.
+The chat frontend has a few configuration options as well. They can be set in the same manner as the chain server.
 
 ```yaml
 {{ fe_schema | to_yaml }}

@@ -297,7 +297,7 @@ run these steps as `root`.
     required information. When finished, click *Add Location*.
     
       - \*Location Name: \* Any short name for this new location
-      - \*Description: \* Any breif metadata for this location.
+      - \*Description: \* Any brief metadata for this location.
       - \*Hostname or IP Address: \* The hostname or address used to
         remotely SSH. If step 1 was followed, this should be the same as
         `REMOTE-MACHINE`.
@@ -319,11 +319,11 @@ run these steps as `root`.
 There are two ways to download this project for local use: Cloning and
 Forking.
 
-Cloning this repository is the recomended way to start. This will not
+Cloning this repository is the recommended way to start. This will not
 allow for local modifications, but is the fastest to get started. This
 also allows for the easiest way to pull updates.
 
-Forking this repository is recomended for development as changes will be
+Forking this repository is recommended for development as changes will be
 able to be saved. However, to get updates, the fork maintainer will have
 to regularly pull from the upstream repo. To work from a fork, follow
 [GitHub's
@@ -351,7 +351,7 @@ section.
     the default value. Press *Clone*. If you are cloning this project,
     the url will be: `https://github.com/NVIDIA/nim-anywhere.git`
     
-    ![AI Workbnech Clone Project
+    ![AI Workbench Clone Project
     Menu](.static/eb6d2e60199d06d752eb6e34478c683f2a084d28.png)
 
 4.  You will be redirected to the new project’s page. Workbench will
@@ -366,7 +366,7 @@ section.
 
 ## Configure this project
 
-The project must be confugred to work with local machine resources.
+The project must be configured to work with local machine resources.
 
 <details>
 <summary>
@@ -427,7 +427,7 @@ The project must be confugred to work with local machine resources.
 
 Even the most basic of LLM Chains depend on a few additional
 microservices. These can be ignored during development for in-memory
-alternatives, but then code changes are required to go to prodoction.
+alternatives, but then code changes are required to go to production.
 Thankfully, Workbench manages those additional microservices for
 development environments.
 
@@ -484,10 +484,10 @@ Frontend](.static/8e77789ca322e118e3af6e0825f4aa42cc8bc95f.png)
 
 ## Populating the Knowledge Base
 
-To get started developing demos, a sample dataset ir provided along with
-a Jupyter Notebook showing how data is ingested into a Vector Databse.
+To get started developing demos, a sample dataset is provided along with
+a Jupyter Notebook showing how data is ingested into a Vector Database.
 
-1.  To import PDF documentation into the vector databse, open Jupyter
+1.  To import PDF documentation into the vector Database, open Jupyter
     using the app launcher in AI Workbench.
 
 2.  Use the Jupyter Notebook at `code/upload-pdfs.ipynb` to ingest the
@@ -508,8 +508,8 @@ The demo services are all in the `code` folder. The root level of the
 code folder has a few interactive notebooks meant for technical deep
 dives. The Chain Server is a sample application utilizing NIMs with
 LangChain. The Chat Frontend folder contains an interactive UI server
-for excersising the chain server. Finally, sample notebooks are provided
-in the Evaluation directory to demonstrate retriveval scoring and
+for exercising the chain server. Finally, sample notebooks are provided
+in the Evaluation directory to demonstrate retrieval scoring and
 validation.
 
 ``` mermaid
@@ -536,7 +536,7 @@ environment variables.
 
 By default, the application will search for a configuration file in all
 of the following locations. If multiple configuration files are found,
-values from lower files in the list will take precendence.
+values from lower files in the list will take precedence.
 
   - ./config.yaml
   - ./config.yml
@@ -634,7 +634,7 @@ log_level: WARNING
 
 ## Chat Frontend config schema
 
-The chat frontend has a few configuraiton options as well. They can be
+The chat frontend has a few configuration options as well. They can be
 set in the same manner as the chain server.
 
 ``` yaml
@@ -664,7 +664,7 @@ log_level: INFO
 
 All feedback and contributions to this project are welcome. When making
 changes to this project, either for personal use or for contributing, it
-is recomended to work on a fork on this project. Once the changes have
+is recommended to work on a fork on this project. Once the changes have
 been completed on the fork, a Merge Request should be opened.
 
 ## Code Style
@@ -701,7 +701,7 @@ CSS. It is designed to be easy to customize, but it should never be
 required. The interactive components of the frontend are all created in
 Gradio and mounted in the app shell using iframes.
 
-Along the top of the app shell is a menu listing the avaiable views.
+Along the top of the app shell is a menu listing the available views.
 Each view may have its own layout consisting of one or a few pages.
 
 ### Creating a new page
@@ -713,7 +713,7 @@ pages is in the `code/frontend/pages` directory. To create a new page:
 2.  Create an `__init__.py` file in the new directory that uses Gradio
     to define the UI. The Gradio Blocks layout should be defined in a
     variable called `page`.
-3.  It is recomended that any CSS and JS files needed for this view be
+3.  It is recommended that any CSS and JS files needed for this view be
     saved in the same directory. See the `chat` page for an example.
 4.  Open the `code/frontend/pages/__init__.py` file, import the new
     page, and add the new page to the `__all__` list.
@@ -723,7 +723,7 @@ pages is in the `code/frontend/pages` directory. To create a new page:
 
 ### Adding a view
 
-View consist of one or a few pages and should function independantly of
+View consist of one or a few pages and should function independently of
 each other. Views are all defined in the `code/frontend/server.py`
 module. All declared views will automatically be added to the Frontend's
 menu bar and made available in the UI.
@@ -800,7 +800,7 @@ SVG definition.
 
 The styling of the App Shell is defined in
 `code/frontend/_static/css/style.css`. The colors in this file may be
-safely modfied.
+safely modified.
 
 The styling of the various pages are defined in
 `code/frontend/pages/*/*.css`. These files may also require modification
@@ -838,7 +838,7 @@ window.top.postMessage({"use_kb": true}, '*');
 
 This message will automatically be sent to all pages by the app shell.
 The following sample code will consume the message on another page. This
-code will run asynchronously when a `message` event is recieved. If the
+code will run asynchronously when a `message` event is received. If the
 message is trusted, a Gradio component with the `elem_id` of `use_kb`
 will be updated to the value specified in the message. In this way, the
 value of a Gradio component can be duplicated across pages.
@@ -921,7 +921,7 @@ Workbench UI.
 ## Python Environment Packages
 
 This project uses one Python environment at `/usr/bin/python3` and
-dependencies are managed with `pip`. Becuse all development is done
+dependencies are managed with `pip`. Because all development is done
 inside a container, any changes to the Python environment will be
 ephemeral. To permanently install a Python package, add it to the
 [`requirements.txt`](./requirements.txt) file or use the Workbench UI.
@@ -950,14 +950,14 @@ update.
     apply the update and rebuild the environment. Address any build
     errors. Ensure that all of the applications can start.
 2.  **Update Python Packages and NIMs:** The Python dependencies and NIM
-    applications can be updated automtically by running the
+    applications can be updated automatically by running the
     `/project/code/tools/bump.sh` script.
 3.  **Update Remaining applications:** For the remaining applications,
     manually check their default tag and compare to the latest. Update
     where appropriate and ensure that the applications still start up
     successfully.
 4.  **Restart and rebuild the environment.**
-5.  **Audit Python Envitonment:** It is now best to check the installed
+5.  **Audit Python Environment:** It is now best to check the installed
     versions of ALL Python packages, not just the direct dependencies.
     To accomplish this, run `/project/code/tools/audit.sh`. This script
     will print out a report of all Python packages in a warning state

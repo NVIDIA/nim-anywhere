@@ -20,7 +20,7 @@ The Chain Server can be configured with either a configuration file or environme
 ## Config from a file
 
 By default, the application will search for a configuration file in all of the following locations.
-If multiple configuration files are found, values from lower files in the list will take precendence.
+If multiple configuration files are found, values from lower files in the list will take precedence.
 
   - ./config.yaml
   - ./config.yml

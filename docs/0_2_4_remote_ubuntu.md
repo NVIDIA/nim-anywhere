@@ -44,7 +44,7 @@ For full instructions, see the [NVIDIA AI Workbench User Guide](https://docs.nvi
 1. Once the remote installation is complete, the Remote Location can be added to the local AI Workbench instance. Open the AI Workbench application, click *Add Remote Location*, and then enter the required information. When finished, click *Add Location*.
 
     - *Location Name: * Any short name for this new location
-    - *Description: * Any breif metadata for this location.
+    - *Description: * Any brief metadata for this location.
     - *Hostname or IP Address: * The hostname or address used to remotely SSH. If step 1 was followed, this should be the same as `REMOTE-MACHINE`.
     - *SSH Port: * Usually left blank. If a nonstandard SSH port is used, it can be configured here.
     - *SSH Username: * The username used for making an SSH connection. If step 1 was followed, this should be the same as `REMOTE_USER`.
