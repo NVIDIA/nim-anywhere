@@ -64,7 +64,7 @@ provide it with a Personal Key. These keys begin with `nvapi-`.
     prompted to, then register for a new account and sign in.
     
     > **HINT** You can find this tool by logging into
-    > [ngc.nvidia.com](ngc.nvidia.com), expanding your profile menu on
+    > [ngc.nvidia.com](https://ngc.nvidia.com), expanding your profile menu on
     > the top right, selecting *Setup*, and then selecting *Generate
     > Personal Key*.
 
