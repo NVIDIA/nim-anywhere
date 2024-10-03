@@ -1,5 +1,5 @@
 specVersion: v2
-specMinorVersion: 1
+specMinorVersion: 2
 meta:
   name: nim-anywhere
   image: project-nim-anywhere
@@ -49,7 +49,7 @@ environment:
       stop_command: jupyter lab stop 8888
       user_msg: ""
       logfile_path: ""
-      timeout_seconds: 0
+      timeout_seconds: 60
       icon_url: ""
       webapp_options:
         autolaunch: true
@@ -104,7 +104,7 @@ execution:
     stop_command: ""
     user_msg: ""
     logfile_path: ""
-    timeout_seconds: 0
+    timeout_seconds: 120
     icon_url: ""
   - name: Chat Frontend
     type: custom
@@ -117,7 +117,7 @@ execution:
       | xargs kill
     user_msg: ""
     logfile_path: ""
-    timeout_seconds: 0
+    timeout_seconds: 60
     icon_url: ""
     webapp_options:
       autolaunch: true
@@ -133,7 +133,7 @@ execution:
     stop_command: /project/apps/milvus.sh stop
     user_msg: ""
     logfile_path: ""
-    timeout_seconds: 0
+    timeout_seconds: 60
     icon_url: milvus.io/favicon-32x32.png
   - name: Redis
     type: custom
@@ -143,7 +143,7 @@ execution:
     stop_command: /project/apps/redis.sh stop
     user_msg: ""
     logfile_path: ""
-    timeout_seconds: 0
+    timeout_seconds: 60
     icon_url: redis.io/favicon.ico
   - name: 'LLM NIM: llm-nim-0'
     type: custom
@@ -153,7 +153,7 @@ execution:
     stop_command: /project/apps/llm-nim-0.sh stop
     user_msg: ""
     logfile_path: ""
-    timeout_seconds: 0
+    timeout_seconds: 60
     icon_url: www.nvidia.com/favicon.ico
   - name: 'LLM NIM: llm-nim-1'
     type: custom
@@ -163,7 +163,7 @@ execution:
     stop_command: /project/apps/llm-nim-1.sh stop
     user_msg: ""
     logfile_path: ""
-    timeout_seconds: 0
+    timeout_seconds: 60
     icon_url: www.nvidia.com/favicon.ico
   - name: 'Embedder NIM: nv-embedqa-e5-v5'
     type: custom
@@ -173,7 +173,7 @@ execution:
     stop_command: /project/apps/embedder_ms.sh stop
     user_msg: ""
     logfile_path: ""
-    timeout_seconds: 0
+    timeout_seconds: 60
     icon_url: www.nvidia.com/favicon.ico
   - name: 'Reranker NIM: nv-rerankqa-mistral-4b-v3'
     type: custom
@@ -183,7 +183,7 @@ execution:
     stop_command: /project/apps/reranker_ms.sh stop
     user_msg: ""
     logfile_path: ""
-    timeout_seconds: 0
+    timeout_seconds: 60
     icon_url: www.nvidia.com/favicon.ico
   - name: Chain Server
     type: custom
@@ -198,7 +198,7 @@ execution:
       $2}' | xargs kill
     user_msg: ""
     logfile_path: ""
-    timeout_seconds: 0
+    timeout_seconds: 60
     icon_url: avatars.githubusercontent.com/u/126733545
     webapp_options:
       autolaunch: false
