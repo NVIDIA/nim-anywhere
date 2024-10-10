@@ -9,7 +9,7 @@ To allow AI Workbench to access NVIDIA’s cloud resources, you’ll need to pro
 
 1. Go to the [NGC Personal Key Manager](https://org.ngc.nvidia.com/setup/personal-keys). If you are prompted to, then register for a new account and sign in.
 
-    > **HINT** You can find this tool by logging into [ngc.nvidia.com](ngc.nvidia.com), expanding your profile menu on the top right, selecting *Setup*, and then selecting *Generate Personal Key*.
+    > **HINT** You can find this tool by logging into [ngc.nvidia.com](https://ngc.nvidia.com), expanding your profile menu on the top right, selecting *Setup*, and then selecting *Generate Personal Key*.
 
 1. Select *Generate Personal Key*.
 
