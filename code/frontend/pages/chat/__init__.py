@@ -31,8 +31,8 @@ _CSS_FILE = Path(__file__).parent.joinpath("style.css")
 with open(_CSS_FILE, "r", encoding="UTF-8") as css_file:
     _CSS = css_file.read()
 _AVATAR_IMAGES = (
-    IMG_DIR.joinpath("user_icon.svg"),
-    IMG_DIR.joinpath("bot_icon.svg"),
+    IMG_DIR.joinpath("user_icon.png"),
+    IMG_DIR.joinpath("bot_icon.png"),
 )
 _JS_FILE = Path(__file__).parent.joinpath("scripts.js")
 with open(_JS_FILE, "r", encoding="UTF-8") as js_file:

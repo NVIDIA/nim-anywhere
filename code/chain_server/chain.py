@@ -18,7 +18,6 @@
 
 from operator import itemgetter
 
-from langchain.pydantic_v1 import BaseModel
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain_community.chat_message_histories import RedisChatMessageHistory
 from langchain_core.documents import Document
@@ -27,6 +26,7 @@ from langchain_core.runnables import RunnablePassthrough, chain
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_milvus.vectorstores.milvus import Milvus
 from langchain_nvidia_ai_endpoints import ChatNVIDIA, NVIDIAEmbeddings, NVIDIARerank
+from pydantic import BaseModel
 
 from . import prompts
 from .configuration import config as app_config
@@ -130,9 +130,7 @@ my_chain = RunnableWithMessageHistory(
     input_messages_key="question",
     output_messages_key="output",
     history_messages_key="history",
-    custom_input_type=ChainInputs,
-    custom_output_type=ChainOutputs,
-)
+).with_types(input_type=ChainInputs)
 
 # %% uncomment this line to print the chain architecture on startup
 # chain.get_graph().print_ascii()
