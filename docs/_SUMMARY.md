@@ -4,7 +4,7 @@ NIM Anywhere is an integration of all the tooling required to start integrating 
 external information during inference without modifying the model
 itself. Imagine you're the [xx] of a company with a local database containing confidential, up-to-date information. You don’t want OpenAI to access it, but you need the model to understand it to answer questions accurately. The solution, connect your language model to the database and feed them with the information. 
 
-To learn more about why it's an excellent solution for boosting the accuracy and reliability of your generative AI models, [click me](https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation/)!
+To learn more about why RAG is an excellent solution for boosting the accuracy and reliability of your generative AI models, [click me](deeper dive into RAG here). Another technique other than RAG is fine-tuning, an overview of this can be seen at [here](link to finetuning, resource outside NV?).
 
 Get started with NIM Anywhere now with the [quick start](#quick-start) instructions and build your first RAG application using NIMs!
 
