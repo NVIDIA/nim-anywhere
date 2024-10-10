@@ -9,29 +9,26 @@
 
 
  
-An entrypoint for developing with NIMs that natively scales out to
-full-sized labs and up to production environments. NIM Anywhere is an
-integration of all the tooling required to start integrating NVIDIA
-enterprise-ready microservices.
+One of the primary benefit for AI for Enterprises is their ability to
+work with and learn from their internal data. [Retrieval-Augmented
+Generation](https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation/)
+(RAG) is one of the best way to do so. Nvidia has developed a set of
+micro-services called
+[NIM](https://docs.nvidia.com/nim/large-language-models/latest/introduction.html#:~:text=NVIDIA%20NIM%20is%20a%20set,to%20inference%20with%20unparalleled%20performance)(NVIDIA
+Inference Micro-service) to help our partners and customers build
+effective RAG pipeline with ease.
 
-This is great news for building a RAG architecture and easily adding
-NIMs as needed\! If you're unfamiliar with RAG(Retrieval Augmented
-Generation), it is an architecture that combines the AI model with a
-retrieval system, allowing models to pull relevant external information.
-Imagine you're the \[xx\] of a company with a local database containing
-confidential, up-to-date information. You don’t want OpenAI to access
-it, but you need the model to understand it to answer questions
-accurately. The solution? Connect your language model to the database
-and feed them with the information.
-
-Difference with fine-tuning? Fine-tuning involves training a model on
-specific data to adapt it to particular tasks, permanently altering its
-internal parameters. In contrast, RAG dynamically retrieves relevant
-external information during inference without modifying the model
-itself, making it more flexible and scalable. RAG is also cheaper
-because it avoids the computational costs of retraining large models, as
-it only fetches information when needed rather than incorporating all
-data into the model.
+NIM Anywhere is an integration of all the tooling required to start
+integrating NIMs. It natively scales out to full-sized labs and up to
+production environments. This is great news for building a RAG
+architecture and easily adding NIMs as needed\! If you're unfamiliar
+with RAG(Retrieval Augmented Generation), it is an architecture that
+combines the AI model with a retrieval system, allowing models to pull
+relevant external information. Imagine you're the \[xx\] of a company
+with a local database containing confidential, up-to-date information.
+You don’t want OpenAI to access it, but you need the model to understand
+it to answer questions accurately. The solution? Connect your language
+model to the database and feed them with the information.
 
 To learn more about why it's an excellent solution for boosting the
 accuracy and reliability of your generative AI models, [click
@@ -42,7 +39,7 @@ instructions and build your first RAG application\!
 
 ![NIM Anywhere
 Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
- 
+
   - [Quick Start](#quick-start)
       - [Generate your NGC Personal
         Key](#generate-your-ngc-personal-key)
