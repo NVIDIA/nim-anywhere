@@ -15,7 +15,7 @@ Generation
 ([RAG](https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation/))
 is one of the best way to do so. NVIDIA has developed a set of
 micro-services called NVIDIA Inference
-Micro-service([NIM](\(https://docs.nvidia.com/nim/large-language-models/latest/introduction\)).html\#:\~:text=NVIDIA%20NIM%20is%20a%20set,to%20inference%20with%20unparalleled%20performance)()
+Micro-service([NIM](https://docs.nvidia.com/nim/large-language-models/latest/introduction))
 to help our partners and customers build effective RAG pipeline with
 ease.
 
