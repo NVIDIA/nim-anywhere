@@ -9,9 +9,9 @@
 
 
  
-Any question or feedback? Please contact <ameliay@nvidia.com> or , Or
-<rkraus@nvidia.com>. if you are a internal user, feel free to join
-\[this\] slack channel.
+Please contact <ameliay@nvidia.com>, <rkraus@nvidia.com>, or join
+\[this\] slack channel if you are a internal user, for any question and
+feedback.
 
 One of the primary benefit for AI for Enterprises is their ability to
 work with and learn from their internal data. Retrieval-Augmented
@@ -101,7 +101,7 @@ provide it with a Personal Key. These keys begin with `nvapi-`.
     Key](.static/929e8801e7993066fa837f6f7e0293694006bc96.png)
 
 3.  Enter any value as the Key name, an expiration of 12 months is fine,
-    and select all four services. Press *Generate Personal Key* when you
+    and select all the services. Press *Generate Personal Key* when you
     are finished.
     
     ![Personal Key

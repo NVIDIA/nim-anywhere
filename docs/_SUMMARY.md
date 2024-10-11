@@ -1,5 +1,4 @@
-Any question or feedback?
-Please contact ameliay@nvidia.com or , Or rkraus@nvidia.com. if you are a internal user, feel free to join [this] slack channel.
+Please contact ameliay@nvidia.com, rkraus@nvidia.com, or join [this] slack channel if you are a internal user, for any question and feedback.
 
 One of the primary benefit for AI for Enterprises is their ability to work with and learn from their internal data. Retrieval-Augmented Generation ([RAG](https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation/)) is one of the best way to do so. NVIDIA has developed a set of micro-services called NVIDIA Inference Micro-service([NIM](https://docs.nvidia.com/nim/large-language-models/latest/introduction)) to help our partners and customers build effective RAG pipeline with ease. 
 
