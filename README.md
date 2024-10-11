@@ -9,6 +9,10 @@
 
 
  
+Any question or feedback? Please contact <ameliay@nvidia.com> or , Or
+<rkraus@nvidia.com>. if you are a internal user, feel free to join
+\[this\] slack channel.
+
 One of the primary benefit for AI for Enterprises is their ability to
 work with and learn from their internal data. Retrieval-Augmented
 Generation
@@ -33,10 +37,10 @@ your language model to the database and feed them with the information.
 To learn more about why RAG is an excellent solution for boosting the
 accuracy and reliability of your generative AI models, \[click
 me\](deeper dive into RAG here). Another technique other than RAG is
-fine-tuning, an overview of this can be seen at \[here\](link to
+fine-tuning, an overview of this can be seen \[here\](link to
 finetuning, resource outside NV?).
 
-Get started with NIM Anywhere now with the [quick start](#quick-start)
+Get started with NIM Anywhere now with the [quick-start](#quick-start)
 instructions and build your first RAG application using NIMs\!
 
 ![NIM Anywhere
