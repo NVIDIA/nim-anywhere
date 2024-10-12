@@ -19,6 +19,7 @@ HEADER_FILE=_HEADER.md
 SUMMARY_FILE=_SUMMARY.md
 TOC_FILE=_TOC.md
 
+export PYTHONPATH := $(PYTHONPATH):../code/chain_server
 
 ../README.md: *.md* ../code/*/configuration.py
 	make --silent _render > ../README.md
