@@ -37,7 +37,8 @@ _render:
 _markdown:
 	for page in $$(cat $(TOC_FILE)); do
 		if [[ $$page == *.py ]]; then
-			./$$page 2> /dev/null || exit 1;
+			./$$page 2> /dev/null > $$page.out || exit 1;
+			cat $$page.out || exit 1;
 		else
 			cat $$page || exit 1;
 		fi
