@@ -51,7 +51,7 @@ jobs:
         git config --local user.name "GitHub Actions"
         git config --local user.email "actions@github.com"
         git add README.md .static
-        git diff --cached --exit-code || git commit -m "Auto-update: Generated README.md"
+        git diff --cached --exit-code || git commit -m "Auto-generated: README.md and related content"
         git push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub token for authentication
