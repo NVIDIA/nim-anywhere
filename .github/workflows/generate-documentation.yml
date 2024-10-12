@@ -1,0 +1,47 @@
+on:
+  push:
+    paths:
+      - 'docs/**'  # Trigger when files under the docs folder change
+
+  workflow_dispatch:  # Also allows manual triggering from the GitHub Actions UI
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the repository
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Step 2: Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+
+    # Step 3: Install Dependencies (Pandoc, Make, etc.)
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y make pandoc
+        pip install confz==2.0.1
+        pip install Jinja2>=3.0.0
+
+    # Step 4: Build Documentation
+    - name: Build documentation
+      working-directory: docs
+      run: make all
+
+    # Step 5: Upload README.md as an artifact for manual review
+    - name: Upload README.md as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: generated-readme
+        path: docs/README.md  # Adjust the path if necessary
+
+    # Step 6: Display the diff for review in logs
+    - name: Show diff for README.md
+      run: |
+        echo "Comparing differneces for the updated README"
+        git diff docs/README.md || echo "No differences to display"
