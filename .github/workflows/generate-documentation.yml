@@ -50,7 +50,7 @@ jobs:
       run: |
         git config --local user.name "GitHub Actions"
         git config --local user.email "actions@github.com"
-        git add README.md
+        git add README.md .static
         git diff --cached --exit-code || git commit -m "Auto-update: Generated README.md"
         git push
       env:
