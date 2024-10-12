@@ -832,9 +832,17 @@ window.addEventListener(
 
 ## Updating documentation
 
+The README is rendered automatically; direct edits will be overwritten.
+In order to modify the README you will need to edit the files for each
+section separately. All of these files will be combined and the README
+will be automatically generated. You can find all of the related files
+in the `docs` folder.
+
 Documentation is written in Github Flavored Markdown and then rendered
-to a final Markdown file by Pandoc. The documentation can be previewed
-in the Workbench file browser window.
+to a final Markdown file by Pandoc. The details for this process are
+defined in the Makefile. The order of files generated are defined in
+`docs/_TOC.md`. The documentation can be previewed in the Workbench file
+browser window.
 
 ### Header file
 
