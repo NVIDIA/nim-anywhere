@@ -26,6 +26,19 @@ Get started now with the [quick start](#quick-start) instructions.
   - [Start This Project](#start-this-project)
   - [Populating the Knowledge Base](#populating-the-knowledge-base)
 - [Developing Your Own Applications](#developing-your-own-applications)
+- [{{docstring}}](#docstring)
+  - [Chain Server config schema](#chain-server-config-schema)
+  - [Chat Frontend config schema](#chat-frontend-config-schema)
+- [Contributing](#contributing)
+  - [Code Style](#code-style)
+  - [Updating the frontend](#updating-the-frontend)
+  - [Updating documentation](#updating-documentation)
+- [Managing your Development
+  Environment](#managing-your-development-environment)
+  - [Environment Variables](#environment-variables)
+  - [Python Environment Packages](#python-environment-packages)
+  - [Operating System Configuration](#operating-system-configuration)
+  - [Updating Dependencies](#updating-dependencies)
 
 # Quick Start
 
@@ -495,3 +508,391 @@ mindmap
         Milvus</br>Vector Database
         LLM NIM</br>Optimized LLMs
 ```
+
+\#!/usr/bin/env python3
+
+import jinja2 from chain_server import configuration from frontend
+import configuration as fe_configuration
+
+def resolve_child(schema, pinfo): ref = pinfo.get("$ref", "")
+if ref.startswith("#/$defs"): child = ref.split("/")\[-1\] return
+schema\["\$defs"\]\[child\] return None
+
+def to_yaml(schema, level=0, env_var_prefixes=\[("APP\_", "\_\_")\]):
+indent = " " \* 4 \* level out = ""
+
+    if schema["type"] == "object":
+        for prop_name, prop in schema["properties"].items():
+            prop_type = prop.get("anyOf", [{"type": prop.get("type")}])
+            prop_desc = prop.get("description", "")
+            prop_child = resolve_child(schema, prop)
+            prop_default = "" if prop_child else (prop.get("default") or "~")
+
+            # print the property description
+            if prop_desc:
+                out += f"{indent}# {prop_desc}\n"
+
+            # print the property environment variables
+            env_vars = prop.get("extra_env_vars", []) + [
+                f"{prefix[0]}{prop_name.upper()}" for prefix in env_var_prefixes
+            ]
+            if not prop_child and env_vars:
+                out += f"{indent}# ENV Variables: "
+                out += ", ".join(env_vars)
+                out += "\n"
+
+            # print variable type
+            if prop_type[0].get("type"):
+                out += f"{indent}# Type: "
+                out += ", ".join([t["type"] for t in prop_type])
+                out += "\n"
+
+            # print out the property
+            out += f"{indent}{prop_name}: {prop_default}\n"
+
+            # if the property references a child, print the child
+            if prop_child:
+                new_env_var_prefixes = [
+                    (f"{prefix[0]}{prop_name.upper()}{prefix[1]}", prefix[1]) for prefix in env_var_prefixes
+                ]
+                out += to_yaml(prop_child, level=level + 1, env_var_prefixes=new_env_var_prefixes)
+
+            out += "\n"
+
+    return out
+
+environment = jinja2.Environment(loader=jinja2.BaseLoader,
+autoescape=True) environment.filters\["to_yaml"\] = to_yaml
+
+doc_page = environment.from_string( """
+
+# {{docstring}}
+
+## Chain Server config schema
+
+``` yaml
+{{ cs_schema | to_yaml }}
+```
+
+## Chat Frontend config schema
+
+The chat frontend has a few configuration options as well. They can be
+set in the same manner as the chain server.
+
+``` yaml
+{{ fe_schema | to_yaml }}
+```
+
+""" )
+
+env_var_prefixes = \[ (source.prefix, source.nested_separator) for
+source in configuration.config.CONFIG_SOURCES if hasattr(source,
+"prefix") \] docs = doc_page.render( docstring=configuration.**doc**,
+cs_schema=configuration.config.model_json_schema(),
+fe_schema=fe_configuration.config.model_json_schema(), ) print(docs)
+
+# Contributing
+
+All feedback and contributions to this project are welcome. When making
+changes to this project, either for personal use or for contributing, it
+is recommended to work on a fork on this project. Once the changes have
+been completed on the fork, a Merge Request should be opened.
+
+## Code Style
+
+This project has been configured with Linters that have been tuned to
+help the code remain consistent while not being overly burdensome. We
+use the following Linters:
+
+- Bandit is used for security scanning
+- Pylint is used for Python Syntax Linting
+- MyPy is used for type hint linting
+- Black is configured for code styling
+- A custom check is run to ensure Jupyter Notebooks do not have any
+  output
+- Another custom check is run to ensure the README.md file is up to date
+
+The embedded VSCode environment is configured to run the linting and
+checking in realtime.
+
+To manually run the linting that is done by the CI pipelines, execute
+`/project/code/tools/lint.sh`. Individual tests can be run be specifying
+them by name:
+`/project code/tools/lint.sh [deps|pylint|mypy|black|docs|fix]`. Running
+the lint tool in fix mode will automatically correct what it can by
+running Black, updating the README, and clearing the cell output on all
+Jupyter Notebooks.
+
+## Updating the frontend
+
+The frontend has been designed in an effort to minimize the required
+HTML and Javascript development. A branded and styled Application Shell
+is provided that has been created with vanilla HTML, Javascript, and
+CSS. It is designed to be easy to customize, but it should never be
+required. The interactive components of the frontend are all created in
+Gradio and mounted in the app shell using iframes.
+
+Along the top of the app shell is a menu listing the available views.
+Each view may have its own layout consisting of one or a few pages.
+
+### Creating a new page
+
+Pages contain the interactive components for a demo. The code for the
+pages is in the `code/frontend/pages` directory. To create a new page:
+
+1.  Create a new folder in the pages directory
+2.  Create an `__init__.py` file in the new directory that uses Gradio
+    to define the UI. The Gradio Blocks layout should be defined in a
+    variable called `page`.
+3.  It is recommended that any CSS and JS files needed for this view be
+    saved in the same directory. See the `chat` page for an example.
+4.  Open the `code/frontend/pages/__init__.py` file, import the new
+    page, and add the new page to the `__all__` list.
+
+> **NOTE:** Creating a new page will not add it to the frontend. It must
+> be added to a view to appear on the Frontend.
+
+### Adding a view
+
+View consist of one or a few pages and should function independently of
+each other. Views are all defined in the `code/frontend/server.py`
+module. All declared views will automatically be added to the Frontend's
+menu bar and made available in the UI.
+
+To define a new view, modify the list named `views`. This is a list of
+`View` objects. The order of the objects will define their order in the
+Frontend menu. The first defined view will be the default.
+
+View objects describe the view name and layout. They can be declared as
+follow:
+
+``` python
+my_view = frontend.view.View(
+  name="My New View",  # the name in the menu
+  left=frontend.pages.sample_page,  # the page to show on the left
+  right=frontend.pages.another_page,  # the page to show on the right
+)
+```
+
+All of the page declarations, `View.left` or `View.right`, are optional.
+If they are not declared, then the associated iframes in the web layout
+will be hidden. The other iframes will expand to fill the gaps. The
+following diagrams show the various layouts.
+
+- All pages are defined
+
+``` mermaid
+block-beta
+    columns 1
+    menu["menu bar"]
+    block
+        columns 2
+        left right
+    end
+```
+
+- Only left is defined
+
+``` mermaid
+block-beta
+    columns 1
+    menu["menu bar"]
+    block
+        columns 1
+        left:1
+    end
+```
+
+### Frontend branding
+
+The frontend contains a few branded assets that can be customized for
+different use cases.
+
+#### Logo
+
+The frontend contains a logo on the top left of the page. To modify the
+logo, an SVG of the desired logo is required. The app shell can then be
+easily modified to use the new SVG by modifying the
+`code/frontend/_assets/index.html` file. There is a single `div` with an
+ID of `logo`. This box contains a single SVG. Update this to the desired
+SVG definition.
+
+``` html
+<div id="logo" class="logo">
+    <svg viewBox="0 0 164 30">...</svg>
+</div>
+```
+
+#### Color scheme
+
+The styling of the App Shell is defined in
+`code/frontend/_static/css/style.css`. The colors in this file may be
+safely modified.
+
+The styling of the various pages are defined in
+`code/frontend/pages/*/*.css`. These files may also require modification
+for custom color schemes.
+
+#### Gradio theme
+
+The Gradio theme is defined in the file
+`code/frontend/_assets/theme.json`. The colors in this file can safely
+be modified to the desired branding. Other styles in this file may also
+be changed, but may cause breaking changes to the frontend. The [Gradio
+documentation](https://www.gradio.app/guides/theming-guide) contains
+more information on Gradio theming.
+
+### Messaging between pages
+
+> **NOTE:** This is an advanced topic that most developers will never
+> require.
+
+Occasionally, it may be necessary to have multiple pages in a view that
+communicate with each other. For this purpose, Javascript's
+`postMessage` messaging framework is used. Any trusted message posted to
+the application shell will be forwarded to each iframe where the pages
+can handle the message as desired. The `control` page uses this feature
+to modify the configuration of the `chat` page.
+
+The following will post a message to the app shell (`window.top`). The
+message will contain a dictionary with the key `use_kb` and a value of
+true. Using Gradio, this Javascript can be executed by [any Gradio
+event](https://www.gradio.app/guides/custom-CSS-and-JS#adding-custom-java-script-to-your-demo).
+
+``` javascript
+window.top.postMessage({"use_kb": true}, '*');
+```
+
+This message will automatically be sent to all pages by the app shell.
+The following sample code will consume the message on another page. This
+code will run asynchronously when a `message` event is received. If the
+message is trusted, a Gradio component with the `elem_id` of `use_kb`
+will be updated to the value specified in the message. In this way, the
+value of a Gradio component can be duplicated across pages.
+
+``` javascript
+window.addEventListener(
+  "message",
+  (event) => {
+      if (event.isTrusted) {
+          use_kb = gradio_config.components.find((element) => element.props.elem_id == "use_kb");
+          use_kb.props.value = event.data["use_kb"];
+      };
+  },
+  false);
+```
+
+## Updating documentation
+
+Documentation is written in Github Flavored Markdown and then rendered
+to a final Markdown file by Pandoc. The documentation can be previewed
+in the Workbench file browser window.
+
+### Header file
+
+The header file is the first file used to compile the documentation.
+This file can be found at `docs/_HEADER.md`. The contents of this file
+will be written verbatim, without any manipulation, to the README before
+anything else.
+
+### Summary file
+
+The summary file contains quick description and graphic that describe
+this project. The contents of this file will be added to the README
+immediately after the header and just before the table of contents. This
+file is processed by Pandoc to embed images before writing to the
+README.
+
+### Table of Contents file
+
+The most important file for the documentation is the table of contents
+file at `docs/_TOC.md`. This file defines a list of files that should be
+concatenated in order to generate the final README manual. Files must be
+on this list to be included.
+
+### Static Content
+
+Save all static content, including images, to the `_static` folder. This
+will help with organization.
+
+### Dynamic documentation
+
+It may be helpful to have documents that update and write themselves. To
+create a dynamic document, simply create an executable file that writes
+the Markdown formatted document to stdout. During build time, if an
+entry in the table of contents file is executable, it will be executed
+and its stdout will be used in its place.
+
+### Rendering documentation
+
+`Make` is used to manage the generation of the `README.md` file. Running
+the following make commands from the `docs/` directory will perform the
+following actions.
+
+- `make` or `make ../README.md` will update the README file if any of
+  the pages have changed since it was last generated.
+
+- `make clean` will cleanup the existing README and static assets.
+
+- `make all` will force the generation of the README manual.
+
+# Managing your Development Environment
+
+## Environment Variables
+
+Most of the configuration for the development environment happens with
+Environment Variables. To make permanent changes to environment
+variables, modify [`variables.env`](./variables.env) or use the
+Workbench UI.
+
+## Python Environment Packages
+
+This project uses one Python environment at `/usr/bin/python3` and
+dependencies are managed with `pip`. Because all development is done
+inside a container, any changes to the Python environment will be
+ephemeral. To permanently install a Python package, add it to the
+[`requirements.txt`](./requirements.txt) file or use the Workbench UI.
+
+## Operating System Configuration
+
+The development environment is based on Ubuntu 22.04. The primary user
+has password-less sudo access, but all changes to the system will be
+ephemeral. To make permanent changes to installed packages, add them to
+the \[`apt.txt`\] file. To make other changes to the operating system
+such as manipulating files, adding environment variables, etc; use the
+[`postBuild.bash`](./postBuild.bash) and
+[`preBuild.bash`](./preBuild.bash) files.
+
+## Updating Dependencies
+
+It is typically good practice to update dependencies monthly to ensure
+no CVEs are exposed through misused dependencies. The following process
+can be used to patch this project. It is recommended to run the
+regression testing after the patch to ensure nothing has broken in the
+update.
+
+1.  **Update Environment:** In the workbench GUI, open the project and
+    navigate to the Environment pane. Check if there is an update
+    available for the base image. If an updated base image is available,
+    apply the update and rebuild the environment. Address any build
+    errors. Ensure that all of the applications can start.
+2.  **Update Python Packages and NIMs:** The Python dependencies and NIM
+    applications can be updated automatically by running the
+    `/project/code/tools/bump.sh` script.
+3.  **Update Remaining applications:** For the remaining applications,
+    manually check their default tag and compare to the latest. Update
+    where appropriate and ensure that the applications still start up
+    successfully.
+4.  **Restart and rebuild the environment.**
+5.  **Audit Python Environment:** It is now best to check the installed
+    versions of ALL Python packages, not just the direct dependencies.
+    To accomplish this, run `/project/code/tools/audit.sh`. This script
+    will print out a report of all Python packages in a warning state
+    and all packages in an error state. Anything in an error state must
+    be resolved as it will have active CVEs and known vulnerabilities.
+6.  **Check Dependabot Alerts:** Check all of the
+    [Dependabot](https://github.com/NVIDIA/nim-anywhere/security/dependabot)
+    alerts and ensure they should be resolved.
+7.  **Regression testing:** Run through the entire demo, from document
+    ingesting to the frontend, and ensure it is still functional and
+    that the GUI looks correct.
