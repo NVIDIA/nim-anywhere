@@ -33,14 +33,25 @@ jobs:
       run: make all
 
     # Step 5: Upload README.md as an artifact for manual review
-    - name: Upload README.md as artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: generated-readme
-        path: README.md  # Adjust the path if necessary
+    #- name: Upload README.md as artifact
+    #  uses: actions/upload-artifact@v4
+    #  with:
+    #    name: generated-readme
+    #    path: README.md  # Adjust the path if necessary
 
     # Step 6: Display the diff for review in logs
     - name: Show diff for README.md
       run: |
         echo "Comparing differneces for the updated README"
         git diff README.md || echo "No differences to display"
+    
+    # Step 7: Commit changes automatically
+    - name: Commit and push changes
+      run: |
+        git config --local user.name "GitHub Actions"
+        git config --local user.email "actions@github.com"
+        git add README.md
+        git diff --cached --exit-code || git commit -m "Auto-update: Generated README.md"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub token for authentication
