@@ -38,10 +38,10 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: generated-readme
-        path: docs/README.md  # Adjust the path if necessary
+        path: README.md  # Adjust the path if necessary
 
     # Step 6: Display the diff for review in logs
     - name: Show diff for README.md
       run: |
         echo "Comparing differneces for the updated README"
-        git diff docs/README.md || echo "No differences to display"
+        git diff README.md || echo "No differences to display"
