@@ -873,16 +873,9 @@ and its stdout will be used in its place.
 
 ### Rendering documentation
 
-`Make` is used to manage the generation of the `README.md` file. Running
-the following make commands from the `docs/` directory will perform the
-following actions.
-
-- `make` or `make ../README.md` will update the README file if any of
-  the pages have changed since it was last generated.
-
-- `make clean` will cleanup the existing README and static assets.
-
-- `make all` will force the generation of the README manual.
+When a documentation related commit is pushed, a GitHub Action will
+render the documentation. Any changes to the README will be automatially
+committed.
 
 # Managing your Development Environment
 
