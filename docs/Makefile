@@ -36,7 +36,11 @@ _render:
 	set -eo pipefail; $(MAKE) --silent _markdown | pandoc $(PANDOC_OPTS)
 _markdown:
 	for page in $$(cat $(TOC_FILE)); do
-		./$$page 2> /dev/null || cat $$page || exit 1;
+		if [[ $$page == *.py ]]; then
+			./$$page 2> /dev/null || exit 1;
+		else
+			cat $$page || exit 1;
+		fi
 		echo " "
 	done
 
