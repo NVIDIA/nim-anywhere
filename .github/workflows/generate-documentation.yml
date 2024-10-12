@@ -2,7 +2,6 @@ on:
   push:
     paths:
       - 'docs/**'  # Trigger when files under the docs folder change
-
   workflow_dispatch:  # Also allows manual triggering from the GitHub Actions UI
 
 jobs:
