@@ -56,7 +56,10 @@ Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
       - [Populating the Knowledge Base](#populating-the-knowledge-base)
   - [Developing Your Own
     Applications](#developing-your-own-applications)
-  - [{{docstring}}](#docstring)
+  - [Application Configuration](#application-configuration)
+      - [Config from a file](#config-from-a-file)
+      - [Config from a custom file](#config-from-a-custom-file)
+      - [Config from env vars](#config-from-env-vars)
       - [Chain Server config schema](#chain-server-config-schema)
       - [Chat Frontend config schema](#chat-frontend-config-schema)
   - [Contributing](#contributing)
@@ -555,69 +558,107 @@ mindmap
         LLM NIM</br>Optimized LLMs
 ```
 
-\#\!/usr/bin/env python3
+# Application Configuration
 
-import jinja2 from chain\_server import configuration from frontend
-import configuration as fe\_configuration
+The Chain Server can be configured with either a configuration file or
+environment variables.
 
-def resolve\_child(schema, pinfo): ref = pinfo.get("$ref", "") if
-ref.startswith("\#/$defs"): child = ref.split("/")\[-1\] return
-schema\["$defs"\]\[child\] return None
+## Config from a file
 
-def to\_yaml(schema, level=0, env\_var\_prefixes=\[("APP\_", "\_\_")\]):
-indent = " " \* 4 \* level out = ""
+By default, the application will search for a configuration file in all
+of the following locations. If multiple configuration files are found,
+values from lower files in the list will take precedence.
 
-    if schema["type"] == "object":
-        for prop_name, prop in schema["properties"].items():
-            prop_type = prop.get("anyOf", [{"type": prop.get("type")}])
-            prop_desc = prop.get("description", "")
-            prop_child = resolve_child(schema, prop)
-            prop_default = "" if prop_child else (prop.get("default") or "~")
-    
-            # print the property description
-            if prop_desc:
-                out += f"{indent}# {prop_desc}\n"
-    
-            # print the property environment variables
-            env_vars = prop.get("extra_env_vars", []) + [
-                f"{prefix[0]}{prop_name.upper()}" for prefix in env_var_prefixes
-            ]
-            if not prop_child and env_vars:
-                out += f"{indent}# ENV Variables: "
-                out += ", ".join(env_vars)
-                out += "\n"
-    
-            # print variable type
-            if prop_type[0].get("type"):
-                out += f"{indent}# Type: "
-                out += ", ".join([t["type"] for t in prop_type])
-                out += "\n"
-    
-            # print out the property
-            out += f"{indent}{prop_name}: {prop_default}\n"
-    
-            # if the property references a child, print the child
-            if prop_child:
-                new_env_var_prefixes = [
-                    (f"{prefix[0]}{prop_name.upper()}{prefix[1]}", prefix[1]) for prefix in env_var_prefixes
-                ]
-                out += to_yaml(prop_child, level=level + 1, env_var_prefixes=new_env_var_prefixes)
-    
-            out += "\n"
-    
-    return out
+  - ./config.yaml
+  - ./config.yml
+  - ./config.json
+  - \~/app.yaml
+  - \~/app.yml
+  - \~/app.json
+  - /etc/app.yaml
+  - /etc/app.yml
+  - /etc/app.json
 
-environment = jinja2.Environment(loader=jinja2.BaseLoader,
-autoescape=True) environment.filters\["to\_yaml"\] = to\_yaml
+## Config from a custom file
 
-doc\_page = environment.from\_string( """
+An additional config file path can be specified through an environment
+variable named `APP_CONFIG`. The value in this file will take precedence
+over all the default file locations.
 
-# {{docstring}}
+``` bash
+export APP_CONFIG=/etc/my_config.yaml
+```
+
+## Config from env vars
+
+Configuration can also be set using environment variables. The variable
+names will be in the form: `APP_FIELD__SUB_FIELD` Values specified as
+environment variables will take precedence over all values from files.
 
 ## Chain Server config schema
 
 ``` yaml
-{{ cs_schema | to_yaml }}
+# Your API key for authentication to AI Foundation.
+# ENV Variables: NGC_API_KEY, NVIDIA_API_KEY, APP_NVIDIA_API_KEY
+# Type: string, null
+nvidia_api_key: ~
+
+# The Data Source Name for your Redis DB.
+# ENV Variables: APP_REDIS_DSN
+# Type: string
+redis_dsn: redis://localhost:6379/0
+
+llm_model: 
+    # The name of the model to request.
+    # ENV Variables: APP_LLM_MODEL__NAME
+    # Type: string
+    name: meta/llama3-8b-instruct
+
+    # The URL to the model API.
+    # ENV Variables: APP_LLM_MODEL__URL
+    # Type: string
+    url: https://integrate.api.nvidia.com/v1
+
+
+embedding_model: 
+    # The name of the model to request.
+    # ENV Variables: APP_EMBEDDING_MODEL__NAME
+    # Type: string
+    name: nvidia/nv-embedqa-e5-v5
+
+    # The URL to the model API.
+    # ENV Variables: APP_EMBEDDING_MODEL__URL
+    # Type: string
+    url: https://integrate.api.nvidia.com/v1
+
+
+reranking_model: 
+    # The name of the model to request.
+    # ENV Variables: APP_RERANKING_MODEL__NAME
+    # Type: string
+    name: nv-rerank-qa-mistral-4b:1
+
+    # The URL to the model API.
+    # ENV Variables: APP_RERANKING_MODEL__URL
+    # Type: string
+    url: https://integrate.api.nvidia.com/v1
+
+
+milvus: 
+    # The host machine running Milvus vector DB.
+    # ENV Variables: APP_MILVUS__URL
+    # Type: string
+    url: http://localhost:19530
+
+    # The name of the Milvus collection.
+    # ENV Variables: APP_MILVUS__COLLECTION_NAME
+    # Type: string
+    collection_name: collection_1
+
+
+log_level: 
+
+
 ```
 
 ## Chat Frontend config schema
@@ -626,16 +667,25 @@ The chat frontend has a few configuration options as well. They can be
 set in the same manner as the chain server.
 
 ``` yaml
-{{ fe_schema | to_yaml }}
+# The URL to the chain on the chain server.
+# ENV Variables: APP_CHAIN_URL
+# Type: string
+chain_url: http://localhost:3030/
+
+# The url prefix when this is running behind a proxy.
+# ENV Variables: PROXY_PREFIX, APP_PROXY_PREFIX
+# Type: string
+proxy_prefix: /
+
+# Path to the chain server&#39;s config.
+# ENV Variables: APP_CHAIN_CONFIG_FILE
+# Type: string
+chain_config_file: ./config.yaml
+
+log_level: 
+
+
 ```
-
-""" )
-
-env\_var\_prefixes = \[ (source.prefix, source.nested\_separator) for
-source in configuration.config.CONFIG\_SOURCES if hasattr(source,
-"prefix") \] docs = doc\_page.render( docstring=configuration.**doc**,
-cs\_schema=configuration.config.model\_json\_schema(),
-fe\_schema=fe\_configuration.config.model\_json\_schema(), ) print(docs)
 
 # Contributing
 
