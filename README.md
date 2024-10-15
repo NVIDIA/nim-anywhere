@@ -9,36 +9,36 @@
 
 
  
-Please contact <ameliay@nvidia.com>, <rkraus@nvidia.com>, or join
-\[this\] slack channel if you are a internal user, for any question and
-feedback.
+Please join \#cdd-nim-anywhere slack channel if you are a internal user,
+open an issue if you are external for any question and feedback.
 
-One of the primary benefit for AI for Enterprises is their ability to
-work with and learn from their internal data. Retrieval-Augmented
+One of the primary benefit of using AI for Enterprises is their ability
+to work with and learn from their internal data. Retrieval-Augmented
 Generation
 ([RAG](https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation/))
-is one of the best way to do so. NVIDIA has developed a set of
-micro-services called NVIDIA Inference
-Micro-service([NIM](https://docs.nvidia.com/nim/large-language-models/latest/introduction))
+is one of the best ways to do so. NVIDIA has developed a set of
+micro-services called [NIM
+micro-service](https://docs.nvidia.com/nim/large-language-models/latest/introduction.html)
 to help our partners and customers build effective RAG pipeline with
 ease.
 
-NIM Anywhere is an integration of all the tooling required to start
-integrating NIMs. It natively scales out to full-sized labs and up to
-production environments. This is great news for building a RAG
-architecture and easily adding NIMs as needed\! If you're unfamiliar
-with RAG, it dynamically retrieves relevant external information during
-inference without modifying the model itself. Imagine you're the \[xx\]
-of a company with a local database containing confidential, up-to-date
-information. You don’t want OpenAI to access it, but you need the model
-to understand it to answer questions accurately. The solution, connect
-your language model to the database and feed them with the information.
+NIM Anywhere contains all the tooling required to start integrating
+NIMs. It natively scales out to full-sized labs and up to production
+environments. This is great news for building a RAG architecture and
+easily adding NIMs as needed. If you're unfamiliar with RAG, it
+dynamically retrieves relevant external information during inference
+without modifying the model itself. Imagine you're the tech lead of a
+company with a local database containing confidential, up-to-date
+information. You don’t want OpenAI to access your data, but you need the
+model to understand it to answer questions accurately. The solution is
+to connect your language model to the database and feed them with the
+information.
 
 To learn more about why RAG is an excellent solution for boosting the
-accuracy and reliability of your generative AI models, \[click
-me\](deeper dive into RAG here). Another technique other than RAG is
-fine-tuning, an overview of this can be seen \[here\](link to
-finetuning, resource outside NV?).
+accuracy and reliability of your generative AI models, [click
+me](https://developer.nvidia.com/blog/enhancing-rag-applications-with-nvidia-nim/).
+Another technique other than RAG is fine-tuning, an overview of this can
+be seen [here](https://www.ibm.com/topics/fine-tuning).
 
 Get started with NIM Anywhere now with the [quick-start](#quick-start)
 instructions and build your first RAG application using NIMs\!
@@ -46,7 +46,7 @@ instructions and build your first RAG application using NIMs\!
 ![NIM Anywhere
 Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
  
-  - [Quick Start](#quick-start)
+  - [Quick-start](#quick-start)
       - [Generate your NGC Personal
         Key](#generate-your-ngc-personal-key)
       - [Install AI Workbench](#install-ai-workbench)
@@ -56,10 +56,7 @@ Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
       - [Populating the Knowledge Base](#populating-the-knowledge-base)
   - [Developing Your Own
     Applications](#developing-your-own-applications)
-  - [Application Configuration](#application-configuration)
-      - [Config from a file](#config-from-a-file)
-      - [Config from a custom file](#config-from-a-custom-file)
-      - [Config from env vars](#config-from-env-vars)
+  - [{{docstring}}](#docstring)
       - [Chain Server config schema](#chain-server-config-schema)
       - [Chat Frontend config schema](#chat-frontend-config-schema)
   - [Contributing](#contributing)
@@ -74,7 +71,7 @@ Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
         Configuration](#operating-system-configuration)
       - [Updating Dependencies](#updating-dependencies)
 
-# Quick Start
+# Quick-start
 
 ## Generate your NGC Personal Key
 
@@ -176,9 +173,9 @@ Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/windo
     to make changes.
 
 3.  Follow the instructions in the installation wizard. If you need to
-    install WSL2, authorize Windows to make the changes and reboot when
-    requested. When the system restarts, the NVIDIA AI Workbench
-    installer should automatically resume.
+    install WSL2, authorize Windows to make the changes and reboot local
+    machine when requested. When the system restarts, the NVIDIA AI
+    Workbench installer should automatically resume.
 
 4.  Select Docker as your container runtime.
 
@@ -253,9 +250,9 @@ these steps as `root`.
     ```
 
 3.  AI Workbench will install the NVIDIA drivers for you (if needed).
-    You will need to reboot your machine after the drivers are installed
-    and then restart the AI Workbench installation by double-clicking
-    the NVIDIA AI Workbench icon on your desktop.
+    You will need to reboot your local machine after the drivers are
+    installed and then restart the AI Workbench installation by
+    double-clicking the NVIDIA AI Workbench icon on your desktop.
 
 4.  Select Docker as your container runtime.
 
@@ -280,10 +277,10 @@ Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/ubunt
 Run this installation as the user who will be using Workbench. Do not
 run these steps as `root`.
 
-1.  Ensure SSH Key based authentication, without a passphrase, is
-    enabled from the local machine to the remote machine. If this is not
-    currently enabled, the following commands will enable this is most
-    situations.
+1.  Ensure SSH Key based authentication is enabled from the local
+    machine to the remote machine. If this is not currently enabled, the
+    following commands will enable this is most situations. change
+    `REMOTE_USER` and `REMOTE-MACHINE` to reflect your remote address.
     
       - From a Windows local client, use the following PowerShell:
         ``` powershell
@@ -307,9 +304,9 @@ run these steps as `root`.
     ```
 
 3.  AI Workbench will install the NVIDIA drivers for you (if needed).
-    You will need to reboot your machine after the drivers are installed
-    and then restart the AI Workbench installation by re-running the
-    commands in the previous step.
+    You will need to reboot your remote machine after the drivers are
+    installed and then restart the AI Workbench installation by
+    re-running the commands in the previous step.
 
 4.  Select Docker as your container runtime.
 
@@ -364,7 +361,8 @@ section.
 </summary>
 
 1.  Open the local NVIDIA AI Workbench window. From the list of
-    locations displayed, select one you would like to work in.
+    locations displayed, select either the remote one you just set up,
+    or local if you're going to work locally.
     
     ![AI Workbench Locations
     Menu](.static/da9474cbe2ca0da073b0ced28dd1dc492dfb3cf5.png)
@@ -374,9 +372,11 @@ section.
     ![AI Workbench Projects
     Menu](.static/966cc83638dc37035b6a544d0c76aaf7a55d3952.png)
 
-3.  Enter the URL of the project repository. You may leave the path as
-    the default value. Press *Clone*. If you are cloning this project,
-    the url will be: `https://github.com/NVIDIA/nim-anywhere.git`
+3.  In the 'Clone Project' pop up window, set the Repository URL to
+    `https://github.com/NVIDIA/nim-anywhere.git`. You can leave the Path
+    as the default of
+    `/home/REMOTE_USER/nvidia-workbench/nim-anywhere.git`. Click
+    *Clone*.\`
     
     ![AI Workbench Clone Project
     Menu](.static/eb6d2e60199d06d752eb6e34478c683f2a084d28.png)
@@ -555,107 +555,69 @@ mindmap
         LLM NIM</br>Optimized LLMs
 ```
 
-# Application Configuration
+\#\!/usr/bin/env python3
 
-The Chain Server can be configured with either a configuration file or
-environment variables.
+import jinja2 from chain\_server import configuration from frontend
+import configuration as fe\_configuration
 
-## Config from a file
+def resolve\_child(schema, pinfo): ref = pinfo.get("$ref", "") if
+ref.startswith("\#/$defs"): child = ref.split("/")\[-1\] return
+schema\["$defs"\]\[child\] return None
 
-By default, the application will search for a configuration file in all
-of the following locations. If multiple configuration files are found,
-values from lower files in the list will take precedence.
+def to\_yaml(schema, level=0, env\_var\_prefixes=\[("APP\_", "\_\_")\]):
+indent = " " \* 4 \* level out = ""
 
-  - ./config.yaml
-  - ./config.yml
-  - ./config.json
-  - \~/app.yaml
-  - \~/app.yml
-  - \~/app.json
-  - /etc/app.yaml
-  - /etc/app.yml
-  - /etc/app.json
+    if schema["type"] == "object":
+        for prop_name, prop in schema["properties"].items():
+            prop_type = prop.get("anyOf", [{"type": prop.get("type")}])
+            prop_desc = prop.get("description", "")
+            prop_child = resolve_child(schema, prop)
+            prop_default = "" if prop_child else (prop.get("default") or "~")
+    
+            # print the property description
+            if prop_desc:
+                out += f"{indent}# {prop_desc}\n"
+    
+            # print the property environment variables
+            env_vars = prop.get("extra_env_vars", []) + [
+                f"{prefix[0]}{prop_name.upper()}" for prefix in env_var_prefixes
+            ]
+            if not prop_child and env_vars:
+                out += f"{indent}# ENV Variables: "
+                out += ", ".join(env_vars)
+                out += "\n"
+    
+            # print variable type
+            if prop_type[0].get("type"):
+                out += f"{indent}# Type: "
+                out += ", ".join([t["type"] for t in prop_type])
+                out += "\n"
+    
+            # print out the property
+            out += f"{indent}{prop_name}: {prop_default}\n"
+    
+            # if the property references a child, print the child
+            if prop_child:
+                new_env_var_prefixes = [
+                    (f"{prefix[0]}{prop_name.upper()}{prefix[1]}", prefix[1]) for prefix in env_var_prefixes
+                ]
+                out += to_yaml(prop_child, level=level + 1, env_var_prefixes=new_env_var_prefixes)
+    
+            out += "\n"
+    
+    return out
 
-## Config from a custom file
+environment = jinja2.Environment(loader=jinja2.BaseLoader,
+autoescape=True) environment.filters\["to\_yaml"\] = to\_yaml
 
-An additional config file path can be specified through an environment
-variable named `APP_CONFIG`. The value in this file will take precedence
-over all the default file locations.
+doc\_page = environment.from\_string( """
 
-``` bash
-export APP_CONFIG=/etc/my_config.yaml
-```
-
-## Config from env vars
-
-Configuration can also be set using environment variables. The variable
-names will be in the form: `APP_FIELD__SUB_FIELD` Values specified as
-environment variables will take precedence over all values from files.
+# {{docstring}}
 
 ## Chain Server config schema
 
 ``` yaml
-# Your API key for authentication to AI Foundation.
-# ENV Variables: NGC_API_KEY, NVIDIA_API_KEY, APP_NVIDIA_API_KEY
-# Type: string, null
-nvidia_api_key: ~
-
-# The Data Source Name for your Redis DB.
-# ENV Variables: APP_REDIS_DSN
-# Type: string
-redis_dsn: redis://localhost:6379/0
-
-llm_model: 
-    # The name of the model to request.
-    # ENV Variables: APP_LLM_MODEL__NAME
-    # Type: string
-    name: meta/llama3-8b-instruct
-
-    # The URL to the model API.
-    # ENV Variables: APP_LLM_MODEL__URL
-    # Type: string
-    url: https://integrate.api.nvidia.com/v1
-
-
-embedding_model: 
-    # The name of the model to request.
-    # ENV Variables: APP_EMBEDDING_MODEL__NAME
-    # Type: string
-    name: nvidia/nv-embedqa-e5-v5
-
-    # The URL to the model API.
-    # ENV Variables: APP_EMBEDDING_MODEL__URL
-    # Type: string
-    url: https://integrate.api.nvidia.com/v1
-
-
-reranking_model: 
-    # The name of the model to request.
-    # ENV Variables: APP_RERANKING_MODEL__NAME
-    # Type: string
-    name: nv-rerank-qa-mistral-4b:1
-
-    # The URL to the model API.
-    # ENV Variables: APP_RERANKING_MODEL__URL
-    # Type: string
-    url: https://integrate.api.nvidia.com/v1
-
-
-milvus: 
-    # The host machine running Milvus vector DB.
-    # ENV Variables: APP_MILVUS__URL
-    # Type: string
-    url: http://localhost:19530
-
-    # The name of the Milvus collection.
-    # ENV Variables: APP_MILVUS__COLLECTION_NAME
-    # Type: string
-    collection_name: collection_1
-
-
-log_level: 
-
-
+{{ cs_schema | to_yaml }}
 ```
 
 ## Chat Frontend config schema
@@ -664,25 +626,16 @@ The chat frontend has a few configuration options as well. They can be
 set in the same manner as the chain server.
 
 ``` yaml
-# The URL to the chain on the chain server.
-# ENV Variables: APP_CHAIN_URL
-# Type: string
-chain_url: http://localhost:3030/
-
-# The url prefix when this is running behind a proxy.
-# ENV Variables: PROXY_PREFIX, APP_PROXY_PREFIX
-# Type: string
-proxy_prefix: /
-
-# Path to the chain server&#39;s config.
-# ENV Variables: APP_CHAIN_CONFIG_FILE
-# Type: string
-chain_config_file: ./config.yaml
-
-log_level: 
-
-
+{{ fe_schema | to_yaml }}
 ```
+
+""" )
+
+env\_var\_prefixes = \[ (source.prefix, source.nested\_separator) for
+source in configuration.config.CONFIG\_SOURCES if hasattr(source,
+"prefix") \] docs = doc\_page.render( docstring=configuration.**doc**,
+cs\_schema=configuration.config.model\_json\_schema(),
+fe\_schema=fe\_configuration.config.model\_json\_schema(), ) print(docs)
 
 # Contributing
 

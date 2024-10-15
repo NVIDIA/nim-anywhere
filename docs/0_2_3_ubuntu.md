@@ -14,7 +14,7 @@ For full instructions, see the [NVIDIA AI Workbench User Guide](https://docs.nvi
     chmod +x NVIDIA-AI-Workbench-*.AppImage
     ```
 
-1. AI Workbench will install the NVIDIA drivers for you (if needed). You will need to reboot your machine after the drivers are installed and then restart the AI Workbench installation by double-clicking the NVIDIA AI Workbench icon on your desktop.
+1. AI Workbench will install the NVIDIA drivers for you (if needed). You will need to reboot your local machine after the drivers are installed and then restart the AI Workbench installation by double-clicking the NVIDIA AI Workbench icon on your desktop.
 
 1. Select Docker as your container runtime.
 
