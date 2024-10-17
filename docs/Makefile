@@ -12,13 +12,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specifi
 SHELL=/bin/bash
-PANDOC_HEADER_OPTS =--from gfm --to gfm --extract-media=.static --self-contained --standalone
-PANDOC_OPTS =--from gfm --to gfm --standalone --toc --toc-depth=2 --extract-media=.static --self-contained
+PANDOC_HEADER_OPTS =--from gfm --to gfm --extract-media=.static --embed-resources --standalone
+PANDOC_OPTS =--from gfm --to gfm --standalone --toc --toc-depth=2 --extract-media=.static --embed-resources --standalone
 
 HEADER_FILE=_HEADER.md
 SUMMARY_FILE=_SUMMARY.md
 TOC_FILE=_TOC.md
 
+export PYTHONPATH := $(PYTHONPATH):../code
 
 ../README.md: *.md* ../code/*/configuration.py
 	make --silent _render > ../README.md
@@ -36,7 +37,11 @@ _render:
 	set -eo pipefail; $(MAKE) --silent _markdown | pandoc $(PANDOC_OPTS)
 _markdown:
 	for page in $$(cat $(TOC_FILE)); do
-		./$$page 2> /dev/null || cat $$page || exit 1;
+		if [[ $$page == *.py ]]; then
+			./$$page 2> /dev/null || cat $$page || exit 1;
+		else
+			cat $$page || exit 1;
+		fi
 		echo " "
 	done
 

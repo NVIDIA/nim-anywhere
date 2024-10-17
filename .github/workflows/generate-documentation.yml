@@ -1,0 +1,62 @@
+name: Generate README
+
+on:
+  push:
+    paths:
+      - 'docs/**'  # Trigger when files under the docs folder change
+  workflow_dispatch:  # Also allows manual triggering from the GitHub Actions UI
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the repository
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Step 2: Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+
+    # Step 3: Install Dependencies (Pandoc, Make, etc.)
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y make wget
+        PANDOC_VERSION=3.1.8
+        wget https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-amd64.deb
+        sudo dpkg -i pandoc-${PANDOC_VERSION}-1-amd64.deb
+        python -m pip install --upgrade pip
+        pip install -r .github/workflows/generate-documentation_requirements.txt
+
+    # Step 4: Build Documentation
+    - name: Build documentation
+      working-directory: docs
+      run: make all
+
+    # Step 5: Upload README.md as an artifact for manual review
+    #- name: Upload README.md as artifact
+    #  uses: actions/upload-artifact@v4
+    #  with:
+    #    name: generated-readme
+    #    path: README.md  # Adjust the path if necessary
+
+    # Step 6: Display the diff for review in logs
+    - name: Show diff for README.md
+      run: |
+        echo "Comparing differences for the updated README"
+        git diff README.md || echo "No differences to display"
+    
+    # Step 7: Commit changes automatically
+    - name: Commit and push changes
+      run: |
+        git config --local user.name "GitHub Actions"
+        git config --local user.email "actions@github.com"
+        git add README.md .static
+        git diff --cached --exit-code || git commit -m "Auto-generated: README.md and related content"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub token for authentication
