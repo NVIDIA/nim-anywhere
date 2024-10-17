@@ -24,7 +24,7 @@ ease.
 
 NIM Anywhere contains all the tooling required to start integrating
 NIMs. It natively scales out to full-sized labs and up to production
-environments. This is great news for building a RAG architecture and
+environments. This is ideal for building a RAG architecture and
 easily adding NIMs as needed. If you're unfamiliar with RAG, it
 dynamically retrieves relevant external information during inference
 without modifying the model itself. Imagine you're the tech lead of a
