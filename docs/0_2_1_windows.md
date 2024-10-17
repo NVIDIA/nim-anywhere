@@ -12,7 +12,7 @@ For full instructions, see the [NVIDIA AI Workbench User Guide](https://docs.nvi
 
 1. Download the [NVIDIA AI Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/) installer and execute it. Authorize Windows to allow the installer to make changes.
 
-1. Follow the instructions in the installation wizard. If you need to install WSL2, authorize Windows to make the changes and reboot when requested. When the system restarts, the NVIDIA AI Workbench installer should automatically resume.
+1. Follow the instructions in the installation wizard. If you need to install WSL2, authorize Windows to make the changes and reboot local machine when requested. When the system restarts, the NVIDIA AI Workbench installer should automatically resume.
 
 1. Select Docker as your container runtime.
 

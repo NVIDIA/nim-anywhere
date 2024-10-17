@@ -11,7 +11,7 @@ Forking this repository is recommended for development as changes will be able t
 <b>Expand this section for a details on downloading this project.</b>
 </summary>
 
-1. Open the local NVIDIA AI Workbench window. From the list of locations displayed, select one you would like to work in.
+1. Open the local NVIDIA AI Workbench window. From the list of locations displayed, select either the remote one you just set up, or local if you're going to work locally.
 
     ![AI Workbench Locations Menu](_static/nvwb_locations.png)
 
@@ -19,7 +19,7 @@ Forking this repository is recommended for development as changes will be able t
 
     ![AI Workbench Projects Menu](_static/nvwb_projects.png)
 
-1. Enter the URL of the project repository. You may leave the path as the default value. Press *Clone*. If you are cloning this project, the url will be: `https://github.com/NVIDIA/nim-anywhere.git`
+1. In the 'Clone Project' pop up window, set the Repository URL to `https://github.com/NVIDIA/nim-anywhere.git`. You can leave the Path as the default of `/home/REMOTE_USER/nvidia-workbench/nim-anywhere.git`. Click *Clone*.`
 
     ![AI Workbench Clone Project Menu](_static/nvwb_clone.png)
 

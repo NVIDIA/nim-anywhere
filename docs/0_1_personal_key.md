@@ -15,7 +15,7 @@ To allow AI Workbench to access NVIDIA’s cloud resources, you’ll need to pro
 
     ![Generate Personal Key](_static/generate_personal_key.png)
 
-1. Enter any value as the Key name, an expiration of 12 months is fine, and select all four services. Press *Generate Personal Key* when you are finished.
+1. Enter any value as the Key name, an expiration of 12 months is fine, and select all the services. Press *Generate Personal Key* when you are finished.
 
     ![Personal Key Form](_static/personal_key_form.png)
 
