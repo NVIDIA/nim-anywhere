@@ -26,8 +26,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y make pandoc
-        pip install confz==2.0.1
-        pip install Jinja2>=3.0.0
+        python -m pip install --upgrade pip
+        pip install -r .github/workflows/generate-documentation_requirements.txt
 
     # Step 4: Build Documentation
     - name: Build documentation
