@@ -12,7 +12,7 @@
 Please join \#cdd-nim-anywhere slack channel if you are a internal user,
 open an issue if you are external for any question and feedback.
 
-One of the primary benefit of using AI for Enterprises is their ability
+AI enables Enterprises to work with and learn from their internal data. 
 to work with and learn from their internal data. Retrieval-Augmented
 Generation
 ([RAG](https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation/))
@@ -30,13 +30,13 @@ dynamically retrieves relevant external information during inference
 without modifying the model itself. Imagine you're the tech lead of a
 company with a local database containing confidential, up-to-date
 information. You don’t want OpenAI to access your data, but you need the
-model to understand it to answer questions accurately. The solution is
+system to understand the confidential data and use it to  answer questions accurately. The solution is
 to connect your language model to the database and feed them with the
 information.
 
 To learn more about why RAG is an excellent solution for boosting the
-accuracy and reliability of your generative AI models, [click
-me](https://developer.nvidia.com/blog/enhancing-rag-applications-with-nvidia-nim/).
+accuracy and reliability of your generative AI models, [read this blog post]
+(https://developer.nvidia.com/blog/enhancing-rag-applications-with-nvidia-nim/).
 Another technique other than RAG is fine-tuning, an overview of this can
 be seen [here](https://www.ibm.com/topics/fine-tuning).
 
@@ -176,7 +176,7 @@ Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/windo
     to make changes.
 
 3.  Follow the instructions in the installation wizard. If you need to
-    install WSL2, authorize Windows to make the changes and reboot local
+    install WSL2, authorize Windows to make the changes and reboot your local
     machine when requested. When the system restarts, the NVIDIA AI
     Workbench installer should automatically resume.
 

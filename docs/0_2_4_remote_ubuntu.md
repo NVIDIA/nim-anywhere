@@ -11,7 +11,7 @@ Only Ubuntu is supported for remote machines.
 
 For full instructions, see the [NVIDIA AI Workbench User Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/ubuntu-remote.html). Run this installation as the user who will be using Workbench. Do not run these steps as `root`.
 
-1. Ensure SSH Key based authentication is enabled from the local machine to the remote machine. If this is not currently enabled, the following commands will enable this is most situations. change `REMOTE_USER` and `REMOTE-MACHINE` to reflect your remote address.
+1. Ensure SSH Key based authentication is enabled from the local machine to the remote machine. If this is not currently enabled, the following commands will enable this is most situations. Change `REMOTE_USER` and `REMOTE-MACHINE` to reflect your remote address.
 
     - From a Windows local client, use the following PowerShell:
       ```powershell
