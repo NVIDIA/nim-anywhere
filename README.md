@@ -12,7 +12,7 @@
 Please join \#cdd-nim-anywhere slack channel if you are a internal user,
 open an issue if you are external for any question and feedback.
 
-AI enables Enterprises to work with and learn from their internal data. 
+One of the primary benefit of using AI for Enterprises is their ability
 to work with and learn from their internal data. Retrieval-Augmented
 Generation
 ([RAG](https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation/))
@@ -24,21 +24,19 @@ ease.
 
 NIM Anywhere contains all the tooling required to start integrating
 NIMs. It natively scales out to full-sized labs and up to production
-environments. This is ideal for building a RAG architecture and
+environments. This is great news for building a RAG architecture and
 easily adding NIMs as needed. If you're unfamiliar with RAG, it
 dynamically retrieves relevant external information during inference
 without modifying the model itself. Imagine you're the tech lead of a
 company with a local database containing confidential, up-to-date
 information. You don’t want OpenAI to access your data, but you need the
-system to understand the confidential data and use it to  answer questions accurately. The solution is
+model to understand it to answer questions accurately. The solution is
 to connect your language model to the database and feed them with the
 information.
 
 To learn more about why RAG is an excellent solution for boosting the
-accuracy and reliability of your generative AI models, [read this blog post]
-(https://developer.nvidia.com/blog/enhancing-rag-applications-with-nvidia-nim/).
-Another technique other than RAG is fine-tuning, an overview of this can
-be seen [here](https://www.ibm.com/topics/fine-tuning).
+accuracy and reliability of your generative AI models, [read this
+blog](https://developer.nvidia.com/blog/enhancing-rag-applications-with-nvidia-nim/).
 
 Get started with NIM Anywhere now with the [quick-start](#quick-start)
 instructions and build your first RAG application using NIMs\!
@@ -176,7 +174,7 @@ Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/windo
     to make changes.
 
 3.  Follow the instructions in the installation wizard. If you need to
-    install WSL2, authorize Windows to make the changes and reboot your local
+    install WSL2, authorize Windows to make the changes and reboot local
     machine when requested. When the system restarts, the NVIDIA AI
     Workbench installer should automatically resume.
 
@@ -282,7 +280,7 @@ run these steps as `root`.
 
 1.  Ensure SSH Key based authentication is enabled from the local
     machine to the remote machine. If this is not currently enabled, the
-    following commands will enable this is most situations. change
+    following commands will enable this is most situations. Change
     `REMOTE_USER` and `REMOTE-MACHINE` to reflect your remote address.
     
       - From a Windows local client, use the following PowerShell:
