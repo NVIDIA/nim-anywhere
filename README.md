@@ -24,7 +24,7 @@ ease.
 
 NIM Anywhere contains all the tooling required to start integrating
 NIMs. It natively scales out to full-sized labs and up to production
-environments. This is great news for building a RAG architecture and
+environments. This is ideal for building a RAG architecture and
 easily adding NIMs as needed. If you're unfamiliar with RAG, it
 dynamically retrieves relevant external information during inference
 without modifying the model itself. Imagine you're the tech lead of a
@@ -37,6 +37,8 @@ information.
 To learn more about why RAG is an excellent solution for boosting the
 accuracy and reliability of your generative AI models, [click
 me](https://developer.nvidia.com/blog/enhancing-rag-applications-with-nvidia-nim/).
+Another technique other than RAG is fine-tuning, an overview of this can
+be seen [here](https://www.ibm.com/topics/fine-tuning).
 
 Get started with NIM Anywhere now with the [quick-start](#quick-start)
 instructions and build your first RAG application using NIMs\!
@@ -535,7 +537,7 @@ Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/
 The demo services are all in the `code` folder. The root level of the
 code folder has a few interactive notebooks meant for technical deep
 dives. The Chain Server is a sample application utilizing NIMs with
-LangChain(Note that the Chain Server here gives you the option to
+LangChain. (Note that the Chain Server here gives you the option to
 experiment with and without RAG). The Chat Frontend folder contains an
 interactive UI server for exercising the chain server. Finally, sample
 notebooks are provided in the Evaluation directory to demonstrate
