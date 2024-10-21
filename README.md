@@ -9,17 +9,42 @@
 
 
  
-An entrypoint for developing with NIMs that natively scales out to
-full-sized labs and up to production environments. NIM Anywhere is an
-integration of all the tooling required to start integrating NVIDIA
-enterprise-ready microservices.
+Please join \#cdd-nim-anywhere slack channel if you are a internal user,
+open an issue if you are external for any question and feedback.
 
-Get started now with the [quick start](#quick-start) instructions.
+One of the primary benefit of using AI for Enterprises is their ability
+to work with and learn from their internal data. Retrieval-Augmented
+Generation
+([RAG](https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation/))
+is one of the best ways to do so. NVIDIA has developed a set of
+micro-services called [NIM
+micro-service](https://docs.nvidia.com/nim/large-language-models/latest/introduction.html)
+to help our partners and customers build effective RAG pipeline with
+ease.
+
+NIM Anywhere contains all the tooling required to start integrating
+NIMs. It natively scales out to full-sized labs and up to production
+environments. This is great news for building a RAG architecture and
+easily adding NIMs as needed. If you're unfamiliar with RAG, it
+dynamically retrieves relevant external information during inference
+without modifying the model itself. Imagine you're the tech lead of a
+company with a local database containing confidential, up-to-date
+information. You don’t want OpenAI to access your data, but you need the
+model to understand it to answer questions accurately. The solution is
+to connect your language model to the database and feed them with the
+information.
+
+To learn more about why RAG is an excellent solution for boosting the
+accuracy and reliability of your generative AI models, [read this
+blog](https://developer.nvidia.com/blog/enhancing-rag-applications-with-nvidia-nim/).
+
+Get started with NIM Anywhere now with the [quick-start](#quick-start)
+instructions and build your first RAG application using NIMs\!
 
 ![NIM Anywhere
 Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
  
-  - [Quick Start](#quick-start)
+  - [Quick-start](#quick-start)
       - [Generate your NGC Personal
         Key](#generate-your-ngc-personal-key)
       - [Install AI Workbench](#install-ai-workbench)
@@ -40,14 +65,14 @@ Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
       - [Updating the frontend](#updating-the-frontend)
       - [Updating documentation](#updating-documentation)
   - [Managing your Development
-    Environment](#managing-your-Development-environment)
+    Environment](#managing-your-development-environment)
       - [Environment Variables](#environment-variables)
       - [Python Environment Packages](#python-environment-packages)
       - [Operating System
         Configuration](#operating-system-configuration)
       - [Updating Dependencies](#updating-dependencies)
 
-# Quick Start
+# Quick-start
 
 ## Generate your NGC Personal Key
 
@@ -74,7 +99,7 @@ provide it with a Personal Key. These keys begin with `nvapi-`.
     Key](.static/929e8801e7993066fa837f6f7e0293694006bc96.png)
 
 3.  Enter any value as the Key name, an expiration of 12 months is fine,
-    and select all four services. Press *Generate Personal Key* when you
+    and select all the services. Press *Generate Personal Key* when you
     are finished.
     
     ![Personal Key
@@ -149,9 +174,9 @@ Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/windo
     to make changes.
 
 3.  Follow the instructions in the installation wizard. If you need to
-    install WSL2, authorize Windows to make the changes and reboot when
-    requested. When the system restarts, the NVIDIA AI Workbench
-    installer should automatically resume.
+    install WSL2, authorize Windows to make the changes and reboot local
+    machine when requested. When the system restarts, the NVIDIA AI
+    Workbench installer should automatically resume.
 
 4.  Select Docker as your container runtime.
 
@@ -226,9 +251,9 @@ these steps as `root`.
     ```
 
 3.  AI Workbench will install the NVIDIA drivers for you (if needed).
-    You will need to reboot your machine after the drivers are installed
-    and then restart the AI Workbench installation by double-clicking
-    the NVIDIA AI Workbench icon on your desktop.
+    You will need to reboot your local machine after the drivers are
+    installed and then restart the AI Workbench installation by
+    double-clicking the NVIDIA AI Workbench icon on your desktop.
 
 4.  Select Docker as your container runtime.
 
@@ -253,10 +278,10 @@ Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/ubunt
 Run this installation as the user who will be using Workbench. Do not
 run these steps as `root`.
 
-1.  Ensure SSH Key based authentication, without a passphrase, is
-    enabled from the local machine to the remote machine. If this is not
-    currently enabled, the following commands will enable this is most
-    situations.
+1.  Ensure SSH Key based authentication is enabled from the local
+    machine to the remote machine. If this is not currently enabled, the
+    following commands will enable this is most situations. Change
+    `REMOTE_USER` and `REMOTE-MACHINE` to reflect your remote address.
     
       - From a Windows local client, use the following PowerShell:
         ``` powershell
@@ -280,9 +305,9 @@ run these steps as `root`.
     ```
 
 3.  AI Workbench will install the NVIDIA drivers for you (if needed).
-    You will need to reboot your machine after the drivers are installed
-    and then restart the AI Workbench installation by re-running the
-    commands in the previous step.
+    You will need to reboot your remote machine after the drivers are
+    installed and then restart the AI Workbench installation by
+    re-running the commands in the previous step.
 
 4.  Select Docker as your container runtime.
 
@@ -323,10 +348,10 @@ Cloning this repository is the recommended way to start. This will not
 allow for local modifications, but is the fastest to get started. This
 also allows for the easiest way to pull updates.
 
-Forking this repository is recommended for development as changes will be
-able to be saved. However, to get updates, the fork maintainer will have
-to regularly pull from the upstream repo. To work from a fork, follow
-[GitHub's
+Forking this repository is recommended for development as changes will
+be able to be saved. However, to get updates, the fork maintainer will
+have to regularly pull from the upstream repo. To work from a fork,
+follow [GitHub's
 instructions](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
 and then reference the URL to your personal fork in the rest of this
 section.
@@ -337,7 +362,8 @@ section.
 </summary>
 
 1.  Open the local NVIDIA AI Workbench window. From the list of
-    locations displayed, select one you would like to work in.
+    locations displayed, select either the remote one you just set up,
+    or local if you're going to work locally.
     
     ![AI Workbench Locations
     Menu](.static/da9474cbe2ca0da073b0ced28dd1dc492dfb3cf5.png)
@@ -347,9 +373,11 @@ section.
     ![AI Workbench Projects
     Menu](.static/966cc83638dc37035b6a544d0c76aaf7a55d3952.png)
 
-3.  Enter the URL of the project repository. You may leave the path as
-    the default value. Press *Clone*. If you are cloning this project,
-    the url will be: `https://github.com/NVIDIA/nim-anywhere.git`
+3.  In the 'Clone Project' pop up window, set the Repository URL to
+    `https://github.com/NVIDIA/nim-anywhere.git`. You can leave the Path
+    as the default of
+    `/home/REMOTE_USER/nvidia-workbench/nim-anywhere.git`. Click
+    *Clone*.\`
     
     ![AI Workbench Clone Project
     Menu](.static/eb6d2e60199d06d752eb6e34478c683f2a084d28.png)
@@ -507,10 +535,11 @@ Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/
 The demo services are all in the `code` folder. The root level of the
 code folder has a few interactive notebooks meant for technical deep
 dives. The Chain Server is a sample application utilizing NIMs with
-LangChain. The Chat Frontend folder contains an interactive UI server
-for exercising the chain server. Finally, sample notebooks are provided
-in the Evaluation directory to demonstrate retrieval scoring and
-validation.
+LangChain. (Note that the Chain Server here gives you the option to
+experiment with and without RAG). The Chat Frontend folder contains an
+interactive UI server for exercising the chain server. Finally, sample
+notebooks are provided in the Evaluation directory to demonstrate
+retrieval scoring and validation.
 
 ``` mermaid
 mindmap
@@ -581,7 +610,7 @@ llm_model:
     # The name of the model to request.
     # ENV Variables: APP_LLM_MODEL__NAME
     # Type: string
-    name: meta/llama3-70b-instruct
+    name: meta/llama3-8b-instruct
 
     # The URL to the model API.
     # ENV Variables: APP_LLM_MODEL__URL
@@ -625,9 +654,7 @@ milvus:
     collection_name: collection_1
 
 
-# Options for the logging levels.
-# ENV Variables: APP_LOG_LEVEL
-log_level: WARNING
+log_level: 
 
 
 ```
@@ -653,9 +680,7 @@ proxy_prefix: /
 # Type: string
 chain_config_file: ./config.yaml
 
-# Options for the logging levels.
-# ENV Variables: APP_LOG_LEVEL
-log_level: INFO
+log_level: 
 
 
 ```

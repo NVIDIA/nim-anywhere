@@ -11,7 +11,7 @@ Only Ubuntu is supported for remote machines.
 
 For full instructions, see the [NVIDIA AI Workbench User Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/ubuntu-remote.html). Run this installation as the user who will be using Workbench. Do not run these steps as `root`.
 
-1. Ensure SSH Key based authentication, without a passphrase, is enabled from the local machine to the remote machine. If this is not currently enabled, the following commands will enable this is most situations.
+1. Ensure SSH Key based authentication is enabled from the local machine to the remote machine. If this is not currently enabled, the following commands will enable this is most situations. Change `REMOTE_USER` and `REMOTE-MACHINE` to reflect your remote address.
 
     - From a Windows local client, use the following PowerShell:
       ```powershell
@@ -33,7 +33,7 @@ For full instructions, see the [NVIDIA AI Workbench User Guide](https://docs.nvi
     sudo -E $HOME/.nvwb/bin/nvwb-cli install
     ```
 
-1. AI Workbench will install the NVIDIA drivers for you (if needed). You will need to reboot your machine after the drivers are installed and then restart the AI Workbench installation by re-running the commands in the previous step.
+1. AI Workbench will install the NVIDIA drivers for you (if needed). You will need to reboot your remote machine after the drivers are installed and then restart the AI Workbench installation by re-running the commands in the previous step.
 
 1. Select Docker as your container runtime.
 
