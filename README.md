@@ -16,36 +16,32 @@ enterprise-ready microservices.
 
 Get started now with the [quick start](#quick-start) instructions.
 
-![NIM Anywhere
-Screenshot](.static/c15df7fd1efa293829b1e03871d7c4f5707d9396.png)
+![NIM Anywhere Screenshot](.static/_static/nim-anywhere.png)
  
-  - [Quick Start](#quick-start)
-      - [Generate your NGC Personal
-        Key](#generate-your-ngc-personal-key)
-      - [Install AI Workbench](#install-ai-workbench)
-      - [Download this project](#download-this-project)
-      - [Configure this project](#configure-this-project)
-      - [Start This Project](#start-this-project)
-      - [Populating the Knowledge Base](#populating-the-knowledge-base)
-  - [Developing Your Own
-    Applications](#developing-your-own-applications)
-  - [Application Configuration](#application-configuration)
-      - [Config from a file](#config-from-a-file)
-      - [Config from a custom file](#config-from-a-custom-file)
-      - [Config from env vars](#config-from-env-vars)
-      - [Chain Server config schema](#chain-server-config-schema)
-      - [Chat Frontend config schema](#chat-frontend-config-schema)
-  - [Contributing](#contributing)
-      - [Code Style](#code-style)
-      - [Updating the frontend](#updating-the-frontend)
-      - [Updating documentation](#updating-documentation)
-  - [Managing your Development
-    Environment](#managing-your-Development-environment)
-      - [Environment Variables](#environment-variables)
-      - [Python Environment Packages](#python-environment-packages)
-      - [Operating System
-        Configuration](#operating-system-configuration)
-      - [Updating Dependencies](#updating-dependencies)
+- [Quick Start](#quick-start)
+  - [Generate your NGC Personal Key](#generate-your-ngc-personal-key)
+  - [Install AI Workbench](#install-ai-workbench)
+  - [Download this project](#download-this-project)
+  - [Configure this project](#configure-this-project)
+  - [Start This Project](#start-this-project)
+  - [Populating the Knowledge Base](#populating-the-knowledge-base)
+- [Developing Your Own Applications](#developing-your-own-applications)
+- [Application Configuration](#application-configuration)
+  - [Config from a file](#config-from-a-file)
+  - [Config from a custom file](#config-from-a-custom-file)
+  - [Config from env vars](#config-from-env-vars)
+  - [Chain Server config schema](#chain-server-config-schema)
+  - [Chat Frontend config schema](#chat-frontend-config-schema)
+- [Contributing](#contributing)
+  - [Code Style](#code-style)
+  - [Updating the frontend](#updating-the-frontend)
+  - [Updating documentation](#updating-documentation)
+- [Managing your Development
+  Environment](#managing-your-development-environment)
+  - [Environment Variables](#environment-variables)
+  - [Python Environment Packages](#python-environment-packages)
+  - [Operating System Configuration](#operating-system-configuration)
+  - [Updating Dependencies](#updating-dependencies)
 
 # Quick Start
 
@@ -62,30 +58,27 @@ provide it with a Personal Key. These keys begin with `nvapi-`.
 1.  Go to the [NGC Personal Key
     Manager](https://org.ngc.nvidia.com/setup/personal-keys). If you are
     prompted to, then register for a new account and sign in.
-    
+
     > **HINT** You can find this tool by logging into
-    > [ngc.nvidia.com](ngc.nvidia.com), expanding your profile menu on
-    > the top right, selecting *Setup*, and then selecting *Generate
-    > Personal Key*.
+    > [ngc.nvidia.com](https://ngc.nvidia.com), expanding your profile
+    > menu on the top right, selecting *Setup*, and then selecting
+    > *Generate Personal Key*.
 
 2.  Select *Generate Personal Key*.
-    
-    ![Generate Personal
-    Key](.static/929e8801e7993066fa837f6f7e0293694006bc96.png)
+
+    ![Generate Personal Key](.static/_static/generate_personal_key.png)
 
 3.  Enter any value as the Key name, an expiration of 12 months is fine,
     and select all four services. Press *Generate Personal Key* when you
     are finished.
-    
-    ![Personal Key
-    Form](.static/9e175697ea16a4c1d1b0b6fac058cc45df0611ae.png)
+
+    ![Personal Key Form](.static/_static/personal_key_form.png)
 
 4.  Save your personal key for later. Workbench will need it and there
     is no way to retrieve it later. If the key is lost, a new one must
     be created. Protect this key as if it were a password.
-    
-    ![Personal
-    Key](.static/00560e8da8eab28d2ee4b9cc8257f82667b2cf79.png)
+
+    ![Personal Key](.static/_static/personal_key.png)
 
 </details>
 
@@ -129,7 +122,7 @@ For full instructions, see the [NVIDIA AI Workbench User
 Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/windows.html).
 
 1.  Install Prerequisite Software
-    
+
     1.  If this machine has an NVIDIA GPU, ensure the GPU drivers are
         installed. It is recommended to use the [GeForce
         Experience](https://www.nvidia.com/en-us/geforce/geforce-experience/)
@@ -171,7 +164,7 @@ For full instructions, see the [NVIDIA AI Workbench User
 Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/macos.html).
 
 1.  Install Prerequisite Software
-    
+
     1.  Install [Docker
         Desktop](https://www.docker.com/products/docker-desktop/) for
         local container support. Please be mindful of Docker Desktop's
@@ -190,7 +183,7 @@ Guide](https://docs.nvidia.com/ai-workbench/user-guide/latest/installation/macos
 
 3.  Drag AI Workbench into the Applications folder and run *NVIDIA AI
     Workbench* from the application launcher. ![Mac DMG Install
-    Interface](.static/766b2c253ae6ae723d0c90d04ed9ed37f3ebf6d1.png)
+    Interface](.static/_static/mac_dmg_drag.png)
 
 4.  Select Docker as your container runtime.
 
@@ -212,7 +205,7 @@ Run this installation as the user who will be user Workbench. Do not run
 these steps as `root`.
 
 1.  Install Prerequisite Software
-    
+
     1.  *\[OPTIONAL\]* If Visual Studio Code integration is desired,
         install [Visual Studio Code](https://code.visualstudio.com/).
 
@@ -220,7 +213,7 @@ these steps as `root`.
     Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/)
     installer, make it executable, and then run it. You can make the
     file executable with the following command:
-    
+
     ``` bash
     chmod +x NVIDIA-AI-Workbench-*.AppImage
     ```
@@ -257,21 +250,21 @@ run these steps as `root`.
     enabled from the local machine to the remote machine. If this is not
     currently enabled, the following commands will enable this is most
     situations.
-    
-      - From a Windows local client, use the following PowerShell:
-        ``` powershell
-        ssh-keygen -f "C:\Users\local-user\.ssh\id_rsa" -t rsa -N '""'
-        type $env:USERPROFILE\.ssh\id_rsa.pub | ssh REMOTE_USER@REMOTE-MACHINE "cat >> .ssh/authorized_keys"
-        ```
-      - From a MacOS or Linux local client, use the following shell:
-        ``` bash
-        if [ ! -e ~/.ssh/id_rsa ]; then ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ""; fi
-        ssh-copy-id REMOTE_USER@REMOTE-MACHINE
-        ```
+
+    - From a Windows local client, use the following PowerShell:
+      ``` powershell
+      ssh-keygen -f "C:\Users\local-user\.ssh\id_rsa" -t rsa -N '""'
+      type $env:USERPROFILE\.ssh\id_rsa.pub | ssh REMOTE_USER@REMOTE-MACHINE "cat >> .ssh/authorized_keys"
+      ```
+    - From a MacOS or Linux local client, use the following shell:
+      ``` bash
+      if [ ! -e ~/.ssh/id_rsa ]; then ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ""; fi
+      ssh-copy-id REMOTE_USER@REMOTE-MACHINE
+      ```
 
 2.  SSH into the remote host. Then, use the following commands to
     download and execute the NVIDIA AI Workbench Installer.
-    
+
     ``` bash
     mkdir -p $HOME/.nvwb/bin && \
     curl -L https://workbench.download.nvidia.com/stable/workbench-cli/$(curl -L -s https://workbench.download.nvidia.com/stable/workbench-cli/LATEST)/nvwb-cli-$(uname)-$(uname -m) --output $HOME/.nvwb/bin/nvwb-cli && \
@@ -295,22 +288,21 @@ run these steps as `root`.
     added to the local AI Workbench instance. Open the AI Workbench
     application, click *Add Remote Location*, and then enter the
     required information. When finished, click *Add Location*.
-    
-      - \*Location Name: \* Any short name for this new location
-      - \*Description: \* Any brief metadata for this location.
-      - \*Hostname or IP Address: \* The hostname or address used to
-        remotely SSH. If step 1 was followed, this should be the same as
-        `REMOTE-MACHINE`.
-      - \*SSH Port: \* Usually left blank. If a nonstandard SSH port is
-        used, it can be configured here.
-      - \*SSH Username: \* The username used for making an SSH
-        connection. If step 1 was followed, this should be the same as
-        `REMOTE_USER`.
-      - \*SSH Key File: \* The path to the private key for making SSH
-        connections. If step 1 was followed, this should be:
-        `/home/USER/.ssh/id_rsa`.
-      - \*Workbench Directory: \* Usually left blank. This is where
-        Workbench will remotely save state.
+
+    - \*Location Name: \* Any short name for this new location
+    - \*Description: \* Any brief metadata for this location.
+    - \*Hostname or IP Address: \* The hostname or address used to
+      remotely SSH. If step 1 was followed, this should be the same as
+      `REMOTE-MACHINE`.
+    - \*SSH Port: \* Usually left blank. If a nonstandard SSH port is
+      used, it can be configured here.
+    - \*SSH Username: \* The username used for making an SSH connection.
+      If step 1 was followed, this should be the same as `REMOTE_USER`.
+    - \*SSH Key File: \* The path to the private key for making SSH
+      connections. If step 1 was followed, this should be:
+      `/home/USER/.ssh/id_rsa`.
+    - \*Workbench Directory: \* Usually left blank. This is where
+      Workbench will remotely save state.
 
 </details>
 
@@ -323,10 +315,10 @@ Cloning this repository is the recommended way to start. This will not
 allow for local modifications, but is the fastest to get started. This
 also allows for the easiest way to pull updates.
 
-Forking this repository is recommended for development as changes will be
-able to be saved. However, to get updates, the fork maintainer will have
-to regularly pull from the upstream repo. To work from a fork, follow
-[GitHub's
+Forking this repository is recommended for development as changes will
+be able to be saved. However, to get updates, the fork maintainer will
+have to regularly pull from the upstream repo. To work from a fork,
+follow [GitHub's
 instructions](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
 and then reference the URL to your personal fork in the rest of this
 section.
@@ -338,29 +330,25 @@ section.
 
 1.  Open the local NVIDIA AI Workbench window. From the list of
     locations displayed, select one you would like to work in.
-    
-    ![AI Workbench Locations
-    Menu](.static/da9474cbe2ca0da073b0ced28dd1dc492dfb3cf5.png)
+
+    ![AI Workbench Locations Menu](.static/_static/nvwb_locations.png)
 
 2.  Once inside the location, select *Clone Project*.
-    
-    ![AI Workbench Projects
-    Menu](.static/966cc83638dc37035b6a544d0c76aaf7a55d3952.png)
+
+    ![AI Workbench Projects Menu](.static/_static/nvwb_projects.png)
 
 3.  Enter the URL of the project repository. You may leave the path as
     the default value. Press *Clone*. If you are cloning this project,
     the url will be: `https://github.com/NVIDIA/nim-anywhere.git`
-    
-    ![AI Workbench Clone Project
-    Menu](.static/eb6d2e60199d06d752eb6e34478c683f2a084d28.png)
+
+    ![AI Workbench Clone Project Menu](.static/_static/nvwb_clone.png)
 
 4.  You will be redirected to the new project’s page. Workbench will
     automatically bootstrap the development environment. You can view
     real-time progress by expanding the Output from the bottom of the
     window.
-    
-    ![AI Workbench Log
-    Viewer](.static/89b9f6c5319f5bade204e0014a0886ba80ab7ce8.png)
+
+    ![AI Workbench Log Viewer](.static/_static/nvwb_logs.png)
 
 </details>
 
@@ -376,41 +364,38 @@ The project must be configured to work with local machine resources.
 1.  Before running for the first time, project specific configuration
     must be provided. Project configuration is done using the
     *Environment* tab from the left-hand panel.
-    
-    ![AI Workbench Side
-    Menu](.static/97f6bf8a475ba1c4e3d4299616333b74f3943889.png)
 
-2.  Scroll down to the **Variables** section and find *NGC\_HOME* entry.
+    ![AI Workbench Side Menu](.static/_static/nvwb_left_menu.png)
+
+2.  Scroll down to the **Variables** section and find *NGC_HOME* entry.
     It should be set to something like `~/.cache/nvidia-nims`. The value
     here is used by workbench. This same location also appears in the
     **Mounts** section that mounts this directory into the container.
 
-3.  Scroll down to the **Secrets** section and find the *NGC\_API\_KEY*
+3.  Scroll down to the **Secrets** section and find the *NGC_API_KEY*
     entry. Press *Configure* and provide the personal key for NGC that
     as generated earlier.
 
 4.  Scroll down to the **Mounts** section. Here, there are two mounts to
     configure.
-    
-    a. Find the mount for /var/host-run. This is used to allow the
+
+    a\. Find the mount for /var/host-run. This is used to allow the
     development environment to access the host’s Docker daemon in a
     pattern called Docker out of Docker. Press **Configure** and provide
     the directory `/var/run`.
-    
-    ![AI Workbench Mount
-    Menu](.static/5c2baccb9a9bb6bc75a6cb38635f966a1a7d5ce2.png)
-    
-    b. Find the mount for /home/workbench/.cache/nvidia-nims. This mount
-    is used as a runtime cache for NIMs where they can cache model
+
+    ![AI Workbench Mount Menu](.static/_static/nvwb_mount_varrun.png)
+
+    b\. Find the mount for /home/workbench/.cache/nvidia-nims. This
+    mount is used as a runtime cache for NIMs where they can cache model
     files. Sharing this cache with the host reduces disk usage and
     network bandwidth.
-    
-    ![AI Workbench Mount
-    Menu](.static/bc3f12445b37de968726f09ebe59bb861186e010.png)
-    
+
+    ![AI Workbench Mount Menu](.static/_static/nvwb_mount_nim.png)
+
     If you don't already have a nim cache, or you aren't sure, use the
     following commands to create one at `/home/USER/.cache/nvidia-nims`.
-    
+
     ``` bash
     mkdir -p ~/.cache/nvidia-nims
     chmod 2777 ~/.cache/nvidia-nims
@@ -456,29 +441,29 @@ development environments.
 4.  **\[OPTIONAL\]:** Next, start the *LLM NIM*. The first time the LLM
     NIM is started, it will take some time to download the image and the
     optimized models.
-    
-    a. During a long start, to confirm the LLM NIM is starting, the
+
+    a\. During a long start, to confirm the LLM NIM is starting, the
     progress can be observed by viewing the logs by using the *Output*
     pane on the bottom left of the UI.
-    
-    b. If the logs indicate an authentication error, that means the
-    provided *NGC\_API\_KEY* does not have access to the NIMs. Please
+
+    b\. If the logs indicate an authentication error, that means the
+    provided *NGC_API_KEY* does not have access to the NIMs. Please
     verify it was generated correctly and in an NGC organization that
     has NVIDIA AI Enterprise support or trial.
-    
-    c. If the logs appear to be stuck on `..........: Pull complete`.
-    `..........: Verifying complete`, or `..........: Download
-    complete`; this is all normal output from Docker that the various
-    layers of the container image have been downloaded.
-    
-    d. Any other failures here need to be addressed.
+
+    c\. If the logs appear to be stuck on `..........: Pull complete`.
+    `..........: Verifying complete`, or
+    `..........: Download complete`; this is all normal output from
+    Docker that the various layers of the container image have been
+    downloaded.
+
+    d\. Any other failures here need to be addressed.
 
 5.  Once the *Chain Server* is up, the *Chat Interface* can be started.
     Starting the interface will automatically open it in a browser
     window.
 
-![NIM Anywhere
-Frontend](.static/8e77789ca322e118e3af6e0825f4aa42cc8bc95f.png)
+![NIM Anywhere Frontend](.static/_static/na_frontend.png)
 
 </details>
 
@@ -538,15 +523,15 @@ By default, the application will search for a configuration file in all
 of the following locations. If multiple configuration files are found,
 values from lower files in the list will take precedence.
 
-  - ./config.yaml
-  - ./config.yml
-  - ./config.json
-  - \~/app.yaml
-  - \~/app.yml
-  - \~/app.json
-  - /etc/app.yaml
-  - /etc/app.yml
-  - /etc/app.json
+- ./config.yaml
+- ./config.yml
+- ./config.json
+- ~/app.yaml
+- ~/app.yml
+- ~/app.json
+- /etc/app.yaml
+- /etc/app.yml
+- /etc/app.json
 
 ## Config from a custom file
 
@@ -625,10 +610,7 @@ milvus:
     collection_name: collection_1
 
 
-# Options for the logging levels.
-# ENV Variables: APP_LOG_LEVEL
-log_level: WARNING
-
+log_level: 
 
 ```
 
@@ -653,10 +635,7 @@ proxy_prefix: /
 # Type: string
 chain_config_file: ./config.yaml
 
-# Options for the logging levels.
-# ENV Variables: APP_LOG_LEVEL
-log_level: INFO
-
+log_level: 
 
 ```
 
@@ -673,24 +652,24 @@ This project has been configured with Linters that have been tuned to
 help the code remain consistent while not being overly burdensome. We
 use the following Linters:
 
-  - Bandit is used for security scanning
-  - Pylint is used for Python Syntax Linting
-  - MyPy is used for type hint linting
-  - Black is configured for code styling
-  - A custom check is run to ensure Jupyter Notebooks do not have any
-    output
-  - Another custom check is run to ensure the README.md file is up to
-    date
+- Bandit is used for security scanning
+- Pylint is used for Python Syntax Linting
+- MyPy is used for type hint linting
+- Black is configured for code styling
+- A custom check is run to ensure Jupyter Notebooks do not have any
+  output
+- Another custom check is run to ensure the README.md file is up to date
 
 The embedded VSCode environment is configured to run the linting and
 checking in realtime.
 
 To manually run the linting that is done by the CI pipelines, execute
 `/project/code/tools/lint.sh`. Individual tests can be run be specifying
-them by name: `/project code/tools/lint.sh
-[deps|pylint|mypy|black|docs|fix]`. Running the lint tool in fix mode
-will automatically correct what it can by running Black, updating the
-README, and clearing the cell output on all Jupyter Notebooks.
+them by name:
+`/project code/tools/lint.sh [deps|pylint|mypy|black|docs|fix]`. Running
+the lint tool in fix mode will automatically correct what it can by
+running Black, updating the README, and clearing the cell output on all
+Jupyter Notebooks.
 
 ## Updating the frontend
 
@@ -748,9 +727,7 @@ If they are not declared, then the associated iframes in the web layout
 will be hidden. The other iframes will expand to fill the gaps. The
 following diagrams show the various layouts.
 
-  - All pages are defined
-
-<!-- end list -->
+- All pages are defined
 
 ``` mermaid
 block-beta
@@ -762,9 +739,7 @@ block-beta
     end
 ```
 
-  - Only left is defined
-
-<!-- end list -->
+- Only left is defined
 
 ``` mermaid
 block-beta
@@ -857,9 +832,17 @@ window.addEventListener(
 
 ## Updating documentation
 
+The README is rendered automatically; direct edits will be overwritten.
+In order to modify the README you will need to edit the files for each
+section separately. All of these files will be combined and the README
+will be automatically generated. You can find all of the related files
+in the `docs` folder.
+
 Documentation is written in Github Flavored Markdown and then rendered
-to a final Markdown file by Pandoc. The documentation can be previewed
-in the Workbench file browser window.
+to a final Markdown file by Pandoc. The details for this process are
+defined in the Makefile. The order of files generated are defined in
+`docs/_TOC.md`. The documentation can be previewed in the Workbench file
+browser window.
 
 ### Header file
 
@@ -898,16 +881,9 @@ and its stdout will be used in its place.
 
 ### Rendering documentation
 
-`Make` is used to manage the generation of the `README.md` file. Running
-the following make commands from the `docs/` directory will perform the
-following actions.
-
-  - `make` or `make ../README.md` will update the README file if any of
-    the pages have changed since it was last generated.
-
-  - `make clean` will cleanup the existing README and static assets.
-
-  - `make all` will force the generation of the README manual.
+When a documentation related commit is pushed, a GitHub Action will
+render the documentation. Any changes to the README will be automatially
+committed.
 
 # Managing your Development Environment
 
