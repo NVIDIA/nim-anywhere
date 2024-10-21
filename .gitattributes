@@ -1,6 +1,9 @@
 # Normalize text files on commit to LF endings by default
 * text=auto
 
+# Enforce LF line endings for markdown files
+*.md text eol=lf
+
 # Make sure Windows batch files preserve CR/LF line endings, otherwise they may not be able to execute.  Windows
 # batch files require a CR/LF for labels to work properly, otherwise they may fail when labels straddle 512-byte
 # block boundaries.  This is important when files are downloaded through a zip archive that was authored on a
