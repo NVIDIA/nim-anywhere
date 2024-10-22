@@ -22,8 +22,8 @@ micro-service](https://docs.nvidia.com/nim/large-language-models/latest/introduc
 to help our partners and customers build effective RAG pipeline with
 ease.
 
-NIM Anywhere contains all the tooling required to start integrating
-NIMs. It natively scales out to full-sized labs and up to production
+NIM Anywhere contains all the tooling required to start integrating NIMs
+for RAG. It natively scales out to full-sized labs and up to production
 environments. This is great news for building a RAG architecture and
 easily adding NIMs as needed. If you're unfamiliar with RAG, it
 dynamically retrieves relevant external information during inference
