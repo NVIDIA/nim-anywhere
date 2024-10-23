@@ -22,8 +22,8 @@ micro-service](https://docs.nvidia.com/nim/large-language-models/latest/introduc
 to help our partners and customers build effective RAG pipeline with
 ease.
 
-NIM Anywhere contains all the tooling required to start integrating
-NIMs. It natively scales out to full-sized labs and up to production
+NIM Anywhere contains all the tooling required to start integrating NIMs
+for RAG. It natively scales out to full-sized labs and up to production
 environments. This is great news for building a RAG architecture and
 easily adding NIMs as needed. If you're unfamiliar with RAG, it
 dynamically retrieves relevant external information during inference
@@ -39,37 +39,34 @@ accuracy and reliability of your generative AI models, [read this
 blog](https://developer.nvidia.com/blog/enhancing-rag-applications-with-nvidia-nim/).
 
 Get started with NIM Anywhere now with the [quick-start](#quick-start)
-instructions and build your first RAG application using NIMs\!
+instructions and build your first RAG application using NIMs!
 
 ![NIM Anywhere Screenshot](.static/_static/nim-anywhere.png)
  
-  - [Quick-start](#quick-start)
-      - [Generate your NGC Personal
-        Key](#generate-your-ngc-personal-key)
-      - [Install AI Workbench](#install-ai-workbench)
-      - [Download this project](#download-this-project)
-      - [Configure this project](#configure-this-project)
-      - [Start This Project](#start-this-project)
-      - [Populating the Knowledge Base](#populating-the-knowledge-base)
-  - [Developing Your Own
-    Applications](#developing-your-own-applications)
-  - [Application Configuration](#application-configuration)
-      - [Config from a file](#config-from-a-file)
-      - [Config from a custom file](#config-from-a-custom-file)
-      - [Config from env vars](#config-from-env-vars)
-      - [Chain Server config schema](#chain-server-config-schema)
-      - [Chat Frontend config schema](#chat-frontend-config-schema)
-  - [Contributing](#contributing)
-      - [Code Style](#code-style)
-      - [Updating the frontend](#updating-the-frontend)
-      - [Updating documentation](#updating-documentation)
-  - [Managing your Development
-    Environment](#managing-your-development-environment)
-      - [Environment Variables](#environment-variables)
-      - [Python Environment Packages](#python-environment-packages)
-      - [Operating System
-        Configuration](#operating-system-configuration)
-      - [Updating Dependencies](#updating-dependencies)
+- [Quick-start](#quick-start)
+  - [Generate your NGC Personal Key](#generate-your-ngc-personal-key)
+  - [Install AI Workbench](#install-ai-workbench)
+  - [Download this project](#download-this-project)
+  - [Configure this project](#configure-this-project)
+  - [Start This Project](#start-this-project)
+  - [Populating the Knowledge Base](#populating-the-knowledge-base)
+- [Developing Your Own Applications](#developing-your-own-applications)
+- [Application Configuration](#application-configuration)
+  - [Config from a file](#config-from-a-file)
+  - [Config from a custom file](#config-from-a-custom-file)
+  - [Config from env vars](#config-from-env-vars)
+  - [Chain Server config schema](#chain-server-config-schema)
+  - [Chat Frontend config schema](#chat-frontend-config-schema)
+- [Contributing](#contributing)
+  - [Code Style](#code-style)
+  - [Updating the frontend](#updating-the-frontend)
+  - [Updating documentation](#updating-documentation)
+- [Managing your Development
+  Environment](#managing-your-development-environment)
+  - [Environment Variables](#environment-variables)
+  - [Python Environment Packages](#python-environment-packages)
+  - [Operating System Configuration](#operating-system-configuration)
+  - [Updating Dependencies](#updating-dependencies)
 
 # Quick-start
 
@@ -278,17 +275,17 @@ run these steps as `root`.
     machine to the remote machine. If this is not currently enabled, the
     following commands will enable this is most situations. Change
     `REMOTE_USER` and `REMOTE-MACHINE` to reflect your remote address.
-    
-      - From a Windows local client, use the following PowerShell:
-        ``` powershell
-        ssh-keygen -f "C:\Users\local-user\.ssh\id_rsa" -t rsa -N '""'
-        type $env:USERPROFILE\.ssh\id_rsa.pub | ssh REMOTE_USER@REMOTE-MACHINE "cat >> .ssh/authorized_keys"
-        ```
-      - From a MacOS or Linux local client, use the following shell:
-        ``` bash
-        if [ ! -e ~/.ssh/id_rsa ]; then ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ""; fi
-        ssh-copy-id REMOTE_USER@REMOTE-MACHINE
-        ```
+
+    - From a Windows local client, use the following PowerShell:
+      ``` powershell
+      ssh-keygen -f "C:\Users\local-user\.ssh\id_rsa" -t rsa -N '""'
+      type $env:USERPROFILE\.ssh\id_rsa.pub | ssh REMOTE_USER@REMOTE-MACHINE "cat >> .ssh/authorized_keys"
+      ```
+    - From a MacOS or Linux local client, use the following shell:
+      ``` bash
+      if [ ! -e ~/.ssh/id_rsa ]; then ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ""; fi
+      ssh-copy-id REMOTE_USER@REMOTE-MACHINE
+      ```
 
 2.  SSH into the remote host. Then, use the following commands to
     download and execute the NVIDIA AI Workbench Installer.
@@ -347,10 +344,6 @@ Forking this repository is recommended for development as changes will
 be able to be saved. However, to get updates, the fork maintainer will
 have to regularly pull from the upstream repo. To work from a fork,
 follow [GitHub's
-Forking this repository is recommended for development as changes will
-be able to be saved. However, to get updates, the fork maintainer will
-have to regularly pull from the upstream repo. To work from a fork,
-follow [GitHub's
 instructions](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
 and then reference the URL to your personal fork in the rest of this
 section.
@@ -363,9 +356,8 @@ section.
 1.  Open the local NVIDIA AI Workbench window. From the list of
     locations displayed, select either the remote one you just set up,
     or local if you're going to work locally.
-    
-    ![AI Workbench Locations
-    Menu](.static/da9474cbe2ca0da073b0ced28dd1dc492dfb3cf5.png)
+
+    ![AI Workbench Locations Menu](.static/_static/nvwb_locations.png)
 
 2.  Once inside the location, select *Clone Project*.
 
@@ -376,9 +368,8 @@ section.
     as the default of
     `/home/REMOTE_USER/nvidia-workbench/nim-anywhere.git`. Click
     *Clone*.\`
-    
-    ![AI Workbench Clone Project
-    Menu](.static/eb6d2e60199d06d752eb6e34478c683f2a084d28.png)
+
+    ![AI Workbench Clone Project Menu](.static/_static/nvwb_clone.png)
 
 4.  You will be redirected to the new project’s page. Workbench will
     automatically bootstrap the development environment. You can view
@@ -650,7 +641,6 @@ milvus:
 
 log_level: 
 
-
 ```
 
 ## Chat Frontend config schema
@@ -675,7 +665,6 @@ proxy_prefix: /
 chain_config_file: ./config.yaml
 
 log_level: 
-
 
 ```
 
