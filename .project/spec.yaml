@@ -226,3 +226,7 @@ execution:
     target: /home/workbench/.cache/nvidia-nims/
     description: A path where NIM containers can store and share their cache.
     options: ""
+  - type: volume
+    target: /nvwb-shared-volume/
+    description: ""
+    options: volumeName=nvwb-shared-volume
