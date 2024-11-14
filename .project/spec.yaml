@@ -158,14 +158,6 @@ execution:
     target: /project/
     description: Project directory
     options: rw
-  - type: host
-    target: /var/host-run/
-    description: Host's runtime files for Docker in Docker support.
-    options: ""
-  - type: host
-    target: /home/workbench/.cache/nvidia-nims/
-    description: A path where NIM containers can store and share their cache.
-    options: ""
   - type: volume
     target: /nvwb-shared-volume/
     description: ""
