@@ -6,7 +6,7 @@
 # General ignores
 .DS_Store
 **/tmp
-code/config.yaml
+# code/config.yaml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
