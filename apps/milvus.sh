@@ -18,7 +18,7 @@ source  $(dirname $0)/functions
 
 NAME="milvus"
 IMAGE="milvusdb/milvus"
-TAG=$(config_lkp "MILVUS_VERSION" "v2.4.6")
+TAG=$(config_lkp "MILVUS_VERSION" "v2.4.15")
 
 # This function is responsible for running creating a running the container
 # and its dependencies.
