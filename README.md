@@ -381,57 +381,22 @@ section.
 
 ## Configure this project
 
-The project must be configured to work with local machine resources.
+The project must be configured to work with your NGC API key.
 
 <details>
 <summary>
 <b>Expand this section for a details on configuring this project.</b>
 </summary>
 
-1.  Before running for the first time, project specific configuration
-    must be provided. Project configuration is done using the
-    *Environment* tab from the left-hand panel.
+1.  Before running for the first time, your NGC personal key must be
+    configured in Workbench. This is done using the *Environment* tab
+    from the left-hand panel.
 
     ![AI Workbench Side Menu](.static/_static/nvwb_left_menu.png)
 
-2.  Scroll down to the **Variables** section and find *NGC_HOME* entry.
-    It should be set to something like `~/.cache/nvidia-nims`. The value
-    here is used by workbench. This same location also appears in the
-    **Mounts** section that mounts this directory into the container.
-
-3.  Scroll down to the **Secrets** section and find the *NGC_API_KEY*
+2.  Scroll down to the **Secrets** section and find the *NGC_API_KEY*
     entry. Press *Configure* and provide the personal key for NGC that
-    as generated earlier.
-
-4.  Scroll down to the **Mounts** section. Here, there are two mounts to
-    configure.
-
-    a\. Find the mount for /var/host-run. This is used to allow the
-    development environment to access the host’s Docker daemon in a
-    pattern called Docker out of Docker. Press **Configure** and provide
-    the directory `/var/run`.
-
-    ![AI Workbench Mount Menu](.static/_static/nvwb_mount_varrun.png)
-
-    b\. Find the mount for /home/workbench/.cache/nvidia-nims. This
-    mount is used as a runtime cache for NIMs where they can cache model
-    files. Sharing this cache with the host reduces disk usage and
-    network bandwidth.
-
-    ![AI Workbench Mount Menu](.static/_static/nvwb_mount_nim.png)
-
-    If you don't already have a nim cache, or you aren't sure, use the
-    following commands to create one at `/home/USER/.cache/nvidia-nims`.
-
-    ``` bash
-    mkdir -p ~/.cache/nvidia-nims
-    chmod 2777 ~/.cache/nvidia-nims
-    ```
-
-5.  A rebuild will occur after these settings have been changed.
-
-6.  Once the build completes with a *Build Ready* message, all
-    applications will be made available to you.
+    was generated earlier.
 
 </details>
 
@@ -450,43 +415,60 @@ development environments.
 
 > **HINT:** For each application, the debug output can be monitored in
 > the UI by clicking the Output link in the lower left corner, selecting
-> the dropdown menu, and choosing the application of interest.
+> the dropdown menu, and choosing the application of interest, or
+> *Compose* for applications started via compose.
 
-1.  All applications bundled in this workspace can be controlled by
-    navigating to **Environment** \> **Applications**.
+1.  The applications bundled in this workspace can be controlled by
+    navigating to two tabs:
 
-2.  First, toggle on *Milvus Vector DB* and *Redis*. Milvus is used as
-    an unstructured knowledge base and Redis is used to store
-    conversation histories.
+    - **Environment** \> **Applications**
+    - **Environment** \> **Compose**.
 
-3.  Once these services have been started, the *Chain Server* can safely
-    be started. This contains the custom LangChain code for performing
-    our reasoning chain. By default, it will use the local Milvus and
-    Redis, but use *ai.nvidia.com* for LLM and Embedding model
-    inferencing.
+2.  First, navigate to the **Environment** \> **Compose** tab. Using the
+    dropdown menu, select the option according to your GPU
+    configuration. All options, even 0 GPUs, will be able to run this
+    project succesfully. Below is an outline of the available options as
+    well as which services they will start up locally:
 
-4.  **\[OPTIONAL\]:** Next, start the *LLM NIM*. The first time the LLM
-    NIM is started, it will take some time to download the image and the
-    optimized models.
+    - 0 GPUs
+      - *Milvus Vector DB* and *Redis*. Milvus is used as an
+        unstructured knowledge base and Redis is used to store
+        conversation histories.
+    - 1 GPU
+      - Everything from 0 GPUs
 
-    a\. During a long start, to confirm the LLM NIM is starting, the
-    progress can be observed by viewing the logs by using the *Output*
-    pane on the bottom left of the UI.
+      - *LLM NIM*. The first time the LLM NIM is started, it will take
+        some time to download the image and the optimized models. a.
+        During a long start, to confirm the LLM NIM is starting, the
+        progress can be observed by viewing the logs by using the
+        *Output* pane on the bottom left of the UI.
 
-    b\. If the logs indicate an authentication error, that means the
-    provided *NGC_API_KEY* does not have access to the NIMs. Please
-    verify it was generated correctly and in an NGC organization that
-    has NVIDIA AI Enterprise support or trial.
+        b\. If the logs indicate an authentication error, that means the
+        provided *NGC_API_KEY* does not have access to the NIMs. Please
+        verify it was generated correctly and in an NGC organization
+        that has NVIDIA AI Enterprise support or trial.
 
-    c\. If the logs appear to be stuck on `..........: Pull complete`.
-    `..........: Verifying complete`, or
-    `..........: Download complete`; this is all normal output from
-    Docker that the various layers of the container image have been
-    downloaded.
+        c\. If the logs appear to be stuck on
+        `..........: Pull complete`. `..........: Verifying complete`,
+        or `..........: Download complete`; this is all normal output
+        from Docker that the various layers of the container image have
+        been downloaded.
 
-    d\. Any other failures here need to be addressed.
+        d\. Any other failures here need to be addressed.
+    - 2 GPU
+      - Everything from 0 and 1 GPUs
+      - *Embedding NIM*
+    - 3+ GPUs
+      - Everything from 0, 1, and 2 GPUs
+      - *Reranking NIM*
 
-5.  Once the *Chain Server* is up, the *Chat Interface* can be started.
+3.  Once the compose services have been started, the *Chain Server* can
+    safely be started. This contains the custom LangChain code for
+    performing our reasoning chain. By default, it will use the local
+    Milvus and Redis, but use *ai.nvidia.com* for LLM, Embedding, and
+    Reranking model inferencing.
+
+4.  Once the *Chain Server* is up, the *Chat Frontend* can be started.
     Starting the interface will automatically open it in a browser
     window.
 
