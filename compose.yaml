@@ -4,7 +4,7 @@
 services:
   nv-embedqa-e5-v5:
     image: "nvcr.io/nim/nvidia/nv-embedqa-e5-v5:1.0.1"
-    profiles: ["2 GPUs", "3 GPUs"]
+    profiles: ["2 GPUs", "3+ GPUs"]
     deploy:
       resources:
         reservations:
@@ -27,7 +27,7 @@ services:
       - default
   nv-rerankqa-mistral-4b-v3:
     image: "nvcr.io/nim/nvidia/nv-rerankqa-mistral-4b-v3:1.0.2"
-    profiles: ["3 GPUs"]
+    profiles: ["3+ GPUs"]
     runtime: "nvidia"
     deploy:
       resources:
@@ -52,7 +52,7 @@ services:
 
   llm-nim:
     image: "nvcr.io/nim/meta/llama3-8b-instruct:1"
-    profiles: ["1 GPU", "2 GPUs", "3 GPUs"]
+    profiles: ["1 GPU", "2 GPUs", "3+ GPUs"]
     deploy:
       resources:
         reservations:
@@ -76,7 +76,7 @@ services:
 
   milvus:
     image: "milvusdb/milvus:v2.4.6"
-    profiles: ["0 GPUs", "1 GPU", "2 GPUs", "3 GPUs"]
+    profiles: ["0 GPUs", "1 GPU", "2 GPUs", "3+ GPUs"]
     security_opt:
       - seccomp:unconfined
     environment:
@@ -97,7 +97,7 @@ services:
 
   redis:
     image: "redis:7"
-    profiles: ["0 GPUs", "1 GPU", "2 GPUs", "3 GPUs"]
+    profiles: ["0 GPUs", "1 GPU", "2 GPUs", "3+ GPUs"]
     volumes:
       - redis:/data
     healthcheck:

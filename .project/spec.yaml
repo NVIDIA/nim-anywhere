@@ -16,9 +16,6 @@ layout:
 - path: docs/
   type: code
   storage: git
-- path: apps/
-  type: code
-  storage: git
 - path: data/
   type: data
   storage: gitlfs
