@@ -206,8 +206,6 @@ execution:
       proxy:
         trim_prefix: true
       url: http://localhost:3030
-<<<<<<< Updated upstream
-=======
   - name: Code Walkthrough
     type: custom
     class: webapp
@@ -225,7 +223,6 @@ execution:
       proxy:
         trim_prefix: true
       url: http://localhost:8000/
->>>>>>> Stashed changes
   resources:
     gpu:
       requested: 0
