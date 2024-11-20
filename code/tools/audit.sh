@@ -7,6 +7,8 @@ function _audit_venv() {
 	cd $venv_dir
 	python3 -m venv "$venv_dir"
 	"$venv_dir/bin/pip" install --upgrade pip
+	# Install pipdeptree
+	"$venv_dir/bin/pip" install pipdeptree
 	grep -vf /project/req.filters.txt /project/requirements.txt | \
 		"$venv_dir/bin/pip" install -r /dev/stdin
 
