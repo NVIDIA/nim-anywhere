@@ -458,16 +458,17 @@ development environments.
     - 3+ GPUs
       - *Reranking NIM*
 
-***NOTE:*** Each profile will also include all services from profiles
-with less GPUs (thus, 3+ GPUs runs *everything* locally)
+    ***NOTE:*** Each profile will also include all services from
+    profiles with less GPUs (thus, 3+ GPUs runs *everything* locally)
 
-1.  Once the compose services have been started, the *Chain Server* can
+3.  Once the compose services have been started, navigate to the
+    **Environment** \> **Applications** tab. Now, the *Chain Server* can
     safely be started. This contains the custom LangChain code for
     performing our reasoning chain. By default, it will use the local
     Milvus and Redis, but use *ai.nvidia.com* for LLM, Embedding, and
     Reranking model inferencing.
 
-2.  Once the *Chain Server* is up, the *Chat Frontend* can be started.
+4.  Once the *Chain Server* is up, the *Chat Frontend* can be started.
     Starting the interface will automatically open it in a browser
     window.
 
