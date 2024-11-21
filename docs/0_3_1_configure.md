@@ -1,5 +1,5 @@
 ## Configure this project
-The project must be configured to work with your NGC API key.
+The project must be configured to use your NGC personal key.
 
 <details>
 <summary>

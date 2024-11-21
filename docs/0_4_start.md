@@ -7,33 +7,32 @@ Even the most basic of LLM Chains depend on a few additional microservices. Thes
 <b>Expand this section for details on starting the demo application.</b>
 </summary>
 
-> **HINT:** For each application, the debug output can be monitored in the UI by clicking the Output link in the lower left corner, selecting the dropdown menu, and choosing the application of interest, or *Compose* for applications started via compose. 
+> **HINT:** For each application, the debug output can be monitored in the UI by clicking the Output link in the lower left corner, selecting the dropdown menu, and choosing the application of interest (or *Compose* for applications started via compose). 
 
 1. The applications bundled in this workspace can be controlled by navigating to two tabs:
 
-    - **Environment** > **Applications**
     - **Environment** > **Compose**.
+    - **Environment** > **Applications**
 
-1. First, navigate to the **Environment** > **Compose** tab. Using the dropdown menu, select the option according to your GPU configuration. All options, even 0 GPUs, will be able to run this project succesfully. Below is an outline of the available options as well as which services they will start up locally:
+1. First, navigate to the **Environment** > **Compose** tab. Using the dropdown menu, select the option reflecting your GPU count. All options, even 0 GPUs, will be able to run this project succesfully. Below is an outline of the available options and services they start up locally:
 
     - 0 GPUs
         - *Milvus Vector DB* and *Redis*. Milvus is used as an unstructured knowledge base and Redis is used to store conversation histories.
     - 1 GPU
-        - Everything from 0 GPUs
         - *LLM NIM*. The first time the LLM NIM is started, it will take some time to download the image and the optimized models.
-            a. During a long start, to confirm the LLM NIM is starting, the progress can be observed by viewing the logs by using the *Output* pane on the bottom left of the UI.
+            - During a long start, to confirm the LLM NIM is starting, the progress can be observed by viewing the logs by using the *Output* pane on the bottom left of the UI.
 
-            b. If the logs indicate an authentication error, that means the provided *NGC_API_KEY* does not have access to the NIMs. Please verify it was generated correctly and in an NGC organization that has NVIDIA AI Enterprise support or trial.
+            - If the logs indicate an authentication error, that means the provided *NGC_API_KEY* does not have access to the NIMs. Please verify it was generated correctly and in an NGC organization that has NVIDIA AI Enterprise support or trial.
 
-            c. If the logs appear to be stuck on `..........: Pull complete`. `..........: Verifying complete`, or `..........: Download complete`; this is all normal output from Docker that the various layers of the container image have been downloaded.
+            - If the logs appear to be stuck on `..........: Pull complete`. `..........: Verifying complete`, or `..........: Download complete`; this is all normal output from Docker that the various layers of the container image have been downloaded.
 
-            d. Any other failures here need to be addressed.
+            - Any other failures here need to be addressed.
     - 2 GPU
-        - Everything from 0 and 1 GPUs
         - *Embedding NIM*
     - 3+ GPUs
-        - Everything from 0, 1, and 2 GPUs
         - *Reranking NIM*
+
+**_NOTE:_**  Each profile will also include all services from profiles with less GPUs (thus, 3+ GPUs runs *everything* locally)
 
 1. Once the compose services have been started, the *Chain Server* can safely be started. This contains the custom LangChain code for performing our reasoning chain. By default, it will use the local Milvus and Redis, but use *ai.nvidia.com* for LLM, Embedding, and Reranking model inferencing.
 
