@@ -16,9 +16,6 @@ layout:
 - path: docs/
   type: code
   storage: git
-- path: apps/
-  type: code
-  storage: git
 - path: data/
   type: data
   storage: gitlfs
@@ -125,66 +122,6 @@ execution:
       proxy:
         trim_prefix: false
       url: http://localhost:7070/
-  - name: Milvus Vector DB
-    type: custom
-    class: process
-    start_command: /project/apps/milvus.sh start
-    health_check_command: /project/apps/milvus.sh status
-    stop_command: /project/apps/milvus.sh stop
-    user_msg: ""
-    logfile_path: ""
-    timeout_seconds: 60
-    icon_url: milvus.io/favicon-32x32.png
-  - name: Redis
-    type: custom
-    class: process
-    start_command: /project/apps/redis.sh start
-    health_check_command: /project/apps/redis.sh status
-    stop_command: /project/apps/redis.sh stop
-    user_msg: ""
-    logfile_path: ""
-    timeout_seconds: 60
-    icon_url: redis.io/favicon.ico
-  - name: 'LLM NIM: llm-nim-0'
-    type: custom
-    class: process
-    start_command: /project/apps/llm-nim-0.sh start
-    health_check_command: /project/apps/llm-nim-0.sh status
-    stop_command: /project/apps/llm-nim-0.sh stop
-    user_msg: ""
-    logfile_path: ""
-    timeout_seconds: 60
-    icon_url: www.nvidia.com/favicon.ico
-  - name: 'LLM NIM: llm-nim-1'
-    type: custom
-    class: process
-    start_command: /project/apps/llm-nim-1.sh start
-    health_check_command: /project/apps/llm-nim-1.sh status
-    stop_command: /project/apps/llm-nim-1.sh stop
-    user_msg: ""
-    logfile_path: ""
-    timeout_seconds: 60
-    icon_url: www.nvidia.com/favicon.ico
-  - name: 'Embedder NIM: nv-embedqa-e5-v5'
-    type: custom
-    class: process
-    start_command: /project/apps/embedder_ms.sh start
-    health_check_command: /project/apps/embedder_ms.sh status
-    stop_command: /project/apps/embedder_ms.sh stop
-    user_msg: ""
-    logfile_path: ""
-    timeout_seconds: 60
-    icon_url: www.nvidia.com/favicon.ico
-  - name: 'Reranker NIM: nv-rerankqa-mistral-4b-v3'
-    type: custom
-    class: process
-    start_command: /project/apps/reranker_ms.sh start
-    health_check_command: /project/apps/reranker_ms.sh status
-    stop_command: /project/apps/reranker_ms.sh stop
-    user_msg: ""
-    logfile_path: ""
-    timeout_seconds: 60
-    icon_url: www.nvidia.com/favicon.ico
   - name: Chain Server
     type: custom
     class: webapp
@@ -218,11 +155,7 @@ execution:
     target: /project/
     description: Project directory
     options: rw
-  - type: host
-    target: /var/host-run/
-    description: Host's runtime files for Docker in Docker support.
-    options: ""
-  - type: host
-    target: /home/workbench/.cache/nvidia-nims/
-    description: A path where NIM containers can store and share their cache.
-    options: ""
+  - type: volume
+    target: /nvwb-shared-volume/
+    description: ""
+    options: volumeName=nvwb-shared-volume
