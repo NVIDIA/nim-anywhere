@@ -476,7 +476,7 @@ development environments.
     - 3+ GPUs
       - *Reranking NIM*
 
-    > ***NOTE:*** Each profile will also include all services from
+    > **NOTE:** Each profile will also include all services from
     > profiles with less GPUs (thus, 3+ GPUs runs *everything* locally)
 
 3.  Once the compose services have been started, navigate to the
