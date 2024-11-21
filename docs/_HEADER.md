@@ -1,5 +1,4 @@
-# NVIDIA NIM Anywhere [![Clone Me with AI Workbench](https://img.shields.io/badge/Clone%20Me%20in%20AI%20Workbench-76b900?style=flat-square)](https://nvidia.github.io/nim-anywhere/clone_me.html)
-
+# NVIDIA NIM Anywhere [![Clone Me with AI Workbench](https://img.shields.io/badge/Open_In-AI_Workbench-76B900)](https://ngc.nvidia.com/open-ai-workbench/aHR0cHM6Ly9naXRodWIuY29tL05WSURJQS9uaW0tYW55d2hlcmUK)
 
 [![NVIDIA: LLM NIM](https://img.shields.io/badge/NVIDIA-LLM%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#large-language-models)
 [![NVIDIA: Embedding NIM](https://img.shields.io/badge/NVIDIA-Embedding%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#nemo-retriever)
