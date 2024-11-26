@@ -138,61 +138,16 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
     # knowledge base tab
     with gr.Tab("Knowledge Base", elem_id="kb-tab", elem_classes=["invert-bg"]):
 
-        # helper to upload a document to the milvus DB
-        def upload_document(file_path):
-            loader = PyPDFLoader(str(file_path))
-            data = loader.load()
-            text_splitter = RecursiveCharacterTextSplitter()
-            all_splits = text_splitter.split_documents(data)
-            vector_store.add_documents(documents=all_splits)
-
-        # upload button action
-        def upload_btn_callback(files):
-            messages = []
-            for file in files:
-              full_file_path = str(file.name)
-              file_name = file.name.split('/')[-1]  # Extract file name from path
-              try:
-                upload_document(full_file_path)
-                messages.append(f"Successfully uploaded {file_name}")
-              except ValueError as e:
-                messages.append(f"Failed to upload {file_name}")
-            return "<br>".join(messages)
-
-        # refesh docs button action
-        def list_documents_callback() -> str:
-
-            # dummy value, uppre bound 100 documents
-            results = vector_store.similarity_search("a", k=100)
-
-            document_names = []
-
-            for result in results:
-                doc_name = result.metadata.get("source", "Unnamed Document")  # Default to 'Unnamed Document' 
-                doc_name = doc_name.split('/')[-1]  # Extract file name from path
-                document_names.append(doc_name)
-
-            return "<br>".join(f"- {name}" for name in document_names)
-
-
-
-        # %% upload file box
+        # %% upload file button
         with gr.Group(elem_id="upload-file-group"):
             upload_btn = gr.UploadButton("Upload PDFs", icon=_UPLOAD_IMG, file_types=[".pdf"], file_count="multiple")
             status = gr.Markdown(value="", visible=True)
-            upload_btn.upload(upload_btn_callback, upload_btn, status)
 
 
-        # %% Existing files box
-        with gr.Group(elem_id="existing-files-group"):
-            gr.Markdown("### Uploaded PDFs")
+        # %% uploaded documents accordian
+        with gr.Accordion(label="Uploaded Documents"):
             output = gr.Markdown()
-            output = list_documents_callback()
             refresh_docs_btn = gr.Button("Refresh")
-            refresh_docs_btn.click(list_documents_callback, outputs=output)
-
-
-        
 
         # %% common helpers
         def read_chain_config() -> str:
@@ -257,3 +212,45 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
 
         # %% editor actions
         editor.input(None, js=_CONFIG_CHANGES_JS)
+
+        # helper to upload a document to the milvus DB
+        def upload_document(file_path) -> None:
+            loader = PyPDFLoader(str(file_path))
+            data = loader.load()
+            text_splitter = RecursiveCharacterTextSplitter()
+            all_splits = text_splitter.split_documents(data)
+            vector_store.add_documents(documents=all_splits)
+
+        # upload button action
+        def upload_btn_callback(files) -> list[str]:
+            messages = []
+            for file in files:
+              full_file_path = str(file.name)
+              file_name = file.name.split('/')[-1]  # Extract file name from path
+              try:
+                upload_document(full_file_path)
+                messages.append(f"Successfully uploaded {file_name}")
+              except ValueError as e:
+                messages.append(f"Failed to upload {file_name}")
+            return "<br>".join(messages)
+        
+        # Link button to callback
+        upload_btn.upload(upload_btn_callback, upload_btn, status)
+
+        # refesh docs button action
+        def list_documents_callback() -> str:
+
+            # dummy value, uppre bound 100 documents
+            results = vector_store.similarity_search("a", k=100)
+
+            document_names = []
+
+            for result in results:
+                doc_name = result.metadata.get("source", "Unnamed Document")  # Default to 'Unnamed Document' 
+                doc_name = doc_name.split('/')[-1]  # Extract file name from path
+                document_names.append(doc_name)
+
+            return "\n".join(f"- {name}" for name in document_names)
+        
+        # Link button to callback
+        refresh_docs_btn.click(list_documents_callback, outputs=output)
