@@ -17,10 +17,22 @@
 
 from pathlib import Path
 
+import os
 import gradio as gr
 import jinja2
 import yaml
 from chain_server.configuration import Configuration as ChainConfiguration
+
+# NEW
+from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings
+from langchain_milvus.vectorstores.milvus import Milvus
+import shutil
+import glob
+from langchain_community.document_loaders import PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from chain_server.configuration import config as chain_config
+
+
 
 from ... import mermaid
 from ...common import IMG_DIR, THEME, USE_KB_INITIAL, USE_RERANKER_INITIAL
@@ -67,9 +79,27 @@ async() => {
 _SAVE_IMG = IMG_DIR.joinpath("floppy.png")
 _UNDO_IMG = IMG_DIR.joinpath("undo.png")
 _HISTORY_IMG = IMG_DIR.joinpath("history.png")
+# new
+_UPLOAD_IMG = IMG_DIR.joinpath("upload-button.png")
 _PSEUDO_FILE_NAME = "config.yaml 🟢"
 with open(config.chain_config_file, "r", encoding="UTF-8") as config_file:
     _STARTING_CONFIG = config_file.read()
+
+# connect to our milvus DB
+#new
+embedding_model = NVIDIAEmbeddings(
+    model=chain_config.embedding_model.name,
+    base_url=str(chain_config.embedding_model.url),
+    api_key=chain_config.nvidia_api_key,
+    truncate="END"
+)
+
+vector_store = Milvus(
+    embedding_function=embedding_model,
+    connection_args={"uri": chain_config.milvus.url},
+    collection_name=chain_config.milvus.collection_name,
+    auto_id=True,
+)
 
 # web ui definition
 with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
@@ -104,6 +134,65 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
                                 show_label=False,
                                 container=False,
                             )
+
+    # knowledge base tab
+    with gr.Tab("Knowledge Base", elem_id="kb-tab", elem_classes=["invert-bg"]):
+
+        # helper to upload a document to the milvus DB
+        def upload_document(file_path):
+            loader = PyPDFLoader(str(file_path))
+            data = loader.load()
+            text_splitter = RecursiveCharacterTextSplitter()
+            all_splits = text_splitter.split_documents(data)
+            vector_store.add_documents(documents=all_splits)
+
+        # upload button action
+        def upload_btn_callback(files):
+            messages = []
+            for file in files:
+              full_file_path = str(file.name)
+              file_name = file.name.split('/')[-1]  # Extract file name from path
+              try:
+                upload_document(full_file_path)
+                messages.append(f"Successfully uploaded {file_name}")
+              except ValueError as e:
+                messages.append(f"Failed to upload {file_name}")
+            return "<br>".join(messages)
+
+        # refesh docs button action
+        def list_documents_callback() -> str:
+
+            # dummy value, uppre bound 100 documents
+            results = vector_store.similarity_search("a", k=100)
+
+            document_names = []
+
+            for result in results:
+                doc_name = result.metadata.get("source", "Unnamed Document")  # Default to 'Unnamed Document' 
+                doc_name = doc_name.split('/')[-1]  # Extract file name from path
+                document_names.append(doc_name)
+
+            return "<br>".join(f"- {name}" for name in document_names)
+
+
+
+        # %% upload file box
+        with gr.Group(elem_id="upload-file-group"):
+            upload_btn = gr.UploadButton("Upload PDFs", icon=_UPLOAD_IMG, file_types=[".pdf"], file_count="multiple")
+            status = gr.Markdown(value="", visible=True)
+            upload_btn.upload(upload_btn_callback, upload_btn, status)
+
+
+        # %% Existing files box
+        with gr.Group(elem_id="existing-files-group"):
+            gr.Markdown("### Uploaded PDFs")
+            output = gr.Markdown()
+            output = list_documents_callback()
+            refresh_docs_btn = gr.Button("Refresh")
+            refresh_docs_btn.click(list_documents_callback, outputs=output)
+
+
+        
 
         # %% common helpers
         def read_chain_config() -> str:
