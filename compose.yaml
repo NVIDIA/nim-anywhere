@@ -25,6 +25,7 @@ services:
       retries: 3
     networks:
       - default
+
   nv-rerankqa-mistral-4b-v3:
     image: "nvcr.io/nim/nvidia/nv-rerankqa-mistral-4b-v3:1.0.2"
     profiles: ["3+ GPUs"]
@@ -109,7 +110,6 @@ services:
     command: "redis-server --save 20 1 --loglevel warning"
     networks:
       - default
-
 
 networks:
   default:
