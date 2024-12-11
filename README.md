@@ -436,25 +436,35 @@ development environments.
 > the dropdown menu, and choosing the application of interest (or
 > *Compose* for applications started via compose).
 
+Since you can either pull NIMs and run them locally, or utilize the
+endpoints from build.nvidia.com, you can run this project with *or*
+without GPUs.
+
 1.  The applications bundled in this workspace can be controlled by
     navigating to two tabs:
 
-    - **Environment** \> **Compose**.
+    - **Environment** \> **Compose**
     - **Environment** \> **Applications**
 
-2.  First, navigate to the **Environment** \> **Compose** tab. Using the
-    dropdown menu, select the option reflecting your GPU count. All
-    options, even 0 GPUs, will be able to run this project succesfully.
-    Below is an outline of the available options and services they start
-    up locally:
+2.  First, navigate to the **Environment** \> **Compose** tab. If you're
+    not working in an environment with GPUs, you can just click
+    **Start** to run the project using a lightweight deployment. This
+    default configuration will run the following containers:
 
-    - 0 GPUs
-      - *Milvus Vector DB* and *Redis*. Milvus is used as an
-        unstructured knowledge base and Redis is used to store
-        conversation histories.
-    - 1 GPU
-      - *LLM NIM*. The first time the LLM NIM is started, it will take
-        some time to download the image and the optimized models.
+    - *Milvus Vector DB*: An unstructured knowledge base
+
+    - *Redis*: Used to store conversation histories
+
+3.  If you have access to GPU resources and want to run any NIMs
+    locally, use the dropdown menu under *Compose* and select which set
+    of NIMs you want to run locally. Note that you *must* have at least
+    1 available GPU per NIM you plan to run locally. Below is an outline
+    of the available configurations:
+
+    - Local LLM (min 1 GPU required)
+
+      - The first time the LLM NIM is started, it will take some time to
+        download the image and the optimized models.
         - During a long start, to confirm the LLM NIM is starting, the
           progress can be observed by viewing the logs by using the
           *Output* pane on the bottom left of the UI.
@@ -471,24 +481,25 @@ development environments.
           have been downloaded.
 
         - Any other failures here need to be addressed.
-    - 2 GPU
-      - *Embedding NIM*
-    - 3+ GPUs
-      - *Reranking NIM*
 
-    > **NOTE:** Each profile will also include all services from
-    > profiles with less GPUs (thus, 3+ GPUs runs *everything* locally)
+    - Local LLM + Embedding (min 2 GPUs required)
 
-3.  Once the compose services have been started, navigate to the
+    - Local LLM + Embedding + Reranking (min 3 GPUs required)
+
+    > **NOTE:** Each profile will also run *Milvus Vector DB* and
+    > *Redis*
+
+4.  Once the compose services have been started, navigate to the
     **Environment** \> **Applications** tab. Now, the *Chain Server* can
     safely be started. This contains the custom LangChain code for
     performing our reasoning chain. By default, it will use the local
     Milvus and Redis, but use *ai.nvidia.com* for LLM, Embedding, and
     Reranking model inferencing.
 
-4.  Once the *Chain Server* is up, the *Chat Frontend* can be started.
+5.  Once the *Chain Server* is up, the *Chat Frontend* can be started.
     Starting the interface will automatically open it in a browser
-    window.
+    window. If you are running any local NIMs, you can edit the config
+    to connect to them via the *Chat Frontend*
 
 ![NIM Anywhere Frontend](.static/_static/na_frontend.png)
 
