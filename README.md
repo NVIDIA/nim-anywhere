@@ -437,7 +437,7 @@ development environments.
 > *Compose* for applications started via compose).
 
 Since you can either pull NIMs and run them locally, or utilize the
-endpoints from build.nvidia.com, you can run this project with *or*
+endpoints from *ai.nvidia.com* you can run this project with *or*
 without GPUs.
 
 1.  The applications bundled in this workspace can be controlled by
