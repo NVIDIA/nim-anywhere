@@ -7,7 +7,7 @@ Even the most basic of LLM Chains depend on a few additional microservices. Thes
 <b>Expand this section for details on starting the demo application.</b>
 </summary>
 
-> **HINT:** For each application, the debug output can be monitored in the UI by clicking the Output link in the lower left corner, selecting the dropdown menu, and choosing the application of interest (or *Compose* for applications started via compose). 
+> **HINT:** For each application, the debug output can be monitored in the UI by clicking the Output link in the lower left corner, selecting the dropdown menu, and choosing the application of interest (or **Compose** for applications started via compose). 
 
 Since you can either pull NIMs and run them locally, or utilize the endpoints from *ai.nvidia.com* you can run this project with *or* without GPUs. 
 
@@ -22,7 +22,7 @@ Since you can either pull NIMs and run them locally, or utilize the endpoints fr
 
     - *Redis*: Used to store conversation histories
 
-1. If you have access to GPU resources and want to run any NIMs locally, use the dropdown menu under *Compose* and select which set of NIMs you want to run locally. Note that you *must* have at least 1 available GPU per NIM you plan to run locally. Below is an outline of the available configurations:
+1. If you have access to GPU resources and want to run any NIMs locally, use the dropdown menu under **Compose** and select which set of NIMs you want to run locally. Note that you *must* have at least 1 available GPU per NIM you plan to run locally. Below is an outline of the available configurations:
 
     - Local LLM (min 1 GPU required)
         - The first time the LLM NIM is started, it will take some time to download the image and the optimized models.
