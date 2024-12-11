@@ -39,6 +39,7 @@ Since you can either pull NIMs and run them locally, or utilize the endpoints fr
         
 
     > **NOTE:**  Each profile will also run *Milvus Vector DB* and *Redis*
+    > **NOTE:**  Due to the nature of Docker Compose profiles, the UI will let you select multiple profiles at the same time. In the context of this project, selecting multiple profiles does not make sense. It will not cause any errors, however we recommend only selecting one profile at a time for simplicity.
 
 1. Once the compose services have been started, navigate to the **Environment** > **Applications** tab. Now, the *Chain Server* can safely be started. This contains the custom LangChain code for performing our reasoning chain. By default, it will use the local Milvus and Redis, but use *ai.nvidia.com* for LLM, Embedding, and Reranking model inferencing.
 
