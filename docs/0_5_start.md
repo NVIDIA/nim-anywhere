@@ -9,7 +9,7 @@ Even the most basic of LLM Chains depend on a few additional microservices. Thes
 
 > **HINT:** For each application, the debug output can be monitored in the UI by clicking the Output link in the lower left corner, selecting the dropdown menu, and choosing the application of interest (or *Compose* for applications started via compose). 
 
-Since you can either pull NIMs and run them locally, or utilize the endpoints from build.nvidia.com, you can run this project with *or* without GPUs. 
+Since you can either pull NIMs and run them locally, or utilize the endpoints from *ai.nvidia.com* you can run this project with *or* without GPUs. 
 
 1. The applications bundled in this workspace can be controlled by navigating to two tabs:
 
