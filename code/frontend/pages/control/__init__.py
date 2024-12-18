@@ -30,6 +30,7 @@ import shutil
 import glob
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.schema import Document
 from chain_server.configuration import config as chain_config
 from typing import List
 import time
@@ -242,12 +243,19 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
         editor.input(None, js=_CONFIG_CHANGES_JS)
 
         # helper to upload a document to the milvus DB
-        def upload_document(file_path) -> None:
+        def upload_document(file_path, file_name) -> None:
             loader = PyPDFLoader(str(file_path))
             data = loader.load()
             text_splitter = RecursiveCharacterTextSplitter()
-            all_splits = text_splitter.split_documents(data)
-            vector_store.add_documents(documents=all_splits)
+
+            # Combine pages of document into one Document
+            combined_content = "\n".join([page.page_content for page in data])
+            new_metadata = data[0].metadata
+            new_metadata["simple_file_name"] = file_name
+            combined_document = [Document(page_content=combined_content, metadata=new_metadata)]
+            
+            #all_splits = text_splitter.split_documents(combined_document)
+            vector_store.add_documents(documents=combined_document)
  
         # upload button action
         def upload_btn_callback(files) -> list[str]:
@@ -265,7 +273,7 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
               full_file_path = str(file.name)
               file_name = file.name.split('/')[-1]  # Extract file name from path
               try:
-                upload_document(full_file_path)
+                upload_document(full_file_path, file_name)
                 messages.append(f"Successfully uploaded {file_name}")
               except ValueError as e:
                 messages.append(f"Failed to upload {file_name}")
@@ -299,15 +307,20 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
 
         # Confirm Delete Button Action (actually deletes docs)
         def confirm_delete_callback(selected_docs):
-            
-            print("Selected for deletion:", selected_docs)
-            filename = str(selected_docs[0])
-            expr = f"source like '%{filename}'"
-            vector_store.delete(expr=expr)
+            messages = []
+            for filename in selected_docs:
+                expr = f"simple_file_name == '{filename}'"
+                #expr = f"source like '%{filename}'"
+                try:
+                    vector_store.delete(expr=expr)
+                    messages.append(f"Successfully removed {filename}")
+                except Exception as e:
+                    messages.append(f"Failed to remove {filename}")
+                    messages.append(str(e))
+                
             time.sleep(1)
             refresh_results = refresh_button_callback()
-            # TODO second return is the delete status
-            return [refresh_results, str(selected_docs), gr.update(visible=True), gr.update(visible=False), gr.update(visible=False)]
+            return [refresh_results, "<br>".join(messages), gr.update(visible=True), gr.update(visible=False), gr.update(visible=False)]
 
         # Cancel delete button action
         def cancel_delete_callback():
