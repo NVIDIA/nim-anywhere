@@ -280,9 +280,11 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
 
             # Perform reload
             if need_reload:
-                print("NEed reload")
-                # TOUCH RELOAD TODO
-                # RM RELOAD TODO
+                reload_filename = "reload"
+                with open(reload_filename, 'w') as file:
+                    pass  # 'pass' ensures the file is created but does nothing else
+                time.sleep(.5)
+                os.remove(reload_filename)
 
             # Refresh uploaded files checkboxes
             time.sleep(1)
@@ -310,14 +312,11 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
             messages = []
             for filename in selected_docs:
                 expr = f"simple_file_name == '{filename}'"
-                #expr = f"source like '%{filename}'"
                 try:
                     vector_store.delete(expr=expr)
                     messages.append(f"Successfully removed {filename}")
                 except Exception as e:
                     messages.append(f"Failed to remove {filename}")
-                    messages.append(str(e))
-                
             time.sleep(1)
             refresh_results = refresh_button_callback()
             return [refresh_results, "<br>".join(messages), gr.update(visible=True), gr.update(visible=False), gr.update(visible=False)]
