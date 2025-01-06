@@ -93,9 +93,9 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
                     with gr.Group(elem_id="config-wrapper"):
                         with gr.Row(elem_id="config-toolbar", elem_classes=["toolbar"]):
                             file_title = gr.Markdown(_PSEUDO_FILE_NAME, elem_id="editor-title")
-                            save_btn = gr.Button("", icon=_SAVE_IMG, elem_classes=["toolbar"])
-                            undo_btn = gr.Button("", icon=_UNDO_IMG, elem_classes=["toolbar"])
-                            reset_btn = gr.Button("", icon=_HISTORY_IMG, elem_classes=["toolbar"])
+                            save_btn = gr.Button("", icon=str(_SAVE_IMG), elem_classes=["toolbar"])
+                            undo_btn = gr.Button("", icon=str(_UNDO_IMG), elem_classes=["toolbar"])
+                            reset_btn = gr.Button("", icon=str(_HISTORY_IMG), elem_classes=["toolbar"])
                         with gr.Row(elem_id="config-row-box"):
                             editor = gr.Code(
                                 elem_id="config-editor",
