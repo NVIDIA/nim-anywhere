@@ -27,4 +27,4 @@ IMG_DIR = STATIC_DIR.joinpath("images")
 USE_KB_INITIAL = False
 USE_RERANKER_INITIAL = False
 
-THEME = gr.themes.Default().load(ASSETS_DIR.joinpath("theme.json"))
+THEME = gr.themes.Default().load(str(ASSETS_DIR.joinpath("theme.json")))
