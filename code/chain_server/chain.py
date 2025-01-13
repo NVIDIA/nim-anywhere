@@ -36,13 +36,13 @@ embedding_model = NVIDIAEmbeddings(
     model=app_config.embedding_model.name,
     base_url=str(app_config.embedding_model.url),
     api_key=app_config.nvidia_api_key,
+    truncate="END",
 )
 vector_store = Milvus(
     embedding_function=embedding_model,
     connection_args={"uri": app_config.milvus.url},
     collection_name=app_config.milvus.collection_name,
     auto_id=True,
-    timeout=10,
 )
 retriever = vector_store.as_retriever()
 
@@ -50,6 +50,7 @@ reranker = NVIDIARerank(
     model=app_config.reranking_model.name,
     base_url=str(app_config.reranking_model.url),
     api_key=app_config.nvidia_api_key,
+    truncate="END",
 )
 reranking_retriever = ContextualCompressionRetriever(base_compressor=reranker, base_retriever=retriever)
 
