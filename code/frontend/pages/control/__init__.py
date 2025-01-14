@@ -139,7 +139,7 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
     with gr.Tab("Knowledge Base", elem_id="kb-tab", elem_classes=["invert-bg"]):
 
         # upload file button
-        upload_btn = gr.UploadButton("Upload PDFs", icon=_UPLOAD_IMG, file_types=[".pdf"], file_count="multiple")
+        upload_btn = gr.UploadButton("Upload PDFs", icon=str(_UPLOAD_IMG), file_types=[".pdf"], file_count="multiple")
 
         def refresh_button_callback():
             """Refesh docs button action"""
