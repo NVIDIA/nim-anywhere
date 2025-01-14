@@ -1,5 +1,5 @@
 llm_model:
-  name: "nvdev/meta/llama-3.1-8b-instruct"
+  name: "meta/llama3-8b-instruct"
 
   # AI Catalog
   url: "https://integrate.api.nvidia.com/v1"
@@ -8,7 +8,7 @@ llm_model:
   # url: "http://llm-nim-0:8000/v1"
 
 embedding_model:
-  name: "nvdev/nvidia/nv-embedqa-e5-v5"
+  name: "nvidia/nv-embedqa-e5-v5"
   
   # AI Catalog
   url: "https://integrate.api.nvidia.com/v1"
@@ -18,7 +18,7 @@ embedding_model:
 
 reranking_model:  
   # AI Catalog
-  name: "nvdev/nv-rerank-qa-mistral-4b:1"
+  name: "nv-rerank-qa-mistral-4b:1"
   url: "https://integrate.api.nvidia.com/v1"
 
   # Locally running NIM
