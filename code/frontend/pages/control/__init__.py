@@ -311,7 +311,7 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
                     vector_store.delete(expr=expr)
                 except Exception as err:
                     raise IOError(f"Failed to remove {filename}:\n{err}") from err
-                    
+
             time.sleep(1)
             refresh_results = refresh_button_callback()
             return [
