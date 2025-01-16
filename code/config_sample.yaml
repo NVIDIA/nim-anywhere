@@ -4,8 +4,9 @@ llm_model:
   # AI Catalog
   url: "https://integrate.api.nvidia.com/v1"
 
-  # Locally running NIM
-  # url: "http://llm-nim-0:8000/v1"
+  # If you are running the LLM NIM locally,
+  # comment out the previous line and uncomment the following
+  # url: "http://llm-nim:8000/v1"
 
 embedding_model:
   name: "nvidia/nv-embedqa-e5-v5"
@@ -13,7 +14,8 @@ embedding_model:
   # AI Catalog
   url: "https://integrate.api.nvidia.com/v1"
   
-  # Locally running NIM
+  # If you are running the Embedding NIM locally,
+  # comment out the previous line and uncomment the following
   #url: "http://nv-embedqa-e5-v5:8000/v1"
 
 reranking_model:  
@@ -21,7 +23,8 @@ reranking_model:
   name: "nv-rerank-qa-mistral-4b:1"
   url: "https://integrate.api.nvidia.com/v1"
 
-  # Locally running NIM
+  # If you are running the Reranking NIM locally,
+  # comment out the previous lines and uncomment the following
   #name: "nvidia/nv-rerankqa-mistral-4b-v3"  
   #url: "http://nv-rerankqa-mistral-4b-v3:8000/v1/"
 

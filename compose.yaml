@@ -1,0 +1,119 @@
+# env variables needed
+# NGC_API_KEY
+
+services:
+  nv-embedqa-e5-v5:
+    image: "nvcr.io/nim/nvidia/nv-embedqa-e5-v5:1.0.1"
+    profiles: ["Local LLM + Embedding", "Local LLM + Embedding + Reranking"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: ["gpu"]
+              count: 1
+    ipc: host
+    environment:
+      - NGC_API_KEY=${NGC_API_KEY}
+    volumes:
+      - nim-cache:/opt/nim/.cache
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; resp = requests.get('http://localhost:8000/v1/health/ready'); resp.raise_for_status()"]
+      interval: 30s
+      start_period: 600s
+      timeout: 20s
+      retries: 3
+    networks:
+      - default
+
+  nv-rerankqa-mistral-4b-v3:
+    image: "nvcr.io/nim/nvidia/nv-rerankqa-mistral-4b-v3:1.0.2"
+    profiles: ["Local LLM + Embedding + Reranking"]
+    runtime: "nvidia"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: ["gpu"]
+              count: 1
+    ipc: host
+    environment:
+      - NGC_API_KEY=${NGC_API_KEY}
+    volumes:
+      - nim-cache:/opt/nim/.cache
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; resp = requests.get('http://localhost:8000/v1/health/ready'); resp.raise_for_status()"]
+      interval: 30s
+      start_period: 600s
+      timeout: 20s
+      retries: 3
+    networks:
+      - default
+
+  llm-nim:
+    image: "nvcr.io/nim/meta/llama3-8b-instruct:1"
+    profiles: ["Local LLM", "Local LLM + Embedding", "Local LLM + Embedding + Reranking"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: ["gpu"]
+              count: 1
+    ipc: host
+    environment:
+      - NGC_API_KEY=${NGC_API_KEY}
+    volumes:
+      - nim-cache:/opt/nim/.cache
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; resp = requests.get('http://localhost:8000/v1/health/ready'); resp.raise_for_status()"]
+      interval: 30s
+      start_period: 600s
+      timeout: 20s
+      retries: 3
+    networks:
+      - default
+
+  milvus:
+    image: "milvusdb/milvus:v2.4.6"
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - ETCD_USE_EMBED=true
+      - ETCD_DATA_DIR=/var/lib/milvus/etcd
+      - COMMON_STORAGETYPE=local
+    volumes:
+      - milvus:/var/lib/milvus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
+      interval: 30s
+      start_period: 90s
+      timeout: 20s
+      retries: 3
+    command: "milvus run standalone"
+    networks:
+      - default
+
+  redis:
+    image: "redis:7"
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      start_period: 30s
+      timeout: 5s
+      retries: 5
+    command: "redis-server --save 20 1 --loglevel warning"
+    networks:
+      - default
+
+networks:
+  default:
+
+volumes:
+  milvus:
+  redis:
+  nim-cache:
+
