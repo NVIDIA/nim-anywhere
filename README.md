@@ -48,7 +48,7 @@ instructions and build your first RAG application using NIM Microservices!
   - [Install AI Workbench](#install-ai-workbench)
   - [Download this project](#download-this-project)
   - [Configure this project](#configure-this-project)
-  - [Start This Project](#start-this-project)
+  - [Start this project](#start-this-project)
   - [Populating the Knowledge Base](#populating-the-knowledge-base)
 - [Developing Your Own Applications](#developing-your-own-applications)
 - [Application Configuration](#application-configuration)
