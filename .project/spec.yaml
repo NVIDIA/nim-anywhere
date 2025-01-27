@@ -143,6 +143,23 @@ execution:
       proxy:
         trim_prefix: true
       url: http://localhost:3030
+  - name: Code Walkthrough
+    type: custom
+    class: webapp
+    start_command: cd /project/code/walkthrough && python -m http.server --directory
+      /project/code/walkthrough 8000
+    health_check_command: curl -f "http://localhost:8000/"
+    stop_command: pkill -f "^python -m http.server --directory /project/code/walkthrough"
+    user_msg: ""
+    logfile_path: ""
+    timeout_seconds: 60
+    icon_url: ""
+    webapp_options:
+      autolaunch: true
+      port: "8000"
+      proxy:
+        trim_prefix: true
+      url: http://localhost:8000/
   resources:
     gpu:
       requested: 0
