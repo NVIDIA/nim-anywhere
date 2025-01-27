@@ -50,7 +50,7 @@ instructions and build your first RAG application using NIM Microservices!
   - [Configure this project](#configure-this-project)
   - [Start this project](#start-this-project)
   - [Populating the Knowledge Base](#populating-the-knowledge-base)
-- [Developing Your Own Applications](#developing-your-own-applications)
+- [Developing your own applications](#developing-your-own-applications)
 - [Application Configuration](#application-configuration)
   - [Config from a file](#config-from-a-file)
   - [Config from a custom file](#config-from-a-custom-file)
