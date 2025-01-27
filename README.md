@@ -39,7 +39,7 @@ accuracy and reliability of your generative AI models, [read this
 blog](https://developer.nvidia.com/blog/enhancing-rag-applications-with-nvidia-nim/).
 
 Get started with NIM Anywhere now with the [quick-start](#quick-start)
-instructions and build your first RAG application using NIMs!
+instructions and build your first RAG application using NIM Microservices!
 
 ![NIM Anywhere Screenshot](.static/_static/nim-anywhere.png)
  
