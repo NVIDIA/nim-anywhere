@@ -126,10 +126,11 @@ execution:
     type: custom
     class: webapp
     start_command: export PROXY_PREFIX && export NGC_API_KEY && cd /project/code &&
-      APP_LOG_LEVEL=DEBUG uvicorn --log-level info --reload chain_server.server:app
-      --port 3030 --host 0.0.0.0 --timeout-graceful-shutdown 10 --reload-exclude 'frontend/*'
+      APP_LOG_LEVEL=DEBUG uvicorn --log-level info chain_server.server:app --port
+      3030 --host 0.0.0.0 --timeout-graceful-shutdown 10 --reload-exclude 'frontend/*'
       --reload-exclude 'evaluation/*' --reload-include '*.html' --reload-include '*.css'
-      --reload-include '*.yaml' --reload-include '*.js'
+      --reload-include '*.yaml' --reload-include '*.js' --reload --reload-include
+      reload
     health_check_command: ps aux |grep -v grep | grep chain_server.server:app
     stop_command: ps aux | grep chain_server.server:app | grep -v grep | awk '{print
       $2}' | xargs kill

@@ -92,3 +92,6 @@ div#config-editor label, div#config-editor button, div#config-editor .container 
 div#config-wrapper {
   border-radius: 1em 1em 0em 0em;
 }
+[data-testid="checkbox-group"] {
+  display: block;
+}
