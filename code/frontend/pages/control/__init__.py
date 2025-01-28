@@ -273,7 +273,6 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
                 except Exception as err:
                     raise IOError(f"Failed to upload {file_name}:\n{err}") from err
 
-
             # Perform reload
             if need_reload:
                 reload_filename = "reload"
