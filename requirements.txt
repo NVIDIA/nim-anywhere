@@ -12,6 +12,7 @@ langserve==0.3.1
 opentelemetry-instrumentation-fastapi==0.50b0
 pydantic
 pymilvus==2.5.3
+pypdf
 redis==5.2.1
 sse-starlette==2.2.1
 uvicorn==0.34.0

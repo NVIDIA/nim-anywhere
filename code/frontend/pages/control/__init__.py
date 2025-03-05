@@ -16,11 +16,23 @@
 """The control panel web app."""
 
 from pathlib import Path
+import shutil
+import glob
+from typing import List
+import time
 
+import os
 import gradio as gr
 import jinja2
 import yaml
+
+from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings
+from langchain_milvus.vectorstores.milvus import Milvus
+from langchain_community.document_loaders import PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.schema import Document
 from chain_server.configuration import Configuration as ChainConfiguration
+from chain_server.configuration import config as chain_config
 
 from ... import mermaid
 from ...common import IMG_DIR, THEME, USE_KB_INITIAL, USE_RERANKER_INITIAL
@@ -67,12 +79,30 @@ async() => {
 _SAVE_IMG = IMG_DIR.joinpath("floppy.png")
 _UNDO_IMG = IMG_DIR.joinpath("undo.png")
 _HISTORY_IMG = IMG_DIR.joinpath("history.png")
+_UPLOAD_IMG = IMG_DIR.joinpath("upload-button.png")
 _PSEUDO_FILE_NAME = "config.yaml 🟢"
 with open(config.chain_config_file, "r", encoding="UTF-8") as config_file:
     _STARTING_CONFIG = config_file.read()
 
+# connect to our milvus DB
+embedding_model = NVIDIAEmbeddings(
+    model=chain_config.embedding_model.name,
+    base_url=str(chain_config.embedding_model.url),
+    api_key=chain_config.nvidia_api_key,
+    truncate="END",
+)
+
+vector_store = Milvus(
+    embedding_function=embedding_model,
+    connection_args={"uri": chain_config.milvus.url},
+    collection_name=chain_config.milvus.collection_name,
+    auto_id=True,
+)
+
 # web ui definition
 with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
+
+    # %% contrl panel tab
     with gr.Tab("Control Panel", elem_id="cp-tab", elem_classes=["invert-bg"]):
 
         # %% architecture control box
@@ -104,6 +134,46 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
                                 show_label=False,
                                 container=False,
                             )
+
+    # %% knowledge base tab
+    with gr.Tab("Knowledge Base", elem_id="kb-tab", elem_classes=["invert-bg"]):
+
+        # upload file button
+        upload_btn = gr.UploadButton("Upload PDFs", icon=str(_UPLOAD_IMG), file_types=[".pdf"], file_count="multiple")
+
+        def refresh_button_callback():
+            """Refesh docs button action"""
+
+            # grab the first 100 documents in the knowledge base
+            results = vector_store.similarity_search("a", k=100)
+            document_names = []
+            for result in results:
+                doc_name = result.metadata.get("source", "Unnamed Document")  # default value 'Unnamed Document'
+                doc_name = doc_name.split("/")[-1]  # extract file name from path
+                document_names.append(doc_name)
+
+            return gr.CheckboxGroup(
+                label="Uploaded Documents",
+                choices=document_names,
+                elem_classes="checkbox-group",
+                visible=True,
+                value=[],
+                interactive=True,
+            )
+
+        uploaded_files = refresh_button_callback()
+
+        # %% refresh and delete buttons
+        with gr.Row(equal_height=True):
+            refresh_docs_btn = gr.Button("Refresh")
+
+            # Link refresh button to callback
+            refresh_docs_btn.click(refresh_button_callback, outputs=uploaded_files)
+
+        with gr.Row(equal_height=True):
+            delete_btn = gr.Button("Delete Selected")
+            confirm_delete_btn = gr.Button("Confirm delete", variant="stop", visible=False)
+            cancel_delete_btn = gr.Button("Cancel", visible=False)
 
         # %% common helpers
         def read_chain_config() -> str:
@@ -168,3 +238,104 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
 
         # %% editor actions
         editor.input(None, js=_CONFIG_CHANGES_JS)
+
+        # %% upload document actions
+        def upload_document(file_path, file_name) -> None:
+            """Helper to upload a document to the milvus DB"""
+            loader = PyPDFLoader(str(file_path))
+            data = loader.load()
+
+            # Combine pages of document into one document
+            combined_content = "\n".join([page.page_content for page in data])
+            new_metadata = data[0].metadata
+            new_metadata["simple_file_name"] = file_name
+            combined_document = [Document(page_content=combined_content, metadata=new_metadata)]
+
+            vector_store.add_documents(documents=combined_document)
+
+        def upload_btn_callback(files) -> str:
+            """Upload button action"""
+
+            # Specify chain server reload if inserting into an empty collection
+            need_reload = False
+
+            # Search with a filler query to see if there are any docs in the vector store
+            docs = vector_store.similarity_search("a")
+            if not docs:
+                need_reload = True
+
+            # Upload files
+            for file in files:
+                full_file_path = str(file.name)
+                file_name = file.name.split("/")[-1]  # Extract file name from path
+                try:
+                    upload_document(full_file_path, file_name)
+                except Exception as err:
+                    raise IOError(f"Failed to upload {file_name}:\n{err}") from err
+
+            # Perform reload
+            if need_reload:
+                reload_filename = "reload"
+                with open(reload_filename, "w", encoding="utf-8") as file:
+                    pass  # 'pass' ensures the file is created but does nothing else
+                time.sleep(0.5)
+                os.remove(reload_filename)
+
+            # Refresh uploaded files checkboxes
+            time.sleep(1)
+            refresh_results = refresh_button_callback()
+
+            return refresh_results
+
+        # Link upload button to callback
+        upload_btn.upload(upload_btn_callback, upload_btn, outputs=uploaded_files)
+
+        # %% Delete document actions
+        def delete_button_callback(selected_docs):
+            """Delete Button Action (Does not actually delete documents)"""
+
+            if not selected_docs:
+                # no docs selected, do nothing
+                return [gr.update(visible=True), gr.update(visible=False), gr.update(visible=False)]
+
+            # docs selected, show confirmation button
+            return [gr.update(visible=False), gr.update(visible=True), gr.update(visible=True)]
+
+        def confirm_delete_callback(selected_docs):
+            """Confirm Delete Button Action (actually deletes docs)"""
+
+            for filename in selected_docs:
+                expr = f"simple_file_name == '{filename}'"
+                try:
+                    vector_store.delete(expr=expr)
+                except Exception as err:
+                    raise IOError(f"Failed to remove {filename}:\n{err}") from err
+
+            time.sleep(1)
+            refresh_results = refresh_button_callback()
+            return [
+                refresh_results,
+                gr.update(visible=True),
+                gr.update(visible=False),
+                gr.update(visible=False),
+            ]
+
+        def cancel_delete_callback():
+            """Cancel delete button action"""
+            return [gr.update(visible=True), gr.update(visible=False), gr.update(visible=False)]
+
+        delete_btn.click(
+            fn=delete_button_callback,
+            inputs=[uploaded_files],
+            outputs=[delete_btn, confirm_delete_btn, cancel_delete_btn],
+        )
+
+        confirm_delete_btn.click(
+            fn=confirm_delete_callback,
+            inputs=[uploaded_files],
+            outputs=[uploaded_files, delete_btn, confirm_delete_btn, cancel_delete_btn],
+        )
+
+        cancel_delete_btn.click(
+            fn=cancel_delete_callback, inputs=None, outputs=[delete_btn, confirm_delete_btn, cancel_delete_btn]
+        )
