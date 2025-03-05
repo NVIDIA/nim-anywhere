@@ -1,6 +1,6 @@
 confz==2.0.1
 fastapi==0.115.6
-gradio==5.9.1
+gradio==5.11.0
 grandalf==0.8
 jupyterlab>3.0
 langchain==0.3.14
