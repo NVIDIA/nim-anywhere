@@ -1,0 +1,52 @@
+title: Settings
+waiting_msg: " "
+testing_msg: Waiting for task to complete.
+next: RESET ALL PROGRESS
+
+
+tasks:
+  - name: Clear progress
+    msg: Use this tool to clear your saved progress and reset these labs. Using this tool **WILL** erase all code that was created. Please save any code you would like to keep.
+
+  - name: Are you sure?
+    msg: Are you absolutely sure you would like to continue? **Your files will be removed!**
+
+  - name: Cleaning artifacts
+    msg: Removing the code created during the labs.
+    test: remove_labs
+
+  - name: Removing cache
+    msg: |
+      Removing all cached progress information.
+    response: |
+      ##### Good as new!
+
+      Reload this page to start fresh.
+    test: remove_state_file
+
+bundle_header: Logs and Support Bundles
+bundle_msg: |
+  A **Support Bundle** is a collection of logs that capture the state of your AI Workbench. To create a support bundle to send in for troubleshooting, first open the AI Workbench CLI (use the WSL distro if on Windows)
+
+  Then, run the following command(s):
+
+  ```bash
+  nvwb support create-bundle
+  ```
+
+  or
+
+  ```bash
+  nvwb support create-bundle --context <location name>
+  ```
+
+  For a full description of relevant AI Workbench related logs, check out the documentation [here](https://docs.nvidia.com/ai-workbench/user-guide/latest/troubleshooting/logging.html)
+
+forum_header: NVIDIA Developer Forum
+forum_msg: |
+  Feel free to engage with other developers and NVIDIA personnel on the [NVIDIA Developer Forum](https://forums.developer.nvidia.com/c/ai-data-science/nvidia-ai-workbench/671) for AI Workbench!
+
+  Here, you can make your own post and get help debugging or troubleshooting your issues. Be sure to include any support bundles created so you get can quicker and more helpful responses.
+
+  Additionally, here you can engage with other developers and follow along with example projects as updates get pushed upstream. Happy coding!
+

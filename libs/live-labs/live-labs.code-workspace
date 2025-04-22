@@ -1,0 +1,82 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"pylint.importStrategy": "useBundled",
+		"python.analysis.extraPaths": ["/project/libs/live-labs"],
+		  // file explorer configuration
+		  "files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			"**/Thumbs.db": true,
+			"**/.venv": true,
+			"**/__pycache__": true,
+			"**/.mypy_cache": true,
+			"**/.ipynb_checkpoints": true,
+			"**/.terraform": true,
+		  },
+
+
+		  // global editor settings
+		  "files.eol": "\n",
+		  "editor.tabSize": 4,
+		  "editor.insertSpaces": true,
+		  "files.insertFinalNewline": true,
+		  // remove this line to automatically forward ports
+		  // in general, workbench will manage this already
+		  "remote.autoForwardPorts": false,
+
+
+		  // bash scripting configuration
+		  "[shellscript]": {
+			"editor.tabSize": 4,
+			"editor.insertSpaces": false,
+		  },
+
+
+		  // css style sheet configuration
+		  "[css]": {
+			"editor.suggest.insertMode": "replace",
+			"editor.tabSize": 2
+		  },
+
+		  // js configuration
+		  "[javascript]": {
+			"editor.maxTokenizationLineLength": 2500,
+			"editor.tabSize": 2,
+		  },
+
+		  // Python environment configuration
+		  "python.terminal.activateEnvironment": true,
+		  "python.defaultInterpreterPath": ".venv/bin/python",
+		  "isort.args":["--profile", "black"],
+		  "isort.check": true,
+		  "[python]": {
+			"editor.defaultFormatter": "ms-python.black-formatter",
+			"editor.codeActionsOnSave": {
+			  "source.organizeImports": "explicit"
+			},
+			//  Comment out this settings to disable auto-formatting
+			"editor.formatOnSave": true
+		  },
+
+		  "black-formatter.args": [
+			"--line-length",
+			"120"
+		  ],
+		  "pylint.severity": {
+			"refactor": "Information",
+		  },
+
+		  "explorer.fileNesting.enabled": true,
+		  "explorer.fileNesting.patterns": {
+			"*.py": "${capture}.*.yaml, ${capture}_tests.py"
+		  }
+	}
+}

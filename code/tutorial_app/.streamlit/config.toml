@@ -1,0 +1,15 @@
+[client]
+showSidebarNavigation = false
+
+[server]
+enableStaticServing = true
+
+[runner]
+enforceSerializableSessionState = true
+
+[theme]
+primaryColor="#76B900"
+backgroundColor="#FFFFFF"
+secondaryBackgroundColor="#F0F2F6"
+textColor="#31333F"
+font="sans serif"
