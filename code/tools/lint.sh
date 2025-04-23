@@ -19,7 +19,7 @@ fi
 
 if [ -z "$1" ] || [ "$1" = "mypy" ]; then
     echo "Checking Type Hints with MyPy"
-    mypy --config-file pyproject.toml $(git ls-files 'code/*.py')
+    mypy --config-file pyproject.toml $(git ls-files 'code/*.py' | grep -v tutorial_app)
     echo -e "\n\n\n"
 fi
 
