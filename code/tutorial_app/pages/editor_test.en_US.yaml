@@ -42,4 +42,5 @@ info_test_timeout: "Your code seems to be taking too long to run."
 
 # custom testing messages
 # if you add manual tests, you can add your own messages here
-info_no_my_string:  "Waiting for my  string to be defined."
+info_no_my_string:  "`my_string` does not exist."
+info_my_string_not_five: "`my_string` exists, but isn't set to the correct value."
