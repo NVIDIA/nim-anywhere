@@ -12,6 +12,3 @@ app = live_labs.AppShell.from_yaml(app_shell_yaml)
 page = app.navigation()
 app.sidebar()
 page.run()
-
-# Print the navigation footer
-app.footer(page.title)

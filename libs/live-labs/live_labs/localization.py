@@ -13,7 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Code to automate loading location specific messages from a file."""
+"""Live Labs Localization
+
+This module is abstractions around retrieving message catalogs in the correct language.
+
+The MessageCatalog data model represents the localized messages for a particular lab.
+
+## Example
+```python
+MESSAGES = live_labs.MessageCatalog.from_page(__file__)
+```
+"""
 
 from pathlib import Path
 from typing import Any, Callable, cast

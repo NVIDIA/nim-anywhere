@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Excercise page layout."""
+"""A generic settings page."""
 from pathlib import Path
 
 import streamlit as st
@@ -24,7 +24,7 @@ from live_labs.pages import settings_tests as TESTS
 MESSAGES = MessageCatalog.from_page(__file__)
 NAME = Path(__file__).stem
 
-with Worksheet(ephemeral=True) as worksheet:
+with Worksheet(name=NAME, ephemeral=True) as worksheet:
 
     # file browser
     with st.container(border=True):
@@ -44,7 +44,7 @@ with Worksheet(ephemeral=True) as worksheet:
 
     # reset progress
     with st.container(border=True):
-        worksheet.live_lab(NAME, MESSAGES, TESTS)
+        worksheet.live_lab(MESSAGES, TESTS)
 
     # break into two columns
     col_1, col_2 = st.columns([1, 1])

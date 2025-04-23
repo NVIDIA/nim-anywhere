@@ -16,19 +16,19 @@
 
 from pathlib import Path
 
-import streamlit as st
 import live_labs
+import streamlit as st
 
 TESTS = None
 
 MESSAGES = live_labs.MessageCatalog.from_page(__file__)
 NAME = Path(__file__).stem
 
-with live_labs.Worksheet() as worksheet:
+with live_labs.Worksheet(name=NAME) as worksheet:
     # Header
     st.title(MESSAGES.get("title"))
     st.write(MESSAGES.get("welcome_msg"))
     st.header(MESSAGES.get("header"), divider="gray")
 
     # Print Tasks
-    worksheet.live_lab(NAME, MESSAGES, TESTS)
+    worksheet.live_lab(MESSAGES, TESTS)

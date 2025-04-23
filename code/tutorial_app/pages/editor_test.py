@@ -27,11 +27,11 @@ NAME = Path(__file__).stem
 EDITOR_DIR = Path("/project/code").joinpath(NAME)
 EDITOR_FILES = ["file1.py", "file2.py"]
 
-with live_labs.Worksheet(autorefresh=0).with_editor(EDITOR_DIR, EDITOR_FILES) as worksheet:
+with live_labs.Worksheet(name=NAME, autorefresh=0).with_editor(EDITOR_DIR, EDITOR_FILES) as worksheet:
     # Header
     st.title(MESSAGES.get("title"))
     st.write(MESSAGES.get("welcome_msg"))
     st.header(MESSAGES.get("header"), divider="gray")
 
     # Print Tasks
-    worksheet.live_lab(NAME, MESSAGES, TESTS)
+    worksheet.live_lab(MESSAGES, TESTS)

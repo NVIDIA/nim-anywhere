@@ -12,7 +12,38 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Common code that is used to render and style boilerplate streamlit objects."""
+"""Live Labs Lab Module
+
+This module contains abstractions around creating the user interface for the individual labs. These lab interfaces
+are called worksheets.
+
+The Worksheet data model is used as the standard entry point to creating and customizing a lab worksheet.
+
+## Example
+```python
+from pathlib import Path
+
+import live_labs
+import streamlit as st
+
+from pages import editor_test_tests as TESTS
+
+MESSAGES = live_labs.MessageCatalog.from_page(__file__)
+NAME = Path(__file__).stem
+
+EDITOR_DIR = Path("/project/code").joinpath(NAME)
+EDITOR_FILES = ["file1.py", "file2.py"]
+
+with live_labs.Worksheet(name=NAME, autorefresh=0).with_editor(EDITOR_DIR, EDITOR_FILES) as worksheet:
+    # Header
+    st.title(MESSAGES.get("title"))
+    st.write(MESSAGES.get("welcome_msg"))
+    st.header(MESSAGES.get("header"), divider="gray")
+
+    # Print Tasks
+    worksheet.live_lab(MESSAGES, TESTS)
+```
+"""
 
 import json
 from pathlib import Path
@@ -21,7 +52,7 @@ from typing import Any, Optional
 
 import streamlit as st
 from jinja2 import BaseLoader, Environment
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PrivateAttr
 from streamlit.delta_generator import DeltaGenerator
 from streamlit_autorefresh import st_autorefresh
 from streamlit_extras.stateful_button import button
@@ -45,6 +76,7 @@ def _slugify(name: str) -> str:
 class Worksheet(BaseModel):
     """Wrapper to simplify creating a live lab worksheet."""
 
+    name: str
     autorefresh: int = 2500
     ephemeral: bool = False
     state_file: Path = DEFAULT_STATE_FILE
@@ -52,11 +84,11 @@ class Worksheet(BaseModel):
     completed_tasks: int = Field(0, init=False)
     total_tasks: int = Field(0, init=False)
 
-    _body: Optional[DeltaGenerator] = None
-    _base_dir: Optional[Path] = None
-    _files: Optional[list[str]] = None
-    _files_data_init: Optional[list[str]] = None
-    _stdout: Optional[DeltaGenerator] = None
+    _body: Optional[DeltaGenerator] = PrivateAttr(None)
+    _base_dir: Optional[Path] = PrivateAttr(None)
+    _files: Optional[list[str]] = PrivateAttr(None)
+    _files_data_init: Optional[list[str]] = PrivateAttr(None)
+    _stdout: Optional[DeltaGenerator] = PrivateAttr(None)
 
     @property
     def stdout(self) -> DeltaGenerator:
@@ -89,6 +121,8 @@ class Worksheet(BaseModel):
 
     def __exit__(self, _, __, ___):
         """Cache data."""
+        if self._body:
+            self._body.__exit__(None, None, None)
         if not self.ephemeral:
             self.save_state()
 
@@ -166,7 +200,7 @@ class Worksheet(BaseModel):
         return state
 
     def print_task(
-        self, parent: str, task: localization.Task, test_suite: None | ModuleType, messages: localization.MessageCatalog
+        self, task: localization.Task, test_suite: None | ModuleType, messages: localization.MessageCatalog
     ) -> bool:
         """Write tasks out to screen.
 
@@ -198,7 +232,7 @@ class Worksheet(BaseModel):
             with col1:
                 st.write("**" + messages.get("waiting_msg", "") + "**")
             with col2:
-                done = button(messages.get("next"), key=f"{parent}_task_{slug}")
+                done = button(messages.get("next"), key=f"{self.name}_task_{slug}")
             if not done:
                 return False
 
@@ -211,11 +245,11 @@ class Worksheet(BaseModel):
 
         return True
 
-    def live_lab(self, name: str, messages: localization.MessageCatalog, test_suite: None | ModuleType = None):
+    def live_lab(self, messages: localization.MessageCatalog, test_suite: None | ModuleType = None):
         """Run the lab."""
         self.total_tasks += len(messages.tasks)
         for task in messages.tasks:
-            if not self.print_task(name, task, test_suite, messages):
+            if not self.print_task(task, test_suite, messages):
                 break
             self.completed_tasks += 1
         else:
@@ -224,5 +258,5 @@ class Worksheet(BaseModel):
             if msg:
                 st.success(msg)
 
-        st.session_state[f"{name}_completed"] = self.completed_tasks
-        st.session_state[f"{name}_total"] = self.total_tasks
+        st.session_state[f"{self.name}_completed"] = self.completed_tasks
+        st.session_state[f"{self.name}_total"] = self.total_tasks

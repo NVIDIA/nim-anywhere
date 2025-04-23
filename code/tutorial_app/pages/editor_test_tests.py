@@ -15,10 +15,12 @@
 """Tests for auto continuing associated tasks."""
 
 import sys
+from pathlib import Path
 
 from live_labs.testing import TestFail, isolate
 
-from .editor_test import EDITOR_DIR
+NAME = "editor_test"
+EDITOR_DIR = Path("/project/code").joinpath(NAME)
 
 
 def sample_test():

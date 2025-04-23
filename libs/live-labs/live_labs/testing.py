@@ -12,7 +12,40 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Helpers for testing lab steps."""
+"""Live Labs Testing
+
+Helpers for writing tests.
+
+TestFail is the standard exception to raise when a custom test fails.
+
+isolate is a decorator that will run a test in a custom Python environment.
+This can be used to somewhat safely execute test code.
+
+## Example
+```python
+def sample_test():
+    raise TestFail("info_test_test")
+
+
+@isolate(EDITOR_DIR)
+def test_my_string():
+    import file1  # pyright: ignore[reportMissingImports]
+
+    print("Looking for my_string.")
+
+    if not hasattr(file1, "my_string"):
+        print(":TestFail: info_no_my_string")
+        return
+
+    print("Looking for five.")
+
+    if file1.my_string != "five":
+        print(":TestFail: info_my_string_not_five")
+        return
+
+    print("Looks good!")
+```
+"""
 import functools
 import inspect
 import selectors
@@ -147,10 +180,8 @@ class Runner:
         return output_text
 
 
-def isolate(cwd: Path | None = None, exec: str | Path | None = None):
+def isolate(cwd: Path | None = None, exec: str | Path | None = None) -> Callable[[Callable[[], None]], Runner]:
     """Decorator to run a function in an isolated process."""
-
     valid_cwd = str(cwd or ".")
     valid_exec = str(exec or sys.executable)
-
     return partial(Runner, valid_cwd, valid_exec)

@@ -1,4 +1,45 @@
-"""Tooling for loading and rendering the custom sidebar."""
+# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""Live Labs App Shell
+
+Abstractions for Streamlit page config, multipage navigation, and navbar elements to
+create the top level user interface components.
+
+The AppShell data model represents the Live Labs configuration and provides a simple API to create a lab application.
+
+## Example
+
+```python
+from pathlib import Path
+
+import live_labs
+
+# Load the page data
+app_shell_yaml = Path(__file__).parent.joinpath("pages", "sidebar.yaml")
+app = live_labs.AppShell.from_yaml(app_shell_yaml)
+
+# Configure the multi page router
+page = app.navigation()
+
+# Embed the navigation sidebar
+app.sidebar()
+
+# Run the current page.
+page.run()
+```
+"""
 
 import os
 from pathlib import Path
@@ -8,13 +49,11 @@ import streamlit as st
 from pydantic import BaseModel
 from pydantic_yaml import parse_yaml_raw_as
 
-from live_labs.pages import settings
-
 if TYPE_CHECKING:
     from streamlit.navigation.page import StreamlitPage
 
 _BASE_URL = os.environ.get("PROXY_PREFIX", "")
-_SETTINGS_PATH = Path(settings.__file__)
+_SETTINGS_PATH = Path(__file__).parent.joinpath("pages", "settings.py")
 
 DEFAULT_CSS = Path(__file__).parent.joinpath("css", "style.css")
 PREVIOUS = "Previous"
@@ -119,18 +158,6 @@ class AppShell(BaseModel):
             st.Page(f"pages/{item.target}.py", title=item.target) for menu in self.navbar for item in menu.children
         ] + [st.Page(_SETTINGS_PATH, title="settings")]
 
-    def neighbors(self, page_name: str) -> tuple[str | None, str | None]:
-        """Determine the next and previous pages from page_name."""
-        all_pages = [f"pages/{item.target}.py" for menu in self.navbar for item in menu.children]
-
-        try:
-            page_idx = all_pages.index(f"pages/{page_name}.py")
-        except ValueError:
-            return None, None
-        prev = all_pages[page_idx - 1] if page_idx > 0 else None
-        nxt = all_pages[page_idx + 1] if page_idx < len(all_pages) - 1 else None
-        return prev, nxt
-
     def _render_header(self):
         """Render the sidebar from yaml."""
         st.markdown(f"## {self.header}")
@@ -190,29 +217,3 @@ class AppShell(BaseModel):
         """Run the streamlit multipage router."""
         pg = st.navigation(self.page_list)
         return pg
-
-    def footer(self, current: str):
-        """Render a footer with prev/next buttons."""
-        completed = st.session_state.get(f"{current}_completed")
-        total = st.session_state.get(f"{current}_total")
-        if completed and total and completed == total:
-            # find the next and previous pages
-            prev_page, next_page = self.neighbors(current)
-
-            # determine which buttons should be shown
-            pills = []
-            if prev_page is not None:
-                pills.append(PREVIOUS)
-            if next_page is not None:
-                pills.append(NEXT)
-
-            # render the buttons
-            _, right = st.columns([1, 1])
-            with right:
-                next_steps = st.pills("", pills)
-
-            # handle button presses
-            if prev_page and next_steps == PREVIOUS:
-                st.switch_page(prev_page)
-            elif next_page and next_steps == NEXT:
-                st.switch_page(next_page)
