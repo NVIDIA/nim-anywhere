@@ -14,5 +14,5 @@ navbar:
       - label: "🏠 Overview"
         target: "overview"
         show_progress: False
-      - label: "editor_test"
+      - label: "📎Editor Test"
         target: editor_test
