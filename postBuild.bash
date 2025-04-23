@@ -23,6 +23,7 @@ sudo chmod ugo+x ngc-cli/ngc
 cat <<EOM | sudo tee /etc/profile.d/ngc-cli.sh > /dev/null
 export PATH=\$PATH:/opt/ngc-cli
 EOM
+cd -
 
 # custom python environment configuration
 cat <<EOM | sudo tee /etc/profile.d/python.sh > /dev/null
@@ -39,10 +40,11 @@ fi
 EOM
 
 # setup the tutorial app
-cd code/tutorial_app
-python -m venv .venv
-.venv/bin/pip install -r requirements.txt
-ln -s $(pwd)/.venv/bin/streamlit ~/.local/bin/streamlit
+cd /opt
+sudo python3 -m venv live-labs
+sudo ./live-labs/bin/pip install wheel
+sudo ./live-labs/bin/pip install git+https://github.com/NVIDIA/nim-anywhere.git#subdirectory=libs/live-labs
+sudo ln -s /opt/live-labs/bin/streamlit /home/workbench/.local/bin/streamlit
 
 # clean up
 sudo apt-get autoremove -y

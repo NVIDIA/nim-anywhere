@@ -136,7 +136,7 @@ execution:
           start_command: |-
             cd /project/code/tutorial_app && \
             export PROXY_PREFIX && \
-            .venv/bin/streamlit run app.py --server.baseUrlPath=$PROXY_PREFIX
+            streamlit run app.py --server.baseUrlPath=$PROXY_PREFIX
           health_check_command: curl -I http://localhost:8501
           stop_command: |
             pkill -9 -f 'streamlit run app.py'
