@@ -16,8 +16,9 @@
 
 import sys
 
-from .editor_test import EDITOR_DIR
 from live_labs.testing import TestFail, isolate
+
+from .editor_test import EDITOR_DIR
 
 
 def sample_test():
@@ -27,19 +28,25 @@ def sample_test():
     # If there is an error in these helpers, they will raise TestFail automatically.
     raise TestFail("info_test_test")
 
+
 @isolate(EDITOR_DIR)
 def test_my_string():
     """Wait for my_string to be ready."""
-    import sys
-    import file1 # pyright: ignore[reportMissingImports]
+    import file1  # pyright: ignore[reportMissingImports]
+
+    print("Looking for my_string.")
 
     if not hasattr(file1, "my_string"):
-        sys.stderr.write("info_no_my_string")
-        sys.exit(1)
+        print(":TestFail: info_no_my_string")
+        return
+
+    print("Looking for five.")
 
     if file1.my_string != "five":
-        sys.stderr.write("info_my_string_not_five")
-        sys.exit(1)
+        print(":TestFail: info_my_string_not_five")
+        return
+
+    print("Looks good!")
 
 
 if __name__ == "__main__":

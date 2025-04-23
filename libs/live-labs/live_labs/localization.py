@@ -16,7 +16,7 @@
 """Code to automate loading location specific messages from a file."""
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable, cast
 
 import streamlit as st
 from pydantic import BaseModel, ConfigDict, Field
@@ -32,6 +32,13 @@ class Task(BaseModel):
     msg: str
     response: None | str = None
     test: None | str = None
+
+    def get_test(self, tests: Any) -> None | Callable[[], str]:
+        """Find a test for this task."""
+        if self.name and self.test and tests:
+            out = cast(Callable[[], str], getattr(tests, self.test, None))
+            return out
+        return None
 
 
 class MessageCatalog(BaseModel):

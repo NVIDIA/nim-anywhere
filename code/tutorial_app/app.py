@@ -1,4 +1,5 @@
 """Top level streamlit app page."""
+
 from pathlib import Path
 
 import live_labs

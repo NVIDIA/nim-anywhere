@@ -15,72 +15,136 @@
 """Helpers for testing lab steps."""
 import functools
 import inspect
+import selectors
 import subprocess
 import sys
+import time
 from functools import partial
 from pathlib import Path
-from textwrap import dedent
-from typing import Any
+from typing import Any, Callable, Iterator, TextIO, cast
 
 import streamlit as st
+
+_TIMEOUT = 10
 
 
 class TestFail(Exception):
     """Indicates a test failed."""
 
 
-def run_test(fun) -> tuple[bool, None | str, None | Any]:
-    """Cache the state of a test once it passes."""
-    cached_state: tuple[bool, None | str, None | Any]
-    state: tuple[bool, None | str, None | Any]
-
-    mod_name = fun.__module__.split(".")[-1]
-    idx = mod_name + "_" + fun.__name__
-
-    # recall state from cache, if it exists
-    cached_state = st.session_state.get(idx, None)
-    if cached_state is not None:
-        return cached_state
-
-    # run the test to evaluate state
-    try:
-        result = fun()
-        state = (True, None, result)
-    except TestFail as exc:
-        state = (False, str(exc), None)
-    else:
-        st.session_state[idx] = state
-
-    return state
-
-
-class Runner:  # pylint: disable=too-few-public-methods
-    """Remote run decorator."""
+class Runner:
+    """Remote run decorator that streams stdout and stderr using selectors."""
 
     cwd: str
     exec: str
     _src: str
+    _rc: None | int = None
+    _testfail: None | str = None
 
-    def __init__(self, cwd: str, exec: str, fun: Any):
-        """Initialize the class."""
+    def __init__(self, cwd: str, exec: str, fun: Callable[..., Any]) -> None:
+        """Initialize the Runner.
+
+        Args:
+            cwd: Directory to run the subprocess in.
+            exec: Path to the Python executable.
+            fun:   The function whose body will be sent to the subprocess.
+        """
         self.cwd = cwd
         self.exec = exec
 
-        # read the function and strip off the signature
-        fun_src = inspect.getsource(fun)
-        fun_lines = [line for line in fun_src.splitlines() if line and line[0] == " "]
-        self._src = dedent("\n".join(fun_lines))
+        # Read the function source and remove the isolate decorator
+        fun_lines = inspect.getsource(fun).splitlines()
+        fun_lines = [line for line in fun_lines if not line.startswith("@isolate(")]
+        fun_src = "\n".join(fun_lines)
+
+        # append a call to it under __main__
+        self._src = f"{fun_src}\n\nif __name__ == '__main__':\n    {fun.__name__}()"
         functools.update_wrapper(self, fun)
 
-    def __call__(self):
-        proc = subprocess.run(
-            [self.exec, "-"], input=self._src, text=True, capture_output=True, cwd=self.cwd, check=False
-        )
-        if proc.returncode > 0:
-            raise TestFail(proc.stderr)
-        if proc.stderr:
-            err_code = ("\n" + proc.stderr).splitlines()[-1]
-            raise TestFail(err_code)
+    def execute(self) -> Iterator[str]:
+        """Run the stored function in a subprocess and stream stdout/stderr.
+
+        Yields:
+            Lines of stdout or stderr as they arrive.
+
+        Raises:
+            TestFail: If the subprocess exits with a non-zero code.
+        """
+        sel = selectors.DefaultSelector()
+        self._testfail = None
+        self._rc = None
+
+        with subprocess.Popen(
+            [self.exec, "-"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=self.cwd,
+        ) as proc:
+            # start the test
+            assert proc.stdin is not None
+            proc.stdin.write(self._src)
+            proc.stdin.close()
+
+            # update the status
+            status = st.empty()
+            status.info("Running your code...")
+
+            # register the process output
+            if proc.stdout:
+                sel.register(proc.stdout, selectors.EVENT_READ)
+            if proc.stderr:
+                sel.register(proc.stderr, selectors.EVENT_READ)
+
+            # iterate  through stdout + stderr
+            yield "```"
+            start_time = time.monotonic()
+            while time.monotonic() - start_time < _TIMEOUT:
+                for key, _ in sel.select(timeout=0.1):
+                    pipe = cast(TextIO, key.fileobj)
+                    line = pipe.readline()
+
+                    # end of file
+                    if line == "":
+                        pipe.close()
+                        sel.unregister(pipe)
+                        continue
+
+                    # test failure occured
+                    if line.startswith(":TestFail:"):
+                        self._testfail = line[10:].strip()
+                        continue
+
+                    # normal terminal output
+                    yield line
+                    start_time = time.monotonic()
+
+                # process has closed, selectors have finished
+                if proc.poll() is not None and not sel.get_map():
+                    break
+
+            else:
+                self._testfail = "info_test_timeout"
+            yield "```"
+
+            # update the status
+            self._rc = proc.returncode
+            if self._rc == 0:
+                status.success("Code run is complete.")
+            else:
+                status.error("Code run is complete with errors.")
+
+    def __call__(self) -> str:
+        """Call the runner, stream to Streamlit, and return the full output."""
+        output_text = st.write_stream(self.execute)
+        assert isinstance(output_text, str)
+
+        if self._testfail:
+            raise TestFail(self._testfail)
+        if self._rc and self._rc > 0:
+            raise TestFail("info_test_nonzero_exit_code")
+        return output_text
 
 
 def isolate(cwd: Path | None = None, exec: str | Path | None = None):
