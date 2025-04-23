@@ -177,6 +177,9 @@ class Runner:
             raise TestFail(self._testfail)
         if self._rc and self._rc > 0:
             raise TestFail("info_test_nonzero_exit_code")
+
+        # remove the markdown code block indicators
+        output_text = "\n".join(output_text.splitlines()[1:-1])
         return output_text
 
 

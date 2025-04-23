@@ -13,30 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 title: Settings
-waiting_msg: " "
-testing_msg: Waiting for task to complete.
-next: RESET ALL PROGRESS
-
-
-tasks:
-  - name: Clear progress
-    msg: Use this tool to clear your saved progress and reset these labs. Using this tool **WILL** erase all code that was created. Please save any code you would like to keep.
-
-  - name: Are you sure?
-    msg: Are you absolutely sure you would like to continue? **Your files will be removed!**
-
-  - name: Cleaning artifacts
-    msg: Removing the code created during the labs.
-    test: remove_labs
-
-  - name: Removing cache
-    msg: |
-      Removing all cached progress information.
-    response: |
-      ##### Good as new!
-
-      Reload this page to start fresh.
-    test: remove_state_file
 
 bundle_header: Logs and Support Bundles
 bundle_msg: |

@@ -28,7 +28,8 @@ tasks:
         ```
       </details>
     response: |
-      Nicely done!
+      Nicely done! I checked and here is what I saw:
+      {{ result | indent(4) }}
     test: test_my_string
 
 # footer data

@@ -16,10 +16,10 @@
 from pathlib import Path
 
 import streamlit as st
+from streamlit_extras.stateful_button import button as st_toggle_btn
 from streamlit_file_browser import st_file_browser
 
-from live_labs import MessageCatalog, Worksheet
-from live_labs.pages import settings_tests as TESTS
+from live_labs import MessageCatalog, Worksheet, reset_all_progress
 
 MESSAGES = MessageCatalog.from_page(__file__)
 NAME = Path(__file__).stem
@@ -44,7 +44,14 @@ with Worksheet(name=NAME, ephemeral=True) as worksheet:
 
     # reset progress
     with st.container(border=True):
-        worksheet.live_lab(MESSAGES, TESTS)
+        col_1, col_2, col_3 = st.columns([1, 1, 1])
+        with col_1:
+            reset = st_toggle_btn("Reset your progress.", key="reset")
+        if reset:
+            with col_2:
+                verify_reset = st.button("Are you sure?")
+            if verify_reset:
+                reset_all_progress()
 
     # break into two columns
     col_1, col_2 = st.columns([1, 1])
