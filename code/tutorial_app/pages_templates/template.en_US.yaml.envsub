@@ -1,0 +1,61 @@
+# header data
+title: $PAGE_NAME
+welcome_msg: |
+  An example welcome message.
+
+  You **should** update this. GitHub Flavored Markdown is accepted with some additional extensions.
+
+  Check out the [formatting docs here](https://docs.streamlit.io/develop/api-reference/text/st.markdown).
+header: |
+  This is a new page!
+  Edit the content to make your own tutorial.
+
+# general strings
+waiting_msg: Let me know when you are ready.
+testing_msg: Waiting for task to complete.
+next: Next
+
+# task script
+tasks:
+  - name: The first task
+    msg: |
+      This message should explain the task to the user.
+
+      Again, Markdown is accepted.
+    response: |
+      After the user completes their task, this message will be shown in a green bubble.
+    test: ~
+    # some tasks are able to check themselves and automatically continue when they are complete.
+    # to do this, add a function to ${PAGE_NAME}_tests.py to test if the step has completed.
+    # then add the function name to test.
+    #
+    # if this task does not have a test, you can omit this line or set it to the null value (~)
+
+# footer data
+closing_msg: "Congratulations! You have completed this exercise."
+
+# testing messages
+# the helpers in the testing module may return one of these errors
+info_wait_for_project: "Waiting for the project to exist."
+info_build_ready: ~
+info_build_needed: "It looks like your project needs you to start a new build. Please do that in the environment tab."
+info_build_running: "Your project's build is currently running."
+info_buid_error: "Uh oh! There was an error building your project. Please check the logs."
+info_container_not_running: ~
+info_container_running: ~
+info_container_paused: "The container has been manually paused."
+info_container_dead: "Uh oh! The container does not seem healthy. Please check the Workbench logs."
+info_wait_for_app: "Waiting for the application to exist."
+info_app_is_running: ~
+info_app_not_running: "Waiting for you to start the application."
+info_app_starting: "The application is starting up! Just a few more seconds."
+info_compose_is_running: "Docker Compose is running."
+info_compose_not_running: "Start Docker Compose from the environment tab."
+info_compose_starting: "Docker Compose is starting. This can take a while the first time."
+info_compose_error: "Uh oh! Docker Compose had an error. Please check the logs."
+info_wait_for_package: "Waiting for you to configure the necessary package."
+info_wait_for_file: "Waiting for you to create the requested file."
+
+# custom testing messages
+# if you add manual tests, you can add your own messages here
+info_test_test: "This is a test!"

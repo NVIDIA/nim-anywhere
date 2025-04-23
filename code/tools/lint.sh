@@ -13,7 +13,7 @@ fi
 
 if [ -z "$1" ] || [ "$1" = "pylint" ]; then
     echo "Checking Python syntax with Pylint."
-    pylint --rc-file pyproject.toml $(git ls-files 'code/*.py')
+    pylint --rc-file pyproject.toml $(git ls-files 'code/*.py' | grep -v tutorial_app)
     echo -e "\n\n\n"
 fi
 

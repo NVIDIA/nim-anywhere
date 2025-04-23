@@ -1,0 +1,18 @@
+header: "NIM Anywhere Live Labs"
+page_layout: wide
+
+links:
+  documentation: ~
+  about: ~
+  gethelp: ~
+  bugs: https://github.com/NVIDIA/nim-anywhere/issues
+  settings: settings
+
+navbar:
+  - label: Start Here
+    children:
+      - label: "🏠 Overview"
+        target: "overview"
+        show_progress: False
+      - label: "📎Editor Test"
+        target: editor_test

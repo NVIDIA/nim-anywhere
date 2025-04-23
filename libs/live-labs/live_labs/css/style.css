@@ -1,0 +1,121 @@
+/*
+# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+*/
+
+/* Custom css necessary when using the live labs app shell layout. */
+
+/* limit image size */
+.stMarkdown{
+  img {
+    max-height: 500px;
+    max-width: 500px;
+  }
+}
+
+/* remove padding at the end of the document */
+[data-testid="stMainBlockContainer"] {
+  padding-bottom: 0px;
+}
+
+
+/* nvidia themed sidebar */
+[data-testid="stSidebarContent"] {
+  background-color: #1a1a1a;
+  color: white;
+  p {
+    color: white;
+  }
+  [data-testid="stSidebarCollapseButton"] {
+    z-index: 99;
+  }
+  [data-testid="stSidebarHeader"] {
+    background-color: #5d1682;
+  }
+  [data-testid="stSidebarHeader"]::before {
+    color: white;
+    content: "";
+    background: url('app/static/logo.png') no-repeat;
+    background-size: contain;
+    background-position: bottom center;
+    width: 100%;
+    height: 2em;
+    position: absolute;
+    left: 0;
+  }
+  [data-testid="stSidebarUserContent"] {
+    background-color: #1a1a1a;
+    h1, h2 {
+      background-color: #5d1682;
+      text-align: center;
+      margin: 0px -64px;
+    }
+  }
+
+  [data-testid="stSidebarCollapseButton"] {
+    display: inline !important;
+  }
+}
+
+.stAppDeployButton {
+  display: none;
+}
+
+/* hide flashing status header buttons */
+div.stStatusWidget {
+    display: none !important;
+    position: absolute !important;
+}
+
+/* toolbar styling */
+.toolbar {
+  margin: 0px -64px;
+  text-align: center;
+  font-size: 24px;
+  background: #2e2e2e;
+  a {
+    color: #76b900;
+  }
+
+  span[role=button] {
+    padding: 0px 0.5em;
+    display: inline-block;
+
+  }
+  span[role=button]:first-of-type {
+    border-left: none;
+  }
+  span[role=button]:last-of-type {
+    border-right: none;
+  }
+  span[role=button]:hover {
+    background-color: #76b900;
+    a {
+      color: white;
+    }
+  }
+  span[role=button].warning {
+    background-color: rgb(122, 0, 0);
+    a {
+      color: white;
+    }
+  }
+  span[role=button].warning:hover {
+    background-color: rgb(180, 0, 0);
+    a {
+      color: white;
+    }
+  }
+}

@@ -38,6 +38,12 @@ if [ -f /project/code/config_sample.yaml ] && [ ! -f /project/code/config.yaml ]
 fi
 EOM
 
+# setup the tutorial app
+cd code/tutorial_app
+python -m venv .venv
+.venv/bin/pip install -r requirements.txt
+ln -s $(pwd)/.venv/bin/streamlit ~/.local/bin/streamlit
+
 # clean up
 sudo apt-get autoremove -y
 sudo rm -rf /var/cache/apt

@@ -1,3 +1,37 @@
+[project]
+name="live-labs"
+version="0.0.1"
+readme="README.md"
+requires-python=">=3.8"
+license="Apache-2.0"
+license-files=["LICENSE"]
+
+dependencies = [
+        "pydantic>=2,<3",
+        "pydantic-yaml",
+        "pyyaml~=6.0",
+        "streamlit>=1.44,<2",
+        "streamlit-autorefresh",
+        "streamlit-extras",
+        "streamlit-ace",
+        "streamlit-bridge",
+        "streamlit-javascript",
+        "streamlit_file_browser",
+]
+
+[project.optional-dependencies]
+build = [
+        "build",
+]
+
+[build-system]
+requires = [
+    "setuptools>=60",
+    "setuptools-scm>=8.0"]
+
+[tool.setuptools.package-data]
+live_labs = ["css/*.css", "js/*.js"]
+
 # Pylint Configuration
 [tool.pylint.MAIN]
 load-plugins = "pylint.extensions.bad_builtin"
@@ -40,4 +74,3 @@ follow_imports = "silent"
 ignore_missing_imports = true
 show_column_numbers = true
 disable_error_code = ["no-untyped-call", "override", "misc", "import-untyped"]
-

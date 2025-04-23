@@ -1,0 +1,128 @@
+# header data
+title: NVIDIA AI Workbench Live Labs
+waiting_msg: Click `Next` to continue.
+testing_msg: Go do the task!
+next: Next
+
+header: "Orientation"
+
+welcome_msg: |
+  ![](app/static/hero.png)
+
+  #### Welcome
+
+  This is the AI Workbench Live Labs, an interactive guide to the features of NVIDIA AI Workbench.
+
+  It will help you learn by doing instead of only reading the docs.
+
+  However, you should feel free to work through the [docs](https://docs.nvidia.com/ai-workbench/user-guide/latest/overview/introduction.html)
+  on your own or with the assistance of an LLM.
+
+  It is organized into **exercises** that are divided into **tasks**.
+
+  Completing each **task** unlocks content for the exercise and will give you feedback.
+
+
+
+tasks:
+
+  - name: Guide Overview
+    msg: |
+      ###### Use the Sidebar to navigate this guide (click the :arrow_forward: icon in the top left to expand it)
+      There are three sections of exercises, and each exercise is organized into tasks. Completing
+      tasks unlocks more content in the exercise.
+
+      1. **Basic** explores core concepts and the Desktop App UI. (15 mins)
+      2. **Advanced** digs deeper to show example workflows. (20 mins - 1 hour)
+      3. **Sneak Peek** previews "in-early-development" features that will be stable soon.
+
+    response: Ok. Let's get started. **Make sure the Desktop App is running with the view for this project visible.**
+
+  - name: The AI Workbench Desktop App
+    msg: |
+      ##### AI Workbench is a free development platform that helps you:
+      * **Connect** to and work on remote systems as if they were local.
+      * **Develop** in containerized environments.
+      * **Manage** development environments across local and remote systems.
+
+      ##### The user experience is handled through views and tabs.
+
+      - **Main Locations View**: For managing and accessing remote systems
+      - **Single Location View**: For managing and accessing different projects on a single system
+      - **Project Tab**: For managing and working with a single project
+
+      ![overview](app/static/overview/cascade.png)
+      ##### There are three basics steps to get working:
+      1. You select a **location** to work in (*local* is default)
+      2. You create or select a **project** to work on
+      3. You start a **web app** or an **IDE** to do your work in the project
+
+      ###### If you've gotten this far, you've already done all of these steps.
+
+    response: |
+      Let's get started. **Make sure the Desktop App is running with the view for this project visible.**
+
+
+  - name: Starting JupyterLab
+    msg: |
+      ###### Let's begin with the most basic thing possible in a Workbench project, starting JupyterLab.
+      - Go to the Desktop App and the Project View for this project
+      - Find the large green button at the top right and click the drop down
+      - Select JupyterLab
+      - Wait for JupyterLab to open in your default browser.
+
+      ![dropdown](app/static/overview/dropdown.png)
+
+    response: Great. JupyterLab is running.
+
+  - name: Stopping JupyterLab
+    msg: |
+      ###### Now let's do the second most basic thing possible, stopping JupyterLab.
+      - Go to the project view for this project and click the **Project Dashboard**
+      - Scroll down a little to see the **Project Container** section
+      - You will see that both this Tutorial app and JupyterLab are running
+      - Click the JupyterLab toggle to stop it.
+
+    response: You stopped JupyterLab.
+
+  - name: Finishing Up the Overview
+    msg: |
+      ###### Objective sources for help and validation are important, so don't be shy about asking for help.
+
+      If something goes wrong or you are confused, work through the following steps:
+
+      1. Click the green :material/book_4: button to see our troubleshooting guide.
+      2. Click the green :material/help: button to see crowd sourced answers in the NVIDIA Developer Forum.
+      3. If you find a bug, click the :material/bug_report: button in the sidebar to create a report on GitHub.
+      4. If all else fails, email us at `aiworkbench-support@nvidia.com`.
+
+    response: Awesome. Let's get started!
+
+
+
+
+# footer data
+closing_msg: |
+  ##### Ok. Now you are ready to get started for real.
+
+# testing messages
+# the helpers in the testing module may return one of these errors
+info_wait_for_project: "Waiting for the project to exist."
+info_build_ready: ~
+info_build_needed: "It looks like your project needs you to start a new build. Please do that in the environment tab."
+info_build_running: "Your project's build is currently running."
+info_buid_error: "Uh oh! There was an error building your project. Please check the logs."
+info_container_not_running: ~
+info_container_running: ~
+info_container_paused: "The container has been manually paused."
+info_container_dead: "Uh oh! The container does not seem healthy. Please check the Workbench logs."
+info_wait_for_app: "Waiting for the application to exist."
+info_app_is_running: ~
+info_app_not_running: "Waiting for you to start the application."
+info_app_starting: "The application is starting up! Just a few more seconds."
+info_compose_is_running: "Docker Compose is running."
+info_compose_not_running: "Start Docker Compose from the environment tab."
+info_compose_starting: "Docker Compose is starting. This can take a while the first time."
+info_compose_error: "Uh oh! Docker Compose had an error. Please check the logs."
+info_wait_for_package: "Waiting for you to configure the necessary package."
+info_wait_for_file: "Waiting for you to create the requested file."

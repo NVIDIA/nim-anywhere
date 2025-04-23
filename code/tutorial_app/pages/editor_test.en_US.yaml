@@ -1,0 +1,45 @@
+# header data
+title: Write some code
+welcome_msg: |
+  In this example, we are going to write some code.
+header: |
+  Sometimes, you have to write code.
+
+  here, we will teach you how to do that.
+
+# general strings
+waiting_msg: Let me know when you are ready.
+testing_msg: Waiting for you to complete the task.
+next: Next
+
+# task script
+tasks:
+  - name: Make a string
+    msg: |
+      In test1.py, define a string called `my_string` that equals `five`.
+
+      <details>
+        <summary>Need a hint?</summary>
+
+        Try this:
+
+        ```python
+        my_string = "five"
+        ```
+      </details>
+    response: |
+      Nicely done! I checked and here is what I saw:
+      {{ result | indent(4) }}
+    test: test_my_string
+
+# footer data
+closing_msg: "Congratulations! You have completed this exercise."
+
+# testing messages
+# the helpers in the testing module may return one of these errors
+info_test_nonzero_exit_code: "Uh oh! I'm not able to run your code. Check the **Terminal Output** tab for details."
+info_test_timeout: "Your code seems to be taking too long to run."
+
+# custom testing messages
+# if you add manual tests, you can add your own messages here
+info_no_my_string:  "Waiting for my  string to be defined."

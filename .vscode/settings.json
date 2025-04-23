@@ -66,4 +66,6 @@
   "pylint.severity": {
     "refactor": "Information",
   },
+
+  "python.analysis.ignore": ["code/tutorial_app/**"]
 }

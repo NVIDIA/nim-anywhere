@@ -1,5 +1,6 @@
 ca-certificates
 curl
+gettext
 jq
 less
 make

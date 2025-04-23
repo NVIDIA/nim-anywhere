@@ -1,0 +1,77 @@
+/*
+# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+*/
+
+/* Custom css for ensuring  proper scrolling in editor layouts. */
+
+/*
+All of the parent divs that are above the columns need to have their height
+set to 100% so that the columns can contain themselves to that size and scroll.
+
+In the worksheet column, scrolling is enabled on the columns primary content.
+
+In the editor column, the tabs are styled to be a bit easier on the eyes.
+*/
+
+[data-testid="stMainBlockContainer"] {
+  height: 100%;
+  /* overflow: hidden; */
+  >[data-testid="stVerticalBlockBorderWrapper"] {
+    height: 100%;
+    >div {
+      height: 100%;
+      >[data-testid="stVerticalBlock"] {
+        height: 100%;
+        >[data-testid="stHorizontalBlock"] {
+          height: 100%;
+
+          /* style the worksheet side */
+          >[data-testid="stColumn"]:first-child {
+            height: 100%;
+            >[data-testid="stVerticalBlockBorderWrapper"] {
+              height: 100%;
+              >div {
+                height: 100%;
+                >[data-testid="stVerticalBlock"] {
+                  height: 100%;
+                  overflow: scroll;
+                  margin-bottom: 1.5em;
+                }
+              }
+            }
+          }
+
+          /* style the editor side */
+          >[data-testid="stColumn"]:last-child {
+            [data-testid="stTabs"]:first-of-type {
+              p {
+                font-size: 18px;
+              }
+              [data-baseweb="tab"]:last-of-type {
+                color: #5d1682;
+                margin-left: auto;
+                p {
+                  font-weight: 900;
+                }
+              }
+            }
+          }
+
+        }
+      }
+    }
+  }
+}

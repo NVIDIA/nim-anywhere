@@ -39,6 +39,8 @@ share/python-wheels/
 *.egg
 MANIFEST
 .mypy_cache
+**/build
+**/.venv
 
 # Unit test / coverage reports
 htmlcov/

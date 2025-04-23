@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+title: Settings
+
+bundle_header: Logs and Support Bundles
+bundle_msg: |
+  A **Support Bundle** is a collection of logs that capture the state of your AI Workbench. To create a support bundle to send in for troubleshooting, first open the AI Workbench CLI (use the WSL distro if on Windows)
+
+  Then, run the following command(s):
+
+  ```bash
+  nvwb support create-bundle
+  ```
+
+  or
+
+  ```bash
+  nvwb support create-bundle --context <location name>
+  ```
+
+  For a full description of relevant AI Workbench related logs, check out the documentation [here](https://docs.nvidia.com/ai-workbench/user-guide/latest/troubleshooting/logging.html)
+
+forum_header: NVIDIA Developer Forum
+forum_msg: |
+  Feel free to engage with other developers and NVIDIA personnel on the [NVIDIA Developer Forum](https://forums.developer.nvidia.com/c/ai-data-science/nvidia-ai-workbench/671) for AI Workbench!
+
+  Here, you can make your own post and get help debugging or troubleshooting your issues. Be sure to include any support bundles created so you get can quicker and more helpful responses.
+
+  Additionally, here you can engage with other developers and follow along with example projects as updates get pushed upstream. Happy coding!
+
