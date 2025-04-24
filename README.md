@@ -1,76 +1,18 @@
-# NVIDIA NIM Anywhere [![Clone Me with AI Workbench](https://img.shields.io/badge/Open_In-AI_Workbench-76B900)](https://ngc.nvidia.com/open-ai-workbench/aHR0cHM6Ly9naXRodWIuY29tL05WSURJQS9uaW0tYW55d2hlcmUK)
+# NVIDIA NIM Anywhere
 
-[![NVIDIA: LLM NIM](https://img.shields.io/badge/NVIDIA-LLM%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#large-language-models)
-[![NVIDIA: Embedding NIM](https://img.shields.io/badge/NVIDIA-Embedding%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#nemo-retriever)
-[![NVIDIA: Reranker NIM](https://img.shields.io/badge/NVIDIA-Reranker%20NIM-green?logo=nvidia&logoColor=white&color=%2376B900)](https://docs.nvidia.com/nim/#nemo-retriever)
-[![CI Pipeline Status](https://github.com/nvidia/nim-anywhere/actions/workflows/ci.yml/badge.svg?query=branch%3Amain)](https://github.com/NVIDIA/nim-anywhere/actions/workflows/ci.yml?query=branch%3Amain)
-![Python: 3.10 | 3.11 | 3.12](https://img.shields.io/badge/Python-3.10%20|%203.11%20|%203.12-yellow?logo=python&logoColor=white&color=%23ffde57)
+[![Clone Me with AI Workbench](https://img.shields.io/badge/Open_In-AI_Workbench-76B900)](https://ngc.nvidia.com/open-ai-workbench/aHR0cHM6Ly9naXRodWIuY29tL05WSURJQS9uaW0tYW55d2hlcmUK)
 
+NIM Anywhere is a starting point into discovering enterprise AI. This branch is currently under heavy construction.
 
- 
-Please join \#cdd-nim-anywhere slack channel if you are a internal user,
-open an issue if you are external for any question and feedback.
+![NIM Anywhere Screenshot](data/hero.png)
 
-One of the primary benefit of using AI for Enterprises is their ability
-to work with and learn from their internal data. Retrieval-Augmented
-Generation
-([RAG](https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation/))
-is one of the best ways to do so. NVIDIA has developed a set of
-micro-services called [NIM
-micro-service](https://docs.nvidia.com/nim/large-language-models/latest/introduction.html)
-to help our partners and customers build effective RAG pipeline with
-ease.
+# NEEDS TO BE UPDATED
 
-NIM Anywhere contains all the tooling required to start integrating NIMs
-for RAG. It natively scales out to full-sized labs and up to production 
-environments. This is great news for building a RAG architecture and
-easily adding NIMs as needed. If you're unfamiliar with RAG, it
-dynamically retrieves relevant external information during inference
-without modifying the model itself. Imagine you're the tech lead of a
-company with a local database containing confidential, up-to-date
-information. You don’t want OpenAI to access your data, but you need the
-model to understand it to answer questions accurately. The solution is
-to connect your language model to the database and feed them with the
-information.
+# Getting  Started
 
-To learn more about why RAG is an excellent solution for boosting the
-accuracy and reliability of your generative AI models, [read this
-blog](https://developer.nvidia.com/blog/enhancing-rag-applications-with-nvidia-nim/).
+## Prerequisites
 
-Get started with NIM Anywhere now with the [quick-start](#quick-start)
-instructions and build your first RAG application using NIMs!
-
-![NIM Anywhere Screenshot](.static/_static/nim-anywhere.png)
- 
-- [Quick-start](#quick-start)
-  - [Generate your NGC Personal Key](#generate-your-ngc-personal-key)
-  - [Authenticate with Docker](#authenticate-with-docker)
-  - [Install AI Workbench](#install-ai-workbench)
-  - [Download this project](#download-this-project)
-  - [Configure this project](#configure-this-project)
-  - [Start This Project](#start-this-project)
-  - [Populating the Knowledge Base](#populating-the-knowledge-base)
-- [Developing Your Own Applications](#developing-your-own-applications)
-- [Application Configuration](#application-configuration)
-  - [Config from a file](#config-from-a-file)
-  - [Config from a custom file](#config-from-a-custom-file)
-  - [Config from env vars](#config-from-env-vars)
-  - [Chain Server config schema](#chain-server-config-schema)
-  - [Chat Frontend config schema](#chat-frontend-config-schema)
-- [Contributing](#contributing)
-  - [Code Style](#code-style)
-  - [Updating the frontend](#updating-the-frontend)
-  - [Updating documentation](#updating-documentation)
-- [Managing your Development
-  Environment](#managing-your-development-environment)
-  - [Environment Variables](#environment-variables)
-  - [Python Environment Packages](#python-environment-packages)
-  - [Operating System Configuration](#operating-system-configuration)
-  - [Updating Dependencies](#updating-dependencies)
-
-# Quick-start
-
-## Generate your NGC Personal Key
+### Generate your NGC Personal Key
 
 To allow AI Workbench to access NVIDIA’s cloud resources, you’ll need to
 provide it with a Personal Key. These keys begin with `nvapi-`.
@@ -107,7 +49,7 @@ provide it with a Personal Key. These keys begin with `nvapi-`.
 
 </details>
 
-## Authenticate with Docker
+### Authenticate with Docker
 
 Workbench will use your system's Docker client to pull NVIDIA NIM
 containers, so before continuing, make sure to follow these steps to
@@ -124,7 +66,7 @@ authenticate your Docker client with your NGC Personal Key.
     - Username: `$oauthtoken`
     - Password: Use your NGC Personal key beggining with `nv-api`
 
-## Install AI Workbench
+### Install AI Workbench
 
 This project is designed to be used with [NVIDIA AI
 Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/).
@@ -150,7 +92,7 @@ flowchart LR
     local <-.ssh.-> remote-lab-machine
 ```
 
-### Client Machine Install
+#### Client Machine Install
 
 Ubuntu is required if the local client will also be used for developent.
 When using a remote lab machine, this can be Windows, MacOS, or Ubuntu.
@@ -274,7 +216,7 @@ these steps as `root`.
 
 </details>
 
-### Remote Machine Install
+#### Remote Machine Install
 
 Only Ubuntu is supported for remote machines.
 
@@ -348,7 +290,9 @@ run these steps as `root`.
 
 </details>
 
-## Download this project
+## Installing
+
+### Download this project
 
 There are two ways to download this project for local use: Cloning and
 Forking.
@@ -397,7 +341,7 @@ section.
 
 </details>
 
-## Configure this project
+### Configure this project
 
 The project must be configured to use your NGC personal key.
 
@@ -418,7 +362,7 @@ The project must be configured to use your NGC personal key.
 
 </details>
 
-## Start This Project
+### Start This Project
 
 Even the most basic of LLM Chains depend on a few additional
 microservices. These can be ignored during development for in-memory
@@ -511,7 +455,7 @@ without GPUs.
 
 </details>
 
-## Populating the Knowledge Base
+### Populating the Knowledge Base
 
 To get started developing demos, a sample dataset is provided along with
 a Jupyter Notebook showing how data is ingested into a Vector Database.
@@ -526,420 +470,23 @@ a Jupyter Notebook showing how data is ingested into a Vector Database.
 3.  If using a custom dataset, upload it to the `data/` directory in
     Jupyter and modify the provided notebook as necessary.
 
-# Developing Your Own Applications
-
-This project contains applications for a few demo services as well as
-integrations with external services. These are all orchestrated by
-[NVIDIA AI
-Workbench](https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/).
-
-The demo services are all in the `code` folder. The root level of the
-code folder has a few interactive notebooks meant for technical deep
-dives. The Chain Server is a sample application utilizing NIMs with
-LangChain. (Note that the Chain Server here gives you the option to
-experiment with and without RAG). The Chat Frontend folder contains an
-interactive UI server for exercising the chain server. Finally, sample
-notebooks are provided in the Evaluation directory to demonstrate
-retrieval scoring and validation.
-
-``` mermaid
-mindmap
-  root((AI Workbench))
-    Demo Services
-        Chain Server<br />LangChain + NIMs
-        Frontend<br />Interactive Demo UI
-        Evaluation<br />Validate the results
-        Notebooks<br />Advanced usage
-
-    Integrations
-        Redis</br>Conversation History
-        Milvus</br>Vector Database
-        LLM NIM</br>Optimized LLMs
-```
-
-# Application Configuration
-
-The Chain Server can be configured with either a configuration file or
-environment variables.
-
-## Config from a file
-
-By default, the application will search for a configuration file in all
-of the following locations. If multiple configuration files are found,
-values from lower files in the list will take precedence.
-
-- ./config.yaml
-- ./config.yml
-- ./config.json
-- ~/app.yaml
-- ~/app.yml
-- ~/app.json
-- /etc/app.yaml
-- /etc/app.yml
-- /etc/app.json
-
-## Config from a custom file
-
-An additional config file path can be specified through an environment
-variable named `APP_CONFIG`. The value in this file will take precedence
-over all the default file locations.
-
-``` bash
-export APP_CONFIG=/etc/my_config.yaml
-```
-
-## Config from env vars
-
-Configuration can also be set using environment variables. The variable
-names will be in the form: `APP_FIELD__SUB_FIELD` Values specified as
-environment variables will take precedence over all values from files.
-
-## Chain Server config schema
-
-``` yaml
-# Your API key for authentication to AI Foundation.
-# ENV Variables: NGC_API_KEY, NVIDIA_API_KEY, APP_NVIDIA_API_KEY
-# Type: string, null
-nvidia_api_key: ~
-
-# The Data Source Name for your Redis DB.
-# ENV Variables: APP_REDIS_DSN
-# Type: string
-redis_dsn: redis://localhost:6379/0
-
-llm_model: 
-    # The name of the model to request.
-    # ENV Variables: APP_LLM_MODEL__NAME
-    # Type: string
-    name: meta/llama3-8b-instruct
-
-    # The URL to the model API.
-    # ENV Variables: APP_LLM_MODEL__URL
-    # Type: string
-    url: https://integrate.api.nvidia.com/v1
-
-
-embedding_model: 
-    # The name of the model to request.
-    # ENV Variables: APP_EMBEDDING_MODEL__NAME
-    # Type: string
-    name: nvidia/nv-embedqa-e5-v5
-
-    # The URL to the model API.
-    # ENV Variables: APP_EMBEDDING_MODEL__URL
-    # Type: string
-    url: https://integrate.api.nvidia.com/v1
-
-
-reranking_model: 
-    # The name of the model to request.
-    # ENV Variables: APP_RERANKING_MODEL__NAME
-    # Type: string
-    name: nv-rerank-qa-mistral-4b:1
-
-    # The URL to the model API.
-    # ENV Variables: APP_RERANKING_MODEL__URL
-    # Type: string
-    url: https://integrate.api.nvidia.com/v1
-
-
-milvus: 
-    # The host machine running Milvus vector DB.
-    # ENV Variables: APP_MILVUS__URL
-    # Type: string
-    url: http://localhost:19530
-
-    # The name of the Milvus collection.
-    # ENV Variables: APP_MILVUS__COLLECTION_NAME
-    # Type: string
-    collection_name: collection_1
-
-
-log_level: 
-
-```
-
-## Chat Frontend config schema
-
-The chat frontend has a few configuration options as well. They can be
-set in the same manner as the chain server.
-
-``` yaml
-# The URL to the chain on the chain server.
-# ENV Variables: APP_CHAIN_URL
-# Type: string
-chain_url: http://localhost:3030/
-
-# The url prefix when this is running behind a proxy.
-# ENV Variables: PROXY_PREFIX, APP_PROXY_PREFIX
-# Type: string
-proxy_prefix: /
-
-# Path to the chain server&#39;s config.
-# ENV Variables: APP_CHAIN_CONFIG_FILE
-# Type: string
-chain_config_file: ./config.yaml
-
-log_level: 
-
-```
-
 # Contributing
 
-All feedback and contributions to this project are welcome. When making
-changes to this project, either for personal use or for contributing, it
-is recommended to work on a fork on this project. Once the changes have
-been completed on the fork, a Merge Request should be opened.
+## Running the tests
 
-## Code Style
+- lint
+- ci
 
-This project has been configured with Linters that have been tuned to
-help the code remain consistent while not being overly burdensome. We
-use the following Linters:
+## Managing your Development Environment
 
-- Bandit is used for security scanning
-- Pylint is used for Python Syntax Linting
-- MyPy is used for type hint linting
-- Black is configured for code styling
-- A custom check is run to ensure Jupyter Notebooks do not have any
-  output
-- Another custom check is run to ensure the README.md file is up to date
-
-The embedded VSCode environment is configured to run the linting and
-checking in realtime.
-
-To manually run the linting that is done by the CI pipelines, execute
-`/project/code/tools/lint.sh`. Individual tests can be run be specifying
-them by name:
-`/project code/tools/lint.sh [deps|pylint|mypy|black|docs|fix]`. Running
-the lint tool in fix mode will automatically correct what it can by
-running Black, updating the README, and clearing the cell output on all
-Jupyter Notebooks.
-
-## Updating the frontend
-
-The frontend has been designed in an effort to minimize the required
-HTML and Javascript development. A branded and styled Application Shell
-is provided that has been created with vanilla HTML, Javascript, and
-CSS. It is designed to be easy to customize, but it should never be
-required. The interactive components of the frontend are all created in
-Gradio and mounted in the app shell using iframes.
-
-Along the top of the app shell is a menu listing the available views.
-Each view may have its own layout consisting of one or a few pages.
-
-### Creating a new page
-
-Pages contain the interactive components for a demo. The code for the
-pages is in the `code/frontend/pages` directory. To create a new page:
-
-1.  Create a new folder in the pages directory
-2.  Create an `__init__.py` file in the new directory that uses Gradio
-    to define the UI. The Gradio Blocks layout should be defined in a
-    variable called `page`.
-3.  It is recommended that any CSS and JS files needed for this view be
-    saved in the same directory. See the `chat` page for an example.
-4.  Open the `code/frontend/pages/__init__.py` file, import the new
-    page, and add the new page to the `__all__` list.
-
-> **NOTE:** Creating a new page will not add it to the frontend. It must
-> be added to a view to appear on the Frontend.
-
-### Adding a view
-
-View consist of one or a few pages and should function independently of
-each other. Views are all defined in the `code/frontend/server.py`
-module. All declared views will automatically be added to the Frontend's
-menu bar and made available in the UI.
-
-To define a new view, modify the list named `views`. This is a list of
-`View` objects. The order of the objects will define their order in the
-Frontend menu. The first defined view will be the default.
-
-View objects describe the view name and layout. They can be declared as
-follow:
-
-``` python
-my_view = frontend.view.View(
-  name="My New View",  # the name in the menu
-  left=frontend.pages.sample_page,  # the page to show on the left
-  right=frontend.pages.another_page,  # the page to show on the right
-)
-```
-
-All of the page declarations, `View.left` or `View.right`, are optional.
-If they are not declared, then the associated iframes in the web layout
-will be hidden. The other iframes will expand to fill the gaps. The
-following diagrams show the various layouts.
-
-- All pages are defined
-
-``` mermaid
-block-beta
-    columns 1
-    menu["menu bar"]
-    block
-        columns 2
-        left right
-    end
-```
-
-- Only left is defined
-
-``` mermaid
-block-beta
-    columns 1
-    menu["menu bar"]
-    block
-        columns 1
-        left:1
-    end
-```
-
-### Frontend branding
-
-The frontend contains a few branded assets that can be customized for
-different use cases.
-
-#### Logo
-
-The frontend contains a logo on the top left of the page. To modify the
-logo, an SVG of the desired logo is required. The app shell can then be
-easily modified to use the new SVG by modifying the
-`code/frontend/_assets/index.html` file. There is a single `div` with an
-ID of `logo`. This box contains a single SVG. Update this to the desired
-SVG definition.
-
-``` html
-<div id="logo" class="logo">
-    <svg viewBox="0 0 164 30">...</svg>
-</div>
-```
-
-#### Color scheme
-
-The styling of the App Shell is defined in
-`code/frontend/_static/css/style.css`. The colors in this file may be
-safely modified.
-
-The styling of the various pages are defined in
-`code/frontend/pages/*/*.css`. These files may also require modification
-for custom color schemes.
-
-#### Gradio theme
-
-The Gradio theme is defined in the file
-`code/frontend/_assets/theme.json`. The colors in this file can safely
-be modified to the desired branding. Other styles in this file may also
-be changed, but may cause breaking changes to the frontend. The [Gradio
-documentation](https://www.gradio.app/guides/theming-guide) contains
-more information on Gradio theming.
-
-### Messaging between pages
-
-> **NOTE:** This is an advanced topic that most developers will never
-> require.
-
-Occasionally, it may be necessary to have multiple pages in a view that
-communicate with each other. For this purpose, Javascript's
-`postMessage` messaging framework is used. Any trusted message posted to
-the application shell will be forwarded to each iframe where the pages
-can handle the message as desired. The `control` page uses this feature
-to modify the configuration of the `chat` page.
-
-The following will post a message to the app shell (`window.top`). The
-message will contain a dictionary with the key `use_kb` and a value of
-true. Using Gradio, this Javascript can be executed by [any Gradio
-event](https://www.gradio.app/guides/custom-CSS-and-JS#adding-custom-java-script-to-your-demo).
-
-``` javascript
-window.top.postMessage({"use_kb": true}, '*');
-```
-
-This message will automatically be sent to all pages by the app shell.
-The following sample code will consume the message on another page. This
-code will run asynchronously when a `message` event is received. If the
-message is trusted, a Gradio component with the `elem_id` of `use_kb`
-will be updated to the value specified in the message. In this way, the
-value of a Gradio component can be duplicated across pages.
-
-``` javascript
-window.addEventListener(
-  "message",
-  (event) => {
-      if (event.isTrusted) {
-          use_kb = gradio_config.components.find((element) => element.props.elem_id == "use_kb");
-          use_kb.props.value = event.data["use_kb"];
-      };
-  },
-  false);
-```
-
-## Updating documentation
-
-The README is rendered automatically; direct edits will be overwritten.
-In order to modify the README you will need to edit the files for each
-section separately. All of these files will be combined and the README
-will be automatically generated. You can find all of the related files
-in the `docs` folder.
-
-Documentation is written in Github Flavored Markdown and then rendered
-to a final Markdown file by Pandoc. The details for this process are
-defined in the Makefile. The order of files generated are defined in
-`docs/_TOC.md`. The documentation can be previewed in the Workbench file
-browser window.
-
-### Header file
-
-The header file is the first file used to compile the documentation.
-This file can be found at `docs/_HEADER.md`. The contents of this file
-will be written verbatim, without any manipulation, to the README before
-anything else.
-
-### Summary file
-
-The summary file contains quick description and graphic that describe
-this project. The contents of this file will be added to the README
-immediately after the header and just before the table of contents. This
-file is processed by Pandoc to embed images before writing to the
-README.
-
-### Table of Contents file
-
-The most important file for the documentation is the table of contents
-file at `docs/_TOC.md`. This file defines a list of files that should be
-concatenated in order to generate the final README manual. Files must be
-on this list to be included.
-
-### Static Content
-
-Save all static content, including images, to the `_static` folder. This
-will help with organization.
-
-### Dynamic documentation
-
-It may be helpful to have documents that update and write themselves. To
-create a dynamic document, simply create an executable file that writes
-the Markdown formatted document to stdout. During build time, if an
-entry in the table of contents file is executable, it will be executed
-and its stdout will be used in its place.
-
-### Rendering documentation
-
-When a documentation related commit is pushed, a GitHub Action will
-render the documentation. Any changes to the README will be automatially
-committed.
-
-# Managing your Development Environment
-
-## Environment Variables
+### Environment Variables
 
 Most of the configuration for the development environment happens with
 Environment Variables. To make permanent changes to environment
 variables, modify [`variables.env`](./variables.env) or use the
 Workbench UI.
 
-## Python Environment Packages
+### Python Environment Packages
 
 This project uses one Python environment at `/usr/bin/python3` and
 dependencies are managed with `pip`. Because all development is done
@@ -947,7 +494,7 @@ inside a container, any changes to the Python environment will be
 ephemeral. To permanently install a Python package, add it to the
 [`requirements.txt`](./requirements.txt) file or use the Workbench UI.
 
-## Operating System Configuration
+### Operating System Configuration
 
 The development environment is based on Ubuntu 22.04. The primary user
 has password-less sudo access, but all changes to the system will be
@@ -990,3 +537,7 @@ update.
 7.  **Regression testing:** Run through the entire demo, from document
     ingesting to the frontend, and ensure it is still functional and
     that the GUI looks correct.
+
+# License
+
+This project is licensed under the Apache 2.0 License  -  see the [LICENSE.txt](LICENSE.txt) file for details.
