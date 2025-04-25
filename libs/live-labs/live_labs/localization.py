@@ -44,7 +44,7 @@ class Task(BaseModel):
     response: None | str = None
     test: None | str = None
 
-    def get_test(self, tests: ModuleType) -> None | Callable[[], str]:
+    def get_test(self, tests: None | ModuleType) -> None | Callable[[], str]:
         """Find a test for this task."""
         if self.name and self.test and tests:
             func = getattr(tests, self.test, None)
@@ -83,7 +83,7 @@ class MessageCatalog(BaseModel):
                 return cls.from_yaml(catalog_path)
         return cls()
 
-    def get(self, key: str, default_value: str = None) -> str | list[Task]:
+    def get(self, key: str, default_value: None | str = None) -> str | list[Task]:
         """Get a value from this class."""
         if default_value is None:
             default_value = f":red-badge[{key}]"

@@ -15,24 +15,19 @@
 
 """The control panel web app."""
 
-from pathlib import Path
-import shutil
-import glob
-from typing import List
-import time
-
 import os
+import time
+from pathlib import Path
+
 import gradio as gr
 import jinja2
 import yaml
-
-from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings
-from langchain_milvus.vectorstores.milvus import Milvus
-from langchain_community.document_loaders import PyPDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import Document
 from chain_server.configuration import Configuration as ChainConfiguration
 from chain_server.configuration import config as chain_config
+from langchain.schema import Document
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_milvus.vectorstores.milvus import Milvus
+from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings
 
 from ... import mermaid
 from ...common import IMG_DIR, THEME, USE_KB_INITIAL, USE_RERANKER_INITIAL
@@ -101,10 +96,8 @@ vector_store = Milvus(
 
 # web ui definition
 with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
-
     # %% contrl panel tab
     with gr.Tab("Control Panel", elem_id="cp-tab", elem_classes=["invert-bg"]):
-
         # %% architecture control box
         with gr.Accordion(label="Retrieval Configuration"):
             with gr.Row(elem_id="kb-row"):
@@ -137,7 +130,6 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
 
     # %% knowledge base tab
     with gr.Tab("Knowledge Base", elem_id="kb-tab", elem_classes=["invert-bg"]):
-
         # upload file button
         upload_btn = gr.UploadButton("Upload PDFs", icon=str(_UPLOAD_IMG), file_types=[".pdf"], file_count="multiple")
 

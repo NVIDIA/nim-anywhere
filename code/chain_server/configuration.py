@@ -48,12 +48,13 @@ The variable names will be in the form: `APP_FIELD__SUB_FIELD`
 Values specified as environment variables will take precedence over all values from files.
 
 """
+
 import logging
 import os
 from enum import Enum
-from typing import Annotated, Any, Callable, Optional, cast
+from typing import Annotated, Any, Callable, ClassVar, Optional, cast
 
-from confz import BaseConfig, EnvSource, FileSource
+from confz import BaseConfig, ConfigSource, EnvSource, FileSource
 from pydantic import (
     BaseModel,
     Field,
@@ -189,7 +190,7 @@ class Configuration(BaseConfig):
     log_level: Annotated[LogLevels, Field(LogLevels.WARNING, description=LogLevels.__doc__)]
 
     # sources where config is looked for
-    CONFIG_SOURCES = [
+    CONFIG_SOURCES: ClassVar[list[ConfigSource]] = [
         FileSource(file="./config.yaml", optional=True),
         FileSource(file="./config.yml", optional=True),
         FileSource(file="./config.json", optional=True),

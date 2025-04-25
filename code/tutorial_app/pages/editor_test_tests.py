@@ -34,7 +34,6 @@ def sample_test():
 @isolate(EDITOR_DIR)
 def test_my_string():
     """Wait for my_string to be ready."""
-    import os
 
     import file1  # pyright: ignore[reportMissingImports]
 

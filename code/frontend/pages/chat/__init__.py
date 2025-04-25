@@ -17,7 +17,7 @@
 
 import uuid
 from pathlib import Path
-from typing import AsyncGenerator, Any
+from typing import Any, AsyncGenerator
 
 import gradio as gr
 from httpx import ConnectError, HTTPStatusError

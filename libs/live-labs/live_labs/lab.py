@@ -134,7 +134,8 @@ class Worksheet(BaseModel):
 
         if not base_dir.exists():
             base_dir.mkdir()
-            artifacts = st.session_state.get("artifacts", []) + [str(base_dir)]
+            artifacts = st.session_state.get("artifacts", [])
+            artifacts.append([str(base_dir)])
             st.session_state["artifacts"] = artifacts
 
         for idx, file in enumerate(self._files):
