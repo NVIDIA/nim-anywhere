@@ -12,6 +12,7 @@
     ".project": true,
     ".vscode": true,
     ".github": true,
+    "**/.ruff_cache": true,
   },
 
   // global editor settings
