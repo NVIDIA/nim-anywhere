@@ -42,7 +42,7 @@ EOM
 # setup the tutorial app
 cd /opt
 sudo python3 -m venv live-labs
-sudo ./live-labs/bin/pip install wheel
+sudo ./live-labs/bin/pip install --upgrade pip wheel
 sudo ./live-labs/bin/pip install git+https://github.com/NVIDIA/nim-anywhere.git#subdirectory=libs/live-labs
 sudo ln -s /opt/live-labs/bin/streamlit /home/workbench/.local/bin/streamlit
 

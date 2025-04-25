@@ -16,9 +16,8 @@
 from pathlib import Path
 
 import streamlit as st
-from streamlit_extras.stateful_button import button as st_toggle_btn
-
 from live_labs import MessageCatalog, Worksheet, reset_all_progress
+from streamlit_extras.stateful_button import button as st_toggle_btn
 
 MESSAGES = MessageCatalog.from_page(__file__)
 NAME = Path(__file__).stem

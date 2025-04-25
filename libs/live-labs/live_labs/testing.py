@@ -48,6 +48,7 @@ def test_my_string():
 """
 import functools
 import inspect
+import os
 import selectors
 import subprocess
 import sys
@@ -114,6 +115,7 @@ class Runner:
             stderr=subprocess.PIPE,
             text=True,
             cwd=self.cwd,
+            env=os.environ,
         ) as proc:
             # start the test
             assert proc.stdin is not None
@@ -131,7 +133,7 @@ class Runner:
                 sel.register(proc.stderr, selectors.EVENT_READ)
 
             # iterate  through stdout + stderr
-            yield "```"
+            yield "```\n"
             start_time = time.monotonic()
             while time.monotonic() - start_time < _TIMEOUT:
                 for key, _ in sel.select(timeout=0.1):
@@ -159,7 +161,7 @@ class Runner:
 
             else:
                 self._testfail = "info_test_timeout"
-            yield "```"
+            yield "```\n\n"
 
             # update the status
             self._rc = proc.returncode
