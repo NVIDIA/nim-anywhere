@@ -17,8 +17,9 @@
 from pathlib import Path
 
 import streamlit as st
-from live_labs import MessageCatalog, Worksheet, reset_all_progress
 from streamlit_extras.stateful_button import button as st_toggle_btn
+
+from live_labs import MessageCatalog, Worksheet, reset_all_progress
 
 MESSAGES = MessageCatalog.from_page(__file__)
 NAME = Path(__file__).stem
@@ -41,13 +42,11 @@ with Worksheet(name=NAME, ephemeral=True) as worksheet:
     col_1, col_2 = st.columns([1, 1])
 
     # information on support logs
-    with col_1:
-        with st.container(border=True):
-            st.header(MESSAGES.get("bundle_header"), divider="gray")
-            st.markdown(MESSAGES.get("bundle_msg"))
+    with col_1, st.container(border=True):
+        st.header(MESSAGES.get("bundle_header"), divider="gray")
+        st.markdown(MESSAGES.get("bundle_msg"))
 
     # information on developer forum
-    with col_2:
-        with st.container(border=True):
-            st.header(MESSAGES.get("forum_header"), divider="gray")
-            st.markdown(MESSAGES.get("forum_msg"))
+    with col_2, st.container(border=True):
+        st.header(MESSAGES.get("forum_header"), divider="gray")
+        st.markdown(MESSAGES.get("forum_msg"))

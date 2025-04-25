@@ -46,9 +46,10 @@ with live_labs.Worksheet(name=NAME, autorefresh=0).with_editor(EDITOR_DIR, EDITO
 """
 
 import json
+from collections.abc import Callable
 from pathlib import Path
 from types import ModuleType
-from typing import Any, Optional
+from typing import Any, TypeVar
 
 import streamlit as st
 from jinja2 import BaseLoader, Environment
@@ -61,13 +62,15 @@ from live_labs import editor, localization, testing
 
 DEFAULT_STATE_FILE = Path("/project/data/scratch/tutorial_state.json")
 
+_TYPE = TypeVar("_TYPE")
+
 
 def _slugify(name: str) -> str:
     """Convert a name into a slugged string."""
 
     def _is_valid(char: str) -> bool:
         """Only pass lowercase and underscores."""
-        return (ord(char) > 96 and ord(char) < 123) or ord(char) == 95
+        return (ord(char) > 96 and ord(char) < 123) or ord(char) == 95  # noqa: PLR2004
 
     filtered_name = [x for x in name.lower().replace(" ", "_") if _is_valid(x)]
     return "".join(filtered_name)
@@ -84,11 +87,11 @@ class Worksheet(BaseModel):
     completed_tasks: int = Field(0, init=False)
     total_tasks: int = Field(0, init=False)
 
-    _body: Optional[DeltaGenerator] = PrivateAttr(None)
-    _base_dir: Optional[Path] = PrivateAttr(None)
-    _files: Optional[list[str]] = PrivateAttr(None)
-    _files_data_init: Optional[list[str]] = PrivateAttr(None)
-    _stdout: Optional[DeltaGenerator] = PrivateAttr(None)
+    _body: DeltaGenerator | None = PrivateAttr(None)
+    _base_dir: Path | None = PrivateAttr(None)
+    _files: list[str] | None = PrivateAttr(None)
+    _files_data_init: list[str] | None = PrivateAttr(None)
+    _stdout: DeltaGenerator | None = PrivateAttr(None)
 
     @property
     def stdout(self) -> DeltaGenerator:
@@ -119,14 +122,14 @@ class Worksheet(BaseModel):
 
         return self
 
-    def __exit__(self, _, __, ___):
+    def __exit__(self, _: object, __: object, ___: object):
         """Cache data."""
         if self._body:
             self._body.__exit__(None, None, None)
         if not self.ephemeral:
             self.save_state()
 
-    def with_editor(self, base_dir: Path, files: list[str]):
+    def with_editor(self, base_dir: Path, files: list[str]) -> "Worksheet":
         """Enable the in page code editor."""
         self._base_dir = base_dir
         self._files = files
@@ -153,7 +156,7 @@ class Worksheet(BaseModel):
         try:
             with self.state_file.open("r", encoding="UTF-8") as ptr:
                 loaded_state = json.load(ptr)
-        except (IOError, OSError):
+        except OSError:
             loaded_state = {}
 
         st.session_state.update(loaded_state)
@@ -166,7 +169,7 @@ class Worksheet(BaseModel):
         last_state_json = state_dict.pop("last_state", "{}")  # dont recurse and save last state
         # dont save autorefresh runtime var
         # dont save session scoped variables (*_derived)
-        remove_keys = ["autorefresh"] + [key for key in state_dict.keys() if key.endswith("_derived")]
+        remove_keys = ["autorefresh"] + [key for key in state_dict if key.endswith("_derived")]
         _ = [state_dict.pop(key, None) for key in remove_keys]
         state_json = json.dumps(state_dict)
 
@@ -176,7 +179,7 @@ class Worksheet(BaseModel):
                 ptr.write(state_json)
             st.session_state["last_state"] = state_json
 
-    def run_test(self, fun) -> tuple[bool, None | str, None | Any]:
+    def run_test(self, fun: Callable[[], _TYPE]) -> tuple[bool, None | str, None | _TYPE]:
         """Cache the state of a test once it passes."""
         cached_state: tuple[bool, None | str, None | Any]
         state: tuple[bool, None | str, None | Any]

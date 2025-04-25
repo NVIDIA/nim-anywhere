@@ -18,6 +18,7 @@ The modules in here contain the basic building blocks of a live lab page.
 """
 
 import shutil
+from contextlib import suppress
 from pathlib import Path
 
 import streamlit as st
@@ -36,10 +37,8 @@ def reset_all_progress():
         shutil.rmtree(artifact, ignore_errors=True)
 
     # remove the cached state
-    try:
+    with suppress(FileNotFoundError):
         Path(DEFAULT_STATE_FILE).unlink()
-    except FileNotFoundError:
-        pass
 
     # clear the state
     keys = list(st.session_state.keys())

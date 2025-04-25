@@ -146,7 +146,7 @@ class AppShell(BaseModel):
     @classmethod
     def from_yaml(cls, path: Path) -> "AppShell":
         """Load the sidebar data from yaml."""
-        with open(path, "r", encoding="UTF-8") as ptr:
+        with path.open(encoding="UTF-8") as ptr:
             yml = ptr.read()
 
         return parse_yaml_raw_as(cls, yml)
@@ -199,7 +199,7 @@ class AppShell(BaseModel):
 
     def _render_stylesheet(self):
         """Load and apply the stylesheet."""
-        with open(DEFAULT_CSS, "r", encoding="UTF-8") as ptr:
+        with DEFAULT_CSS.open(encoding="UTF-8") as ptr:
             style = ptr.read()
         with st.container(height=1, border=False):
             st.html(f"<style>{style}</style>")
@@ -214,5 +214,4 @@ class AppShell(BaseModel):
 
     def navigation(self) -> "StreamlitPage":
         """Run the streamlit multipage router."""
-        pg = st.navigation(self.page_list)
-        return pg
+        return st.navigation(self.page_list)

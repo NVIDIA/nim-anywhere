@@ -54,9 +54,10 @@ import selectors
 import subprocess
 import sys
 import time
+from collections.abc import Callable, Iterator
 from functools import partial
 from pathlib import Path
-from typing import Any, Callable, Iterator, TextIO, cast
+from typing import Any, TextIO, cast
 
 import streamlit as st
 
@@ -182,8 +183,7 @@ class Runner:
             raise TestFail("info_test_nonzero_exit_code")
 
         # remove the markdown code block indicators
-        output_text = "\n".join(output_text.splitlines()[1:-1])
-        return output_text
+        return "\n".join(output_text.splitlines()[1:-1])
 
 
 def isolate(cwd: Path | None = None, exec: str | Path | None = None) -> Callable[[Callable[[], None]], Runner]:

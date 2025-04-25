@@ -25,9 +25,9 @@ MESSAGES = live_labs.MessageCatalog.from_page(__file__)
 ```
 """
 
+from collections.abc import Callable
 from pathlib import Path
 from types import ModuleType
-from typing import Callable
 
 import streamlit as st
 from pydantic import BaseModel, ConfigDict, Field
@@ -64,7 +64,7 @@ class MessageCatalog(BaseModel):
     @classmethod
     def from_yaml(cls, path: Path) -> "MessageCatalog":
         """Load the message catalog data from yaml."""
-        with open(path, "r", encoding="UTF-8") as ptr:
+        with path.open(encoding="UTF-8") as ptr:
             yml = ptr.read()
 
         return parse_yaml_raw_as(cls, yml)
