@@ -57,6 +57,7 @@ select = [
   "RUF",  # Ruff-specific rules
   "ANN",  # Type annotations
   "ARG",  # Function arguments
+  "FIX",  # Forbid common FIXME comments
 ]
 ignore = [
   "ANN401", # Allow the use of the Any type
