@@ -1,6 +1,6 @@
 # NVIDIA NIM Anywhere
 
-[![Clone Me with AI Workbench](https://img.shields.io/badge/Open_In-AI_Workbench-76B900?logo=nvidia)](https://ngc.nvidia.com/open-ai-workbench/aHR0cHM6Ly9naXRodWIuY29tL05WSURJQS9uaW0tYW55d2hlcmUK)
+[![Clone Me with AI Workbench](https://img.shields.io/badge/Open_In-AI_Workbench-76B900?logo=nvidia)](https://build.nvidia.com/open-ai-workbench/aHR0cHM6Ly9naXRodWIuY29tL05WSURJQS9uaW0tYW55d2hlcmU=)
 [![Work on your own fork](https://img.shields.io/badge/Create_your_own-Fork-4078c0?logo=github)](https://github.com/NVIDIA/nim-anywhere/fork)
 
 NIM Anywhere is a starting point into discovering enterprise AI. This branch is currently under heavy construction.
