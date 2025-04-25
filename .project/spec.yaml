@@ -82,7 +82,7 @@ environment:
         package_manager_environment:
             name: ""
             target: ""
-    compose_file_path: ""
+    compose_file_path: ".project/compose.yaml"
 execution:
     apps:
         - name: Visual Studio Code

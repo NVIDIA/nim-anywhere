@@ -1,5 +1,6 @@
 # Ignore generated or temporary files managed by the Workbench
 .project/*
+!.project/compose.yaml
 !.project/spec.yaml
 !.project/configpacks
 
