@@ -16,7 +16,6 @@ dependencies = [
         "streamlit-ace",
         "streamlit-bridge",
         "streamlit-javascript",
-        "streamlit_file_browser",
 ]
 
 [project.optional-dependencies]
