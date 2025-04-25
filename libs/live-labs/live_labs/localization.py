@@ -26,7 +26,8 @@ MESSAGES = live_labs.MessageCatalog.from_page(__file__)
 """
 
 from pathlib import Path
-from typing import Any, Callable, cast
+from types import ModuleType
+from typing import Callable
 
 import streamlit as st
 from pydantic import BaseModel, ConfigDict, Field
@@ -43,18 +44,19 @@ class Task(BaseModel):
     response: None | str = None
     test: None | str = None
 
-    def get_test(self, tests: Any) -> None | Callable[[], str]:
+    def get_test(self, tests: ModuleType) -> None | Callable[[], str]:
         """Find a test for this task."""
         if self.name and self.test and tests:
-            out = cast(Callable[[], str], getattr(tests, self.test, None))
-            return out
+            func = getattr(tests, self.test, None)
+            if callable(func):
+                return func  # type: ignore[return-value]
         return None
 
 
 class MessageCatalog(BaseModel):
     """Representation of a localization catalog files."""
 
-    __pydantic_extra__: dict[str, None | str | list[Task]] = Field(init=False)  # type: ignore
+    __pydantic_extra__: dict[str, None | str | list[Task]] = Field(init=False)
     model_config = ConfigDict(extra="allow")
 
     tasks: list[Task] = []
@@ -81,8 +83,10 @@ class MessageCatalog(BaseModel):
                 return cls.from_yaml(catalog_path)
         return cls()
 
-    def get(self, key: str, default_value: Any = None) -> Any:
+    def get(self, key: str, default_value: str = None) -> str | list[Task]:
         """Get a value from this class."""
+        if default_value is None:
+            default_value = f":red-badge[{key}]"
         try:
             return getattr(self, key)
         except AttributeError:
