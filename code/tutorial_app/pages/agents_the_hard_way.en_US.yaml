@@ -34,26 +34,27 @@ tasks:
     msg: |
       # verify tool here using step 6
     response: ~
-    test: ~
+    test: payload_tool_selection
     
   - name: Execute the tool and get result
     msg: |
       #asdf
     response: ~
-    test: ~
+    test: execute_tool
 
   - name: Create a new message list with the tool call + response
     msg: |
       #asdf
     response: ~
-    test: ~
+    test: create_message_list
 
   - name: Call again to let the model continue the chat
     msg: |
       #aaa
     response: ~
-    test: ~
+    test: call_model_again
 
 info_no_client: ~
 info_wrong_client_type: ~
 info_test_nonzero_exit_code: ~
+# add all of the error messages here

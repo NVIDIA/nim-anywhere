@@ -17,46 +17,52 @@
 import sys
 from pathlib import Path
 
-from live_labs.testing import TestFail, isolate
+from live_labs.testing import isolate
 
 NAME = "agents_the_hard_way"
 EDITOR_DIR = Path("/project/code").joinpath(NAME)
 PYTHON_EXE = "/usr/bin/python"
 
-# TODO test if the openai module is in single_agent.__dict__ 
+# TODO test if the openai module is in single_agent.__dict__
+
 
 # dir(dir of the running code)/python exe to use(import langgraph...)
 @isolate(EDITOR_DIR, PYTHON_EXE)
 def define_client():
     """define the client"""
-    import single_agent
-    from openai import OpenAI
-    # intentionally same file name with answer 
+    import single_agent  # pyright: ignore[reportMissingImports]
+    from openai import OpenAI  # pyright: ignore[reportMissingImports]
+
+    # intentionally same file name with answer
     if not hasattr(single_agent, "client"):
         print(":TestFail: info_no_client")
         return
-    
+
     if not isinstance(single_agent.client, OpenAI):
         print(":TestFail: info_wrong_client_type")
         return
 
+
 @isolate(EDITOR_DIR, PYTHON_EXE)
 def define_adding_tool():
     """make sure its an add function"""
-    import single_agent
+    import single_agent  # pyright: ignore[reportMissingImports]
+
     if not hasattr(single_agent, "add"):
         print(":TestFail: info_no_add")
         return
-    
-    if single_agent.add(7,8) != 15:
+
+    if single_agent.add(7, 8) != 15:
         print(":TestFail: info_add_not_working")
         return
+
 
 @isolate(EDITOR_DIR, PYTHON_EXE)
 def define_tools_list():
     """make sure its a list"""
-    import single_agent
     import pprint
+
+    import single_agent  # pyright: ignore[reportMissingImports]
 
     def strip_descriptions(d):
         """Recursively remove 'description' keys from a dictionary."""
@@ -66,26 +72,23 @@ def define_tools_list():
             return [strip_descriptions(item) for item in d]
         else:
             return d
-    
+
     tools_target = {
         "type": "function",
         "function": {
             "name": "add",
             "parameters": {
                 "type": "object",
-                "properties": {
-                    "a": {"type": "integer"},
-                    "b": {"type": "integer"}
-                },
-                "required": ["a", "b"]
-            }
-        }
+                "properties": {"a": {"type": "integer"}, "b": {"type": "integer"}},
+                "required": ["a", "b"],
+            },
+        },
     }
 
     if not hasattr(single_agent, "tools"):
         print(":TestFail: info_no_tools")
         return
-    
+
     if not isinstance(single_agent.tools, list):
         print(":TestFail: info_tools_not_list")
         return
@@ -97,13 +100,13 @@ def define_tools_list():
     if not isinstance(single_agent.tools[0], dict):
         print(":TestFail: info_tools_list_dict")
         return
-    
+
     if strip_descriptions(single_agent.tools[0]) != tools_target:
         print(":TestFail: info_tools_list_content")
         return
-    
+
     pprint.pprint(single_agent.tools)
-    
+
 
 @isolate(EDITOR_DIR)
 def test_my_string():
