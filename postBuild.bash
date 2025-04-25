@@ -43,12 +43,15 @@ EOM
 cd /opt
 sudo python3 -m venv live-labs
 sudo ./live-labs/bin/pip install --upgrade pip wheel
-sudo ./live-labs/bin/pip install git+https://github.com/NVIDIA/nim-anywhere.git#subdirectory=libs/live-labs
+sudo ./live-labs/bin/pip install git+https://github.com/NVIDIA/nim-anywhere.git@rkraus/simplify#subdirectory=libs/live-labs
+# TODO: swith branch  back to main
 sudo ln -s /opt/live-labs/bin/streamlit /home/workbench/.local/bin/streamlit
 
 # install pipx packages
-if [-f /project/pipx.txt ]; then
-  cat /project/pipx.txt | xargs pipx install
+if [ -f /project/pipx.txt ]; then
+    while IFS= read -r line; do
+        pipx install "$line"
+    done < /project/pipx.txt
 fi
 
 # clean up
