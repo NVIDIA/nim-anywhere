@@ -16,3 +16,7 @@ navbar:
         show_progress: False
       - label: "📎Editor Test"
         target: editor_test
+  - label: Agent with NVIDIA 
+    children:
+      - label: "📎Agents the Hard Way"
+        target: agents_the_hard_way

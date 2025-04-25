@@ -1,0 +1,59 @@
+# header data
+title: NVIDIA AI Workbench Live Labs
+waiting_msg: Click `Next` to continue.
+testing_msg: Go do the task!
+next: Next
+
+header: "Orientation"
+
+tasks:
+  - name: Define the client
+    msg: |
+      # make sure variable name is client
+    response: ~
+    test: define_client
+
+  - name: Define the adding tool
+    msg: |
+      #asdf
+    response: ~
+    test: define_adding_tool
+
+  - name: Add the tool to list of tools
+    msg: |
+      #asdf
+    response: |
+      that looks correct
+
+      ```
+      {{result}}
+      ```
+    test: define_tools_list
+
+  - name: Define the payload and get reponse on tool selection
+    msg: |
+      # verify tool here using step 6
+    response: ~
+    test: ~
+    
+  - name: Execute the tool and get result
+    msg: |
+      #asdf
+    response: ~
+    test: ~
+
+  - name: Create a new message list with the tool call + response
+    msg: |
+      #asdf
+    response: ~
+    test: ~
+
+  - name: Call again to let the model continue the chat
+    msg: |
+      #aaa
+    response: ~
+    test: ~
+
+info_no_client: ~
+info_wrong_client_type: ~
+info_test_nonzero_exit_code: ~
