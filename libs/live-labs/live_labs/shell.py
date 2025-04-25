@@ -120,7 +120,7 @@ def _icon(name: str) -> str:
         'style="display: inline-block; font-family: &quot;Material Symbols Rounded&quot;; font-weight: 400; '
         'user-select: none; vertical-align: bottom; white-space: nowrap; overflow-wrap: normal;"'
     )
-    return f'<span role="img" { style }>{name}</span>'
+    return f'<span role="img" {style}>{name}</span>'
 
 
 class AppShell(BaseModel):
@@ -190,8 +190,7 @@ class AppShell(BaseModel):
             )
         if self.links.settings:
             html += (
-                '<span role="button" title="Settings">'
-                f'<a href="{self.links.settings}">{_icon("settings")}</a></span>'
+                f'<span role="button" title="Settings"><a href="{self.links.settings}">{_icon("settings")}</a></span>'
             )
 
         html += "</div>"

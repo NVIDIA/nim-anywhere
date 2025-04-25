@@ -83,7 +83,7 @@ class MessageCatalog(BaseModel):
                 return cls.from_yaml(catalog_path)
         return cls()
 
-    def get(self, key: str, default_value: None | str = None) -> str | list[Task]:
+    def get(self, key: str, default_value: None | str = None) -> str:
         """Get a value from this class."""
         if default_value is None:
             default_value = f":red-badge[{key}]"
