@@ -46,6 +46,11 @@ sudo ./live-labs/bin/pip install --upgrade pip wheel
 sudo ./live-labs/bin/pip install git+https://github.com/NVIDIA/nim-anywhere.git#subdirectory=libs/live-labs
 sudo ln -s /opt/live-labs/bin/streamlit /home/workbench/.local/bin/streamlit
 
+# install pipx packages
+if [-f /project/pipx.txt ]; then
+  cat /project/pipx.txt | xargs pipx install
+fi
+
 # clean up
 sudo apt-get autoremove -y
 sudo rm -rf /var/cache/apt

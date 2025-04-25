@@ -1,0 +1,10 @@
+# Basic Retrieval
+- [  ] Getting started with llms
+- [  ] singe doc rag
+- [  ] naive rag
+- [  ] advanced rag
+- [  ] enterprise rag -> point to the rag 2.0 blueprint
+
+# AI Agents
+- [  ] Build an agent the hard way
+- [  ] Build your first agent

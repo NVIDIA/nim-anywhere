@@ -3,6 +3,7 @@ curl
 jq
 less
 make
+pipx
 python3.10-venv
 unzip
 wget
