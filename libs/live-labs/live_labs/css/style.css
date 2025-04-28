@@ -27,7 +27,7 @@
 
 /* remove padding at the end of the document */
 [data-testid="stMainBlockContainer"] {
-  padding-bottom: 0px;
+  padding-bottom: 5px;
 }
 
 
