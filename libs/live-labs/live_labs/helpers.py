@@ -15,6 +15,7 @@
 """Live Labs Helpers functions and constants."""
 
 import json
+import re
 import shutil
 from contextlib import suppress
 from pathlib import Path
@@ -35,16 +36,11 @@ def scroll_to(header_title: str):
         st_javascript(code, key=anchor)
 
 
-def slugify(name: str, space: str = "_") -> str:
-    """Convert a name into a slugged string."""
-
-    def _is_valid(char: str) -> bool:
-        """Only pass lowercase and spaces."""
-        return (ord(char) > 96 and ord(char) < 123) or char == space  # noqa: PLR2004
-
-    name = name.lower()
-    name = name.replace(" ", space)
-    return "".join([x for x in name if _is_valid(x)])
+def slugify(text: str, space: str = "_") -> str:
+    """Convert text to a valid slug."""
+    text = text.lower()
+    text = re.sub(r"[^a-z0-9\s]", "", text)
+    return re.sub(r"\s+", space, text)
 
 
 def reset_all_progress():

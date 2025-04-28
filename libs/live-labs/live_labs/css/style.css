@@ -22,11 +22,42 @@ html {
   scroll-behavior: smooth;
 }
 
+/* customize fonts */
+p, ol, ul, dl {
+  font-size: 20px !important;
+}
+
+/* custom details drop downs */
+details {
+  padding-left: 50px;
+}
+details > summary {
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 100;
+  text-transform: uppercase;
+  list-style-type: '► ';
+}
+details[open] > summary {
+  list-style-type: '▼ ';
+}
+details > summary::marker {
+  color: #76b900;
+}
+details > summary::after {
+  content: "🙋";
+  font-size: 32px;
+  position: absolute;
+  left: 0;
+}
+
+
 /* limit image size */
 .stMarkdown{
   img {
     max-height: 500px;
     max-width: 500px;
+    width: 100%;
   }
 }
 

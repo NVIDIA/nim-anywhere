@@ -71,5 +71,6 @@
 		"workbench.colorCustomizations": {
 			"titleBar.activeBackground": "#e0218a"
 		},
+		"window.title": "lib/live_labs ${dirty}${activeEditorShort}${separator}${rootName}${separator}${profileName}${separator}${appName}"
 	}
 }

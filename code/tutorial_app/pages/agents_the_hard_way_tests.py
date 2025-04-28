@@ -14,71 +14,131 @@
 # limitations under the License.
 """Tests for auto continuing associated tasks."""
 
-import sys
+import shutil
 from pathlib import Path
 
 from live_labs.editor import send_keys
 from live_labs.testing import isolate
 
 NAME = "agents_the_hard_way"
+ANSWER_DIR = Path(__file__).parent.parent.joinpath("answers", NAME)
 EDITOR_DIR = Path("/project/code").joinpath(NAME)
 PYTHON_EXE = "/usr/bin/python"
 
-# TODO test if the openai module is in single_agent.__dict__
 
-
-def prep_imports_and_api_key() -> str:
+## Setup the environment
+def prep_imports() -> None:
     """Prepare the imports and api key."""
-    return send_keys(
+    cache_answer = ANSWER_DIR.joinpath("caching.py")
+    cache_lib = EDITOR_DIR.joinpath("caching.py")
+    shutil.copy(cache_answer, cache_lib)
+
+    send_keys(
         r'''
         """An example agent built from scratch."""
 
         import json
         import os
 
-        from cachier import cachier
+        from caching import call_llm_cached
         from openai import OpenAI
-
-        API_KEY = os.environ.get("NVIDIA_API_KEY", "")
-        MODEL_URL = "https://integrate.api.nvidia.com/v1"
-        MODEL_NAME = "meta/llama-3.3-70b-instruct"
-
-
         '''
     )
 
 
-# dir(dir of the running code)/python exe to use(import langgraph...)
-@isolate(EDITOR_DIR, PYTHON_EXE)
-def define_client():
-    """define the client"""
-    import single_agent  # pyright: ignore[reportMissingImports]
-    from openai import OpenAI  # pyright: ignore[reportMissingImports]
+## Load the configuration
+def prep_api_key() -> None:
+    """Prepare the imports and api key."""
+    send_keys(
+        r"""
 
-    # intentionally same file name with answer
+        API_KEY = os.environ.get("NGC_API_KEY", "---")
+        MODEL_URL = "https://integrate.api.nvidia.com/v1"
+        MODEL_NAME = "meta/llama-3.3-70b-instruct"
+        """
+    )
+
+
+## Part 1 - The Model
+def prep_define_client() -> None:
+    """Add some comments."""
+    send_keys(
+        r"""
+
+
+        # Connect to the model server
+        """
+    )
+
+
+@isolate(EDITOR_DIR, PYTHON_EXE)
+def test_define_client():
+    """define the client"""
+    import caching  # pyright: ignore[reportMissingImports]
+    import openai  # pyright: ignore[reportMissingImports]
+    import single_agent  # pyright: ignore[reportMissingImports]
+
+    MODEL_NAME = "meta/llama-3.3-70b-instruct"
+
+    # look for the value
     if not hasattr(single_agent, "client"):
         print(":TestFail: info_no_client")
         return
 
-    if not isinstance(single_agent.client, OpenAI):
+    # ensure the correct type
+    if not isinstance(single_agent.client, openai.OpenAI):
         print(":TestFail: info_wrong_client_type")
         return
 
+    # ensure it works
+    messages = [{"role": "user", "content": "Hello!"}]
+    try:
+        _ = caching.call_llm_cached(single_agent.client, MODEL_NAME, messages)
+    except openai.BadRequestError:
+        print(":TestFail: info_client_bad_request")
+    except openai.AuthenticationError:
+        print(":TestFail: info_client_bad_auth")
+    except openai.NotFoundError:
+        print(":TestFail: info_test_bad_url")
+
+
+## Part 2 - Tools
+def prep_adding_tool() -> None:
+    """Add some comments."""
+    send_keys(
+        r"""
+
+
+        # Create a tool for your agents
+        """
+    )
+
 
 @isolate(EDITOR_DIR, PYTHON_EXE)
-def define_adding_tool():
+def test_adding_tool():
     """make sure its an add function"""
-    import single_agent  # pyright: ignore[reportMissingImports]
+    import inspect
+
+    import single_agent  # pyright: ignore[reportMissingImports]s
 
     if not hasattr(single_agent, "add"):
         print(":TestFail: info_no_add")
         return
 
-    if single_agent.add(7, 8) != 15:
+    if not callable(single_agent.add):
+        print(":TestFail: info_add_not_fun")
+
+    signature = inspect.signature(single_agent.add)
+    args = list(signature.parameters.keys())
+    if args != ["a", "b"]:
+        print(":TestFail: info_bad_add_args")
+
+    if single_agent.add(7, 8) != 7 + 8:
         print(":TestFail: info_add_not_working")
         return
 
 
+## TODO
 @isolate(EDITOR_DIR, PYTHON_EXE)
 def define_tools_list():
     """make sure its a list"""
@@ -130,28 +190,63 @@ def define_tools_list():
     pprint.pprint(single_agent.tools)
 
 
-@isolate(EDITOR_DIR)
-def test_my_string():
+@isolate(EDITOR_DIR, PYTHON_EXE)
+def payload_tool_selection():
     """Wait for my_string to be ready."""
-    import file1  # pyright: ignore[reportMissingImports]
+    import json
 
-    print("Looking for my_string.")
+    import single_agent  # pyright: ignore[reportMissingImports]
 
-    if not hasattr(file1, "my_string"):
-        print(":TestFail: info_no_my_string")
+    if not hasattr(single_agent, "response"):
+        print(":TestFail: info_no_response")
         return
 
-    print("Looking for five.")
-
-    if file1.my_string != "five":
-        print(":TestFail: info_my_string_not_five")
+    tool_call = single_agent.response.choices[0].message.tool_calls[0]
+    if json.loads(tool_call.function.arguments) != {"a": 3, "b": 12}:
+        print(":TestFail: info_parameters_not_correct")
         return
 
     print("Looks good!")
+    # TODO: response formatt bug
+
+
+@isolate(EDITOR_DIR, PYTHON_EXE)
+def execute_tool():
+    """execute the tool"""
+    import single_agent  # pyright: ignore[reportMissingImports]
+
+    if not hasattr(single_agent, "tool_call"):
+        print(":TestFail: info_no_tool_call")
+        return
+    # how to check if a conditional statement exists?
+
+
+@isolate(EDITOR_DIR, PYTHON_EXE)
+def create_message_list():
+    """create a message list"""
+    import single_agent  # pyright: ignore[reportMissingImports]
+
+    if not hasattr(single_agent, "messages"):
+        print(":TestFail: info_no_messages")
+        return
+
+    if single_agent.messages != [{"role": "user", "content": "What is 3 plus 12?"}]:
+        # TODO: message is not complete
+        print(":TestFail: info_messages_not_correct")
+        return
+
+
+@isolate(EDITOR_DIR, PYTHON_EXE)
+def call_model_again():
+    """call the model again"""
+    import single_agent  # pyright: ignore[reportMissingImports]
+
+    if not hasattr(single_agent, "final_response"):
+        print(":TestFail: info_no_final_response")
+        return
 
 
 if __name__ == "__main__":
     sys.stdout.write("---------------\n")
     # you can use this space for testing while you are
     # developing your tests
-    test_my_string()

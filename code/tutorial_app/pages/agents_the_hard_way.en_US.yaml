@@ -9,84 +9,98 @@ welcome_msg: |
   Later, we will replace much of this logic with prebuilt tools, but building it ourselves helps
   us understand the fundamentals.
 
-  Reminder, the instructions for each step will specify the names for you to use for your variables.
-  You **must** use these names!
+  ![intro picture](app/static/agent-lab.png)
 
 tasks:
   - name: What is an agent?
     msg: |
       An agent is an application that uses an LLM to make decisions and interact with the outside world.
 
-      Agents have four key components:
-      - **MODEL:** An LLM that decides which tools to use and how to respond
-      - **TOOLS:** Functions that let the LLM perform actions like math or database queries
-      - **MEMORY:** Information available to the LLM during and between conversations
-      - **LOGIC:** The decision-making flow that determines which, in any, tools to use next
+      Agents have four key parts:
+      1. **MODEL:** An LLM that decides which tools to use and how to respond
+      1. **TOOLS:** Functions that let the LLM perform actions like math or database queries
+      1. **MEMORY:** Information available to the LLM during and between conversations
+      1. **LOGIC:** The decision-making flow that determines which, if any, tools to use next
 
       In this exercise, we'll build a basic agent by implementing these basic components from scratch.
 
   - name: Setup the environment
     msg: |
-      Like most Python modules, we start by importing the necessary modules and setting a few constants.
+      To get us started, I'll drop is some code and explain as I go.
 
-      I'll drop is some code to get us started and explain as I go.
+      Like most Python code, we start by importing the necessary modules.
+      - The `openai` module is maintained by OpenAI and is used for talking to models running remotely.
+      - The `caching` module helps us cache LLM responses and conserve tokens.
 
-      I've just defined three constants:
+      The caching module is custom code, but it makes use of the `cachier` Python library.
+      Feel free to check it out by opening Visual Studio Code or JupyterLab from the Workbench interface.
+    response: |
+      Let's keep going!
+    prep: prep_imports
+
+  - name: Load the configuration
+    msg: |
+      Now I'll load our configuration as contants:
       - `API_KEY` loads our credentials from an environment variable
       - `MODEL_URL` points the the server hosting your model
       - `MODEL_NAME` is the model we are going to use
 
-      <details>
-        <summary>🙋 Why these values?</summary>
+      Why these values?
 
-        This `MODEL_URL` points to NVIDIA's hosted Model API Catalog.
+      This `MODEL_URL` points to NVIDIA's hosted Model API Catalog.
 
-        Becuase we are starting with NVIDIA's hosted service, we have a lot of models to choose from.
-        Picking where to start can be difficult.
+      Becuase we are starting with NVIDIA's hosted service, we have a lot of models to choose from.
+      Picking where to start can be difficult.
 
-        - Start with a newer open source model from a team you recognize.
-        - Start with a moderate sized model (~70b parameters). You'll work on optimizing to a smaller model later.
-        - If you need features like function calling, make sure the model supports it! (More on that later).
-      </details>
+      - Start with a newer open source model from a team you recognize.
+      - Start with a moderate sized model (~70b parameters). You'll work on optimizing to a smaller model later.
+      - If you need features like function calling, make sure the model supports it! (More on that later).
     response: |
       Let's keep going!
-    prep: prep_imports_and_api_key
+    prep: prep_api_key
 
-  - name: Connect to the model API
+  - name: Part 1 - The Model
     msg: |
-      Now we will use the `openai` library to connect to the model API. Most LLM providers have
-      standardized on the OpenAI API. This means that this one Python library will work most of the time.
+      The first of four critical parts for an agent is the AI model.
 
-      Using a base URL of `https://integrate.api.nvidia.com/v1` and the `api_key` variable, create a
-      client for connecting NVIDIA's hosted models. Save this in a variable named `client`.
+      We will talk to the AI models on build.nvidia.com using the OpenAI API.
+      This API is the *language* that most model providers use.
+      This means we can use the `OpenAI` class to connect to most model providers. Neat!
+
+      Using the `MODEL_URL` and `API_KEY` defined above, create a new model client named `client`.
 
       #### Resources
-      - [Docs: Quick Start](https://github.com/openai/openai-python?tab=readme-ov-file#usage)
-      - [Docs: Custom base URL](https://github.com/openai/openai-python?tab=readme-ov-file#configuring-the-http-client)
+      - [Docs: OpenAI Quick Start](https://github.com/openai/openai-python?tab=readme-ov-file#usage)
+      - [Docs: OpenAI Custom base URL](https://github.com/openai/openai-python?tab=readme-ov-file#configuring-the-http-client)
       - [Example: NVIDIA hosted models](https://build.nvidia.com/nvidia/llama-3_3-nemotron-super-49b-v1)
 
       <details>
         <summary>Need some help?</summary>
 
-        Previously, we imported the `OpenAI` class, and loaded the API key `api_key`.
-        We have been provided the base URL to use. We can put that together to create the client.
-
         ```python
         client = OpenAI(
-            base_url="https://integrate.api.nvidia.com/v1",
-            api_key=api_key,
+            base_url=MODEL_URL,
+            api_key=API_KEY
         )
         ```
       </details>
     response: |
-      Looks good. Now we can start using the AI models in our code.
-    test: define_client
+      Great! We are now connected to the models!
+    prep: prep_define_client
+    test: test_define_client
 
-  - name: Define the adding tool
+  - name: Part 2 - Tools
     msg: |
-      Tools are simply traditional code that is executed when the LLM requests it.
-      So lets write our first tool. Let's createa a function, called `add`, that
-      adds two integers, called `a` and `b`.
+      Every agent has access to some tools.
+      Tools are how the model is able to interact with the world.
+
+      Tools are created by developers to connect to external services.
+      The model cannot *do* anything that it doesn't have a tool for.
+
+      Tools are simply code that is executed at the LLM's request.
+      So lets write our first tool!
+
+      Create a function, called `add`, that adds two integers, called `a` and `b`.
 
       <details>
         <summary>Need some help?</summary>
@@ -101,7 +115,8 @@ tasks:
         We can use this function as a tool by returning it from our function.
       </details>
     response: ~
-    test: define_adding_tool
+    prep: prep_adding_tool
+    test: test_adding_tool
 
   - name: Create a menu of tools
     msg: |
@@ -228,7 +243,16 @@ tasks:
     response: ~
     test: call_model_again
 
-info_no_client: ~
-info_wrong_client_type: ~
-info_test_nonzero_exit_code: ~
-# add all of the error messages here
+info_test_nonzero_exit_code: "Uh oh! Looks like your code isn't running. Check the *Terminal Output* tab."
+info_no_client: "Waiting for the `client` variable."
+info_wrong_client_type: "`client` needs to be an instance of the OpenAI class."
+info_client_bad_request: |
+  We got a Bad Request error. This usually happens if you give the wrong args to the `chat.completions.create` method.
+info_client_bad_auth: |
+  You API Key was rejected.
+  Check the value you set in the workbench interface in the Project Container --> Variables configuration.
+info_test_bad_url: "No models were found at the provided URL. Make sure we are pointing to a working endpoint."
+info_no_add: "Waiting for the `add` function."
+info_add_not_fun: "`add` needs to be a funtion."
+info_bad_add_args: "Check the arguments to your `add` function."
+info_add_not_working: "The `add` function doesn't seem to be adding."

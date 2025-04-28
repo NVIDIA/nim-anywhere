@@ -7,7 +7,7 @@ next: Next
 header: "Orientation"
 
 welcome_msg: |
-  ![](app/static/hero.png)
+  ![hero picture](app/static/welcome.png)
 
   #### Welcome
 

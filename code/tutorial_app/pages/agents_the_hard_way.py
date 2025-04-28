@@ -32,8 +32,6 @@ with live_labs.Worksheet(name=NAME, autorefresh=0).with_editor(EDITOR_DIR, EDITO
     # Header
     st.title(MESSAGES.get("title"))
     st.write(MESSAGES.get("welcome_msg"))
-    st.header(MESSAGES.get("header"), divider="gray")
-    # TODO define in yaml
 
     # Print Tasks
     worksheet.live_lab(MESSAGES, TESTS)

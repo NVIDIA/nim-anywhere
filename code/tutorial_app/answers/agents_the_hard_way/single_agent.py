@@ -3,24 +3,12 @@
 import json
 import os
 
-from cachier import cachier
+from caching import call_llm_cached
 from openai import OpenAI
 
-API_KEY = os.environ.get("NVIDIA_API_KEY", "")
+API_KEY = os.environ.get("NGC_API_KEY", "---")
 MODEL_URL = "https://integrate.api.nvidia.com/v1"
 MODEL_NAME = "meta/llama-3.3-70b-instruct"
-
-
-# Helper function for calling the LLM and caching the answers
-@cachier(cache_dir="/project/data/scratch")
-def call_llm(model_client, message_history, tool_list):
-    """Create OpenAI completions request."""
-    return model_client.chat.completions.create(
-        model=MODEL_NAME,
-        messages=message_history,
-        tools=tool_list,
-        tool_choice="auto",
-    )
 
 
 # Connect to the model server
@@ -57,7 +45,7 @@ messages = [{"role": "user", "content": "What is 3 plus 12?"}]
 
 
 # Prompt the model for a response to the question and update the memory
-llm_response = call_llm(client, messages, tools)
+llm_response = call_llm_cached(client, messages, tools)
 messages.append(llm_response)
 
 
@@ -80,4 +68,4 @@ messages.append(tool_result)
 
 
 # Prompt the model again, this time with the tool output
-final_response = call_llm(client, messages, tools)
+final_response = call_llm_cached(client, messages, tools)

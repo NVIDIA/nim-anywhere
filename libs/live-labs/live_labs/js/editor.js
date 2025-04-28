@@ -56,21 +56,29 @@ function main() {
 
     // Helper function to pop the first word off of a string, helpful for simulated streaming
     function wordPop(input) {
-      if (input.startsWith('\n')) {
-        return { word: '\n', newInput: input.slice(1), last: false };
+      if (!input) {
+        return { word: '', newInput: '', last: true };
       }
 
-      const firstSpace = input.indexOf(' ');
-      if (firstSpace === -1) {
-        // no space found, entire input is the word
-        return { word: input, newInput: '', last: true };
+      const firstChar = input[0];
+
+      // Newline special case
+      if (firstChar === '\n') {
+        return { word: '\n', newInput: input.slice(1), last: input.length === 1 };
       }
 
-      const word = input.slice(0, firstSpace) + " ";
-      const newInput = input.slice(firstSpace + 1);
-      const last = false;
-      return { word, newInput, last };
+      // Group either spaces or non-spaces
+      const isSpace = firstChar === ' ';
+      let i = 0;
+      while (i < input.length && (input[i] === ' ') === isSpace) {
+        i++;
+      }
+
+      const word = input.slice(0, i);
+      const newInput = input.slice(i);
+      return { word, newInput, last: newInput.length === 0 };
     }
+
 
     // Helper function to simulate typing in the editor
     async function editorSendKeys(input) {
@@ -93,8 +101,8 @@ function main() {
         newInput = updatedInput;
 
         if (!last) {
-          // sleep for 125 ms
-          await new Promise(resolve => setTimeout(resolve, 250));
+          // sleep
+          await new Promise(resolve => setTimeout(resolve, 125));
         }
       }
     }

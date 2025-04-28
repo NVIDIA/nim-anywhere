@@ -76,5 +76,6 @@
 		"workbench.colorCustomizations": {
 			"titleBar.activeBackground": "#2fe274"
 		},
+		"window.title": "code/tutorial_app ${dirty}${activeEditorShort}${separator}${rootName}${separator}${profileName}${separator}${appName}"
 	}
 }

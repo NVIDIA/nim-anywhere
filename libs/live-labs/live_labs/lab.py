@@ -199,15 +199,12 @@ class Worksheet(BaseModel):
         task: localization.Task,
         test_suite: None | ModuleType,
         messages: localization.MessageCatalog,
-        autoscroll: bool = True,
     ) -> bool:
         """Write tasks out to screen.
 
         Returns boolean to indicate if task printing should continue."""
 
         st.write("### " + task.name)
-        if autoscroll:
-            scroll_to(task.name)
 
         st.markdown(task.msg, unsafe_allow_html=True)
         # html is allowed to enable <details> blocks
@@ -221,7 +218,7 @@ class Worksheet(BaseModel):
         # run prep function
         if prep and not st.session_state.get(f"{self.name}_task_{slug}_prep"):
             result = prep()
-            st.session_state[f"{self.name}_task_{slug}_prep"] = result
+            st.session_state[f"{self.name}_task_{slug}_prep"] = True
 
         if test:
             # continue task based on test function
@@ -259,12 +256,14 @@ class Worksheet(BaseModel):
     def live_lab(self, messages: localization.MessageCatalog, test_suite: None | ModuleType = None):
         """Run the lab."""
         self.total_tasks += len(messages.tasks)
-        for idx, task in enumerate(messages.tasks):
-            autoscroll = idx > 0
-            if not self.print_task(task, test_suite, messages, autoscroll):
+        for task in messages.tasks:
+            if not self.print_task(task, test_suite, messages):
+                if self.completed_tasks > 0:
+                    scroll_to(task.name)
                 break
             self.completed_tasks += 1
         else:
+            scroll_to(task.name)
             # Print footer after last task
             msg = messages.get("closing_msg", None)
             if msg:

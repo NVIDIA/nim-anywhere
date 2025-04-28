@@ -77,12 +77,10 @@ def st_editor(base_dir: Path, files: list[str], init_data: list[str]) -> DeltaGe
 def _sanitize_text(text: str) -> Generator[str]:
     """Internal generator for removing happy accidents from strings."""
     text = dedent(text)
-    found_content = False
 
-    for line in text.splitlines():
+    for idx, line in enumerate(text.splitlines()):
         clean_line = line.rstrip()
-        if found_content or line:
-            found_content = True
+        if idx > 0 or line:
             yield clean_line
 
 
