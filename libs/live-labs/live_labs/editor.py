@@ -56,15 +56,15 @@ def _new_ace_ide(base_dir: Path, key: str, value: str) -> None:
 
 def st_editor(base_dir: Path, files: list[str], init_data: list[str]) -> DeltaGenerator:
     """Add an editor to the page."""
-    with st.container(height=1, border=False):
-        st_javascript(_JS_CODE)
-        st.html(f"<style>{_CSS}</style>")
-
     with st.container():
         tab_names = [f":material/data_object: {fname}" for fname in files] + [":material/terminal: Terminal Output"]
         editor_tabs = st.tabs(tab_names)
         for file_idx, file_tab in enumerate(editor_tabs[:-1]):
             with file_tab:
                 _new_ace_ide(base_dir, files[file_idx], init_data[file_idx])
+
+    with st.container(height=1, border=False):
+        st_javascript(_JS_CODE)
+        st.html(f"<style>{_CSS}</style>")
 
     return editor_tabs[-1]

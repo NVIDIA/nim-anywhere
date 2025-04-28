@@ -1,44 +1,214 @@
 # header data
-title: NVIDIA AI Workbench Live Labs
+title: Agents the Hard Way
 waiting_msg: Click `Next` to continue.
 testing_msg: Go do the task!
 next: Next
 
-header: "Orientation"
+welcome_msg: |
+  In this excercise, we will be building a simple AI agent from scratch.
+  Later, we will replace much of this logic with prebuilt tools, but building it ourselves helps
+  us understand the fundamentals.
+
+  Reminder, the instructions for each step will specify the names for you to use for your variables.
+  You **must** use these names!
 
 tasks:
-  - name: Define the client
+  - name: What is an agent?
     msg: |
-      # make sure variable name is client
-    response: ~
+      An agent is an application that uses an LLM to make decisions and interact with the outside world.
+
+      Agents have four key components:
+      - **MODEL:** An LLM that decides which tools to use and how to respond
+      - **TOOLS:** Functions that let the LLM perform actions like math or database queries
+      - **MEMORY:** Information available to the LLM during and between conversations
+      - **LOGIC:** The decision-making flow that determines which, in any, tools to use next
+
+      In this exercise, we'll build a basic agent by implementing these components from scratch.
+
+  - name: Get setup and load the API key
+    msg: |
+      Like with all Python modules, we start by importing the necessary libraries. We won't be using
+      many for this module, just `openai` and `os`.
+
+      ```python
+      from openai import OpenAI
+      import os
+      ```
+
+      Next, we need to load our API key. We'll do this by loading it from an environment variable. The API
+      key needs to be saved to a variable named `api_key`.
+
+      ```python
+      api_key = os.environ.get("NVIDIA_API_KEY")
+      ```
+
+      This is all we need to get started.
+    response: |
+      Good job! But no more freebies! For the rest of the excercises, try them yourself and check the
+      answer only if you need to.
+    test: imports_and_api_key
+
+  - name: Connect to the model API
+    msg: |
+      Now we will use the `openai` library to connect to the model API. Most LLM providers have
+      standardized on the OpenAI API. This means that this one Python library will work most of the time.
+
+      Using a base URL of `https://integrate.api.nvidia.com/v1` and the `api_key` variable, create a
+      client for connecting NVIDIA's hosted models. Save this in a variable named `client`.
+
+      #### Resources
+      - [Docs: Quick Start](https://github.com/openai/openai-python?tab=readme-ov-file#usage)
+      - [Docs: Custom base URL](https://github.com/openai/openai-python?tab=readme-ov-file#configuring-the-http-client)
+      - [Example: NVIDIA hosted models](https://build.nvidia.com/nvidia/llama-3_3-nemotron-super-49b-v1)
+
+      <details>
+        <summary>Need some help?</summary>
+
+        Previously, we imported the `OpenAI` class, and loaded the API key `api_key`.
+        We have been provided the base URL to use. We can put that together to create the client.
+
+        ```python
+        client = OpenAI(
+            base_url="https://integrate.api.nvidia.com/v1",
+            api_key=api_key,
+        )
+        ```
+      </details>
+    response: |
+      Looks good. Now we can start using the AI models in our code.
     test: define_client
 
   - name: Define the adding tool
     msg: |
-      #asdf
+      Tools are simply traditional code that is executed when the LLM requests it.
+      So lets write our first tool. Let's createa a function, called `add`, that
+      adds two integers, called `a` and `b`.
+
+      <details>
+        <summary>Need some help?</summary>
+
+        Here is a simple Python function for adding two numbers.
+
+        ```python
+        def add(a, b):
+          return a + b
+        ```
+
+        We can use this function as a tool by returning it from our function.
+      </details>
     response: ~
     test: define_adding_tool
 
-  - name: Add the tool to list of tools
+  - name: Create a menu of tools
     msg: |
       #asdf
     response: |
-      that looks correct
+      Next, we create a list of tools and their descriptions. This metadata is
+      given to the LLM so it knows what tools it has available and how to use them.
 
-      ```
-      {{result}}
-      ```
+      We will create a variabled named `tools` that is a list of dictionaries.
+      The dictionaries have a specific structure, defined by OpenAI, to define
+      a function. Create a single function definition in `tools` that describes
+      your `add` fucntion, its arguments, and short descriptions.
+
+      #### Resources
+      - [Docs: Defining functions format](https://platform.openai.com/docs/guides/function-calling?api-mode=responses&example=get-weather#defining-functions)
+
+      <details>
+        <summary>Need some help?</summary>
+
+        Here is an example of a minimal tools definition for out `add` function.
+
+         ```python
+         tools = [
+             {
+                 "type": "function",
+                 "function": {
+                     "name": "add",
+                     "description": "Add two integers.",
+                     "parameters": {
+                         "type": "object",
+                         "properties": {
+                             "a": {"type": "integer", "description": "First integer"},
+                             "b": {"type": "integer", "description": "Second integer"},
+                         },
+                         "required": ["a", "b"],
+                     },
+                 },
+             }
+         ]
+         ```
+      </details>
     test: define_tools_list
 
-  - name: Define the payload and get reponse on tool selection
+
+  - name: Create short term memeory
     msg: |
-      # verify tool here using step 6
+      Our agent will need to be able to remember a few things. To keep everything simple, we can use a list for our memory.
+      Create a variable named `messages` that is a list. Our list will have a single entry that will be a dictionary
+      representing a message from the user asking, "What is 3 plus 12?". The user message, in dictionary format
+      is: `{"role": "user", "content": "What is 3 plus 12?"}`.
+
+      Every message from the model, the user, or a tool, is added to this list for the model to use later.
+
+      #### Reference
+      - [Docs: Chat completion docs](https://platform.openai.com/docs/api-reference/chat/create#chat-create-messages)
+
+      <details>
+        <summary>Need some help?</summary>
+
+        Here is an example of a minimal messages definition.
+
+        ```python
+        messages = [
+          {"role": "user", "content": "What is 3 plus 12?"}
+        ]
+        ```
+
+      </details>
     response: ~
-    test: payload_tool_selection
-    
-  - name: Execute the tool and get result
+    test: define_messages
+
+  - name: Ask the model how to proceed
     msg: |
-      #asdf
+      Next, we will use the chat completions API to ask the model what to do next.
+
+      Use the `client` to create a chat completions request. Pass the `messages` and `tools` variables.
+      Save the response to a variable named `response`.
+
+      <details>
+        <summary>Need some help?</summary>
+
+        Here is an example of a minimal chat completion request.
+
+        ```python
+        response = client.chat.completions.create(
+            model="meta/llama-3.3-70b-instruct",
+            messages=messages,
+            tools=tools,
+        )
+        ```
+      </details>
+
+  - name: Route tool calls
+    msg: |
+      Now we inspect the response from the model. The response contains a tool call, indicating
+      that the model wants us to execute a tool and return the results.
+
+      Write some quick logic
+
+      <details>
+        <summary>Need some help?</summary>
+
+        Here is a tool router logic.
+
+        ```python
+        if "add" == tool_name:
+            # Get the function from the global namespace
+            result = add(**tool_args)
+            print(f"Result of {tool_name}({tool_args}): {result}")
+        ```
+      </details>
     response: ~
     test: execute_tool
 
