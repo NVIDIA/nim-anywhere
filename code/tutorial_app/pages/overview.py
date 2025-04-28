@@ -24,6 +24,8 @@ TESTS = None
 MESSAGES = live_labs.MessageCatalog.from_page(__file__)
 NAME = Path(__file__).stem
 
+# TODO: this shouldn't be a lab
+
 with live_labs.Worksheet(name=NAME) as worksheet:
     # Header
     st.title(MESSAGES.get("title"))

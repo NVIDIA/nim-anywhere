@@ -94,7 +94,7 @@ function main() {
 
         if (!last) {
           // sleep for 125 ms
-          await new Promise(resolve => setTimeout(resolve, 500));
+          await new Promise(resolve => setTimeout(resolve, 250));
         }
       }
     }

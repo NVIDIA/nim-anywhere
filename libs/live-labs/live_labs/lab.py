@@ -60,22 +60,10 @@ from streamlit_extras.add_vertical_space import add_vertical_space
 from streamlit_extras.stateful_button import button
 
 from live_labs import editor, localization, testing
-
-DEFAULT_STATE_FILE = Path("/project/data/scratch/tutorial_state.json")
+from live_labs.helpers import DEFAULT_STATE_FILE, scroll_to, slugify
 
 _TYPE = TypeVar("_TYPE")
 _FREE_SCROLL_LINES = 50
-
-
-def _slugify(name: str) -> str:
-    """Convert a name into a slugged string."""
-
-    def _is_valid(char: str) -> bool:
-        """Only pass lowercase and underscores."""
-        return (ord(char) > 96 and ord(char) < 123) or ord(char) == 95  # noqa: PLR2004
-
-    filtered_name = [x for x in name.lower().replace(" ", "_") if _is_valid(x)]
-    return "".join(filtered_name)
 
 
 class Worksheet(BaseModel):
@@ -207,13 +195,20 @@ class Worksheet(BaseModel):
         return state
 
     def print_task(
-        self, task: localization.Task, test_suite: None | ModuleType, messages: localization.MessageCatalog
+        self,
+        task: localization.Task,
+        test_suite: None | ModuleType,
+        messages: localization.MessageCatalog,
+        autoscroll: bool = True,
     ) -> bool:
         """Write tasks out to screen.
 
         Returns boolean to indicate if task printing should continue."""
 
         st.write("### " + task.name)
+        if autoscroll:
+            scroll_to(task.name)
+
         st.markdown(task.msg, unsafe_allow_html=True)
         # html is allowed to enable <details> blocks
 
@@ -221,7 +216,7 @@ class Worksheet(BaseModel):
         test = task.get_test(test_suite)
         prep = task.get_prep(test_suite)
         result: str | None = ""
-        slug = _slugify(task.name)
+        slug = slugify(task.name)
 
         # run prep function
         if prep and not st.session_state.get(f"{self.name}_task_{slug}_prep"):
@@ -241,6 +236,7 @@ class Worksheet(BaseModel):
 
         else:
             # continue task based on user input
+            st.write("")
             with st.empty():
                 col1, col2 = st.columns([3, 1])
                 with col1:
@@ -249,7 +245,7 @@ class Worksheet(BaseModel):
                     done = button(messages.get("next"), key=f"{self.name}_task_{slug}")
                 if not done:
                     return False
-                st.write("")
+                st.write("")  # Hide the "next" button
 
         # show success message after completion
         scs_msg = task.response
@@ -263,8 +259,9 @@ class Worksheet(BaseModel):
     def live_lab(self, messages: localization.MessageCatalog, test_suite: None | ModuleType = None):
         """Run the lab."""
         self.total_tasks += len(messages.tasks)
-        for task in messages.tasks:
-            if not self.print_task(task, test_suite, messages):
+        for idx, task in enumerate(messages.tasks):
+            autoscroll = idx > 0
+            if not self.print_task(task, test_suite, messages, autoscroll):
                 break
             self.completed_tasks += 1
         else:

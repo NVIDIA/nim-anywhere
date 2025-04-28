@@ -37,6 +37,7 @@ In the editor column, the tabs are styled to be a bit easier on the eyes.
         height: 100%;
         >[data-testid="stHorizontalBlock"] {
           height: 100%;
+          overflow: hidden;
 
           /* style the worksheet side */
           >[data-testid="stColumn"]:first-child {
@@ -48,6 +49,7 @@ In the editor column, the tabs are styled to be a bit easier on the eyes.
                 >[data-testid="stVerticalBlock"] {
                   height: 100%;
                   overflow: scroll;
+                  scroll-behavior: smooth;
                   margin-bottom: 1.5em;
                 }
               }

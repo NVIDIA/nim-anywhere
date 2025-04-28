@@ -28,6 +28,9 @@ select = [
 ignore = [
   "ANN401", # Allow the use of the Any type
 ]
+unfixable = [
+  "F401", # Dont remove unused imports
+]
 
 [tool.ruff.lint.per-file-ignores]
 "**/answers/*" = ["ANN001", "ANN201"]

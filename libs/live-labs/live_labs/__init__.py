@@ -17,32 +17,10 @@
 The modules in here contain the basic building blocks of a live lab page.
 """
 
-import shutil
-from contextlib import suppress
-from pathlib import Path
-
-import streamlit as st
-
-from .lab import DEFAULT_STATE_FILE, Worksheet
+from . import testing
+from .helpers import reset_all_progress, scroll_to
+from .lab import Worksheet
 from .localization import MessageCatalog
 from .shell import AppShell
 
-__all__ = ["AppShell", "MessageCatalog", "Worksheet", "reset_all_progress"]
-
-
-def reset_all_progress():
-    """Remove all files and reset cached progress."""
-    # remove artifacts
-    for artifact in st.session_state.get("artifacts", []):
-        shutil.rmtree(artifact)
-
-    # remove the cached state
-    with suppress(FileNotFoundError):
-        Path(DEFAULT_STATE_FILE).unlink()
-
-    # clear the state
-    keys = list(st.session_state.keys())
-    for key in keys:
-        st.session_state.pop(key)
-
-    st.rerun()
+__all__ = ["AppShell", "MessageCatalog", "Worksheet", "reset_all_progress", "scroll_to", "testing"]

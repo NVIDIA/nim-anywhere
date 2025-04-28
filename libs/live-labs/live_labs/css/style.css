@@ -17,6 +17,11 @@
 
 /* Custom css necessary when using the live labs app shell layout. */
 
+/*  smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
 /* limit image size */
 .stMarkdown{
   img {

@@ -94,7 +94,7 @@ def send_keys(text: str) -> bool:
     text = "\n".join(_sanitize_text(text))
 
     code = _JS_SEND_KEYS_CODE.replace("ARG", json.dumps(text))
-    st.write(json.dumps(code))
-    st_javascript(code)
+    with st.container(height=1, border=False):
+        st_javascript(code)
 
     return True
