@@ -56,6 +56,7 @@ from jinja2 import BaseLoader, Environment
 from pydantic import BaseModel, Field, PrivateAttr
 from streamlit.delta_generator import DeltaGenerator
 from streamlit_autorefresh import st_autorefresh
+from streamlit_extras.add_vertical_space import add_vertical_space
 from streamlit_extras.stateful_button import button
 
 from live_labs import editor, localization, testing
@@ -63,6 +64,7 @@ from live_labs import editor, localization, testing
 DEFAULT_STATE_FILE = Path("/project/data/scratch/tutorial_state.json")
 
 _TYPE = TypeVar("_TYPE")
+_FREE_SCROLL_LINES = 50
 
 
 def _slugify(name: str) -> str:
@@ -124,6 +126,7 @@ class Worksheet(BaseModel):
 
     def __exit__(self, _: object, __: object, ___: object):
         """Cache data."""
+        add_vertical_space(_FREE_SCROLL_LINES)
         if self._body:
             self._body.__exit__(None, None, None)
         if not self.ephemeral:
@@ -238,13 +241,15 @@ class Worksheet(BaseModel):
 
         else:
             # continue task based on user input
-            col1, col2 = st.columns([3, 1])
-            with col1:
-                st.write("**" + messages.get("waiting_msg", "") + "**")
-            with col2:
-                done = button(messages.get("next"), key=f"{self.name}_task_{slug}")
-            if not done:
-                return False
+            with st.empty():
+                col1, col2 = st.columns([3, 1])
+                with col1:
+                    st.write("**" + messages.get("waiting_msg", "") + "**")
+                with col2:
+                    done = button(messages.get("next"), key=f"{self.name}_task_{slug}")
+                if not done:
+                    return False
+                st.write("")
 
         # show success message after completion
         scs_msg = task.response
