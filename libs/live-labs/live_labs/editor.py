@@ -20,7 +20,10 @@ st_editor is called to create a new set of ACE editors with tabs.
 It can only be called once per page and should probably not be called outside of the Worksheet class.
 """
 
+import json
+from collections.abc import Generator
 from pathlib import Path
+from textwrap import dedent
 
 import streamlit as st
 from streamlit.delta_generator import DeltaGenerator
@@ -28,6 +31,7 @@ from streamlit_ace import st_ace
 from streamlit_javascript import st_javascript
 
 _JS_CODE = Path(__file__).parent.joinpath("js", "editor.js").read_text("UTF-8").strip()
+_JS_SEND_KEYS_CODE = Path(__file__).parent.joinpath("js", "editor.send_keys.js").read_text("UTF-8").strip()
 _CSS = Path(__file__).parent.joinpath("css", "editor.css").read_text("UTF-8").strip()
 
 
@@ -68,3 +72,29 @@ def st_editor(base_dir: Path, files: list[str], init_data: list[str]) -> DeltaGe
         st.html(f"<style>{_CSS}</style>")
 
     return editor_tabs[-1]
+
+
+def _sanitize_text(text: str) -> Generator[str]:
+    """Internal generator for removing happy accidents from strings."""
+    text = dedent(text)
+    found_content = False
+
+    for line in text.splitlines():
+        clean_line = line.rstrip()
+        if found_content or line:
+            found_content = True
+            yield clean_line
+
+
+def send_keys(text: str) -> bool:
+    """Write the text to the on screen editor."""
+    if isinstance(text, bytes):
+        text = text.decode("UTF-8")
+
+    text = "\n".join(_sanitize_text(text))
+
+    code = _JS_SEND_KEYS_CODE.replace("ARG", json.dumps(text))
+    st.write(json.dumps(code))
+    st_javascript(code)
+
+    return True

@@ -1,8 +1,8 @@
 # header data
 title: Agents the Hard Way
-waiting_msg: Click `Next` to continue.
-testing_msg: Go do the task!
-next: Next
+waiting_msg: Let me know when you are ready.
+testing_msg: Waiting on you to finish up.
+next: Let's go!
 
 welcome_msg: |
   In this excercise, we will be building a simple AI agent from scratch.
@@ -23,30 +23,34 @@ tasks:
       - **MEMORY:** Information available to the LLM during and between conversations
       - **LOGIC:** The decision-making flow that determines which, in any, tools to use next
 
-      In this exercise, we'll build a basic agent by implementing these components from scratch.
+      In this exercise, we'll build a basic agent by implementing these basic components from scratch.
 
-  - name: Get setup and load the API key
+  - name: Setup the environment
     msg: |
-      Like with all Python modules, we start by importing the necessary libraries. We won't be using
-      many for this module, just `openai` and `os`.
+      Like most Python modules, we start by importing the necessary modules and setting a few constants.
 
-      ```python
-      from openai import OpenAI
-      import os
-      ```
+      I'll drop is some code to get us started and explain as I go.
 
-      Next, we need to load our API key. We'll do this by loading it from an environment variable. The API
-      key needs to be saved to a variable named `api_key`.
+      I've just defined three constants:
+      - `API_KEY` loads our credentials from an environment variable
+      - `MODEL_URL` points the the server hosting your model
+      - `MODEL_NAME` is the model we are going to use
 
-      ```python
-      api_key = os.environ.get("NVIDIA_API_KEY")
-      ```
+      <details>
+        <summary>🙋 Why these values?</summary>
 
-      This is all we need to get started.
+        This `MODEL_URL` points to NVIDIA's hosted Model API Catalog.
+
+        Becuase we are starting with NVIDIA's hosted service, we have a lot of models to choose from.
+        Picking where to start can be difficult.
+
+        - Start with a newer open source model from a team you recognize.
+        - Start with a moderate sized model (~70b parameters). You'll work on optimizing to a smaller model later.
+        - If you need features like function calling, make sure the model supports it! (More on that later).
+      </details>
     response: |
-      Good job! But no more freebies! For the rest of the excercises, try them yourself and check the
-      answer only if you need to.
-    test: imports_and_api_key
+      Let's keep going!
+    prep: prep_imports_and_api_key
 
   - name: Connect to the model API
     msg: |

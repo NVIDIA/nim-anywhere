@@ -138,7 +138,7 @@ class Worksheet(BaseModel):
         if not base_dir.exists():
             base_dir.mkdir()
             artifacts = st.session_state.get("artifacts", [])
-            artifacts.append([str(base_dir)])
+            artifacts.append(str(base_dir))
             st.session_state["artifacts"] = artifacts
 
         for idx, file in enumerate(self._files):
@@ -216,7 +216,14 @@ class Worksheet(BaseModel):
 
         # Lookup a test from the test module.
         test = task.get_test(test_suite)
+        prep = task.get_prep(test_suite)
         result: str | None = ""
+        slug = _slugify(task.name)
+
+        # run prep function
+        if prep and not st.session_state.get(f"{self.name}_task_{slug}_prep"):
+            result = prep()
+            st.session_state[f"{self.name}_task_{slug}_prep"] = result
 
         if test:
             # continue task based on test function
@@ -231,7 +238,6 @@ class Worksheet(BaseModel):
 
         else:
             # continue task based on user input
-            slug = _slugify(task.name)
             col1, col2 = st.columns([3, 1])
             with col1:
                 st.write("**" + messages.get("waiting_msg", "") + "**")

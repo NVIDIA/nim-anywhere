@@ -51,7 +51,7 @@ function main() {
     }
 
     // Resize the editor now and when the window is resized
-    window.addEventListener('resize', updateEditorHeight);
+    window.parent.addEventListener('resize', updateEditorHeight);
     updateEditorHeight();
 
     // Helper function to pop the first word off of a string, helpful for simulated streaming
@@ -69,27 +69,36 @@ function main() {
       const word = input.slice(0, firstSpace) + " ";
       const newInput = input.slice(firstSpace + 1);
       const last = false;
-      console.log(newInput);
       return { word, newInput, last };
     }
 
     // Helper function to simulate typing in the editor
-    function editorSendKeys(input) {
-      if ( editor ) {
-        const scrollbar = editor.container.getElementsByClassName("ace_scrollbar")[0];
+    async function editorSendKeys(input) {
+      if (!editor) return;
 
-        /* insert one word at a time */
-        let { word, newInput, last } = wordPop(input);
+      const scrollbar = editor.container.getElementsByClassName("ace_scrollbar")[0];
+      let newInput = input;
+
+      while (newInput.length > 0) {
+        let { word, newInput: updatedInput, last } = wordPop(newInput);
+
+        if (last) {
+          word += "\n";
+        }
+
         editor.setValue(editor.getValue() + word);
         scrollbar.scrollTop = scrollbar.scrollHeight;
-        editor.clearSelection()
+        editor.clearSelection();
 
-        /* call again soon */
-        if ( ! last ) {
-          setTimeout(editorSendKeys, 125, newInput);
+        newInput = updatedInput;
+
+        if (!last) {
+          // sleep for 125 ms
+          await new Promise(resolve => setTimeout(resolve, 500));
         }
       }
     }
+
 
     // Save the helper function to the global scope
     window.parent.editor = editor;
@@ -98,7 +107,7 @@ function main() {
 
   /* Start trying to initialize in the background. */
   setTimeout(init, 1);
-}({});
+}( {} );
 
 
 

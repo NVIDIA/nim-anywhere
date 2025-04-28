@@ -43,11 +43,20 @@ class Task(BaseModel):
     msg: str
     response: None | str = None
     test: None | str = None
+    prep: None | str = None
 
     def get_test(self, tests: None | ModuleType) -> None | Callable[[], str]:
         """Find a test for this task."""
         if self.name and self.test and tests:
             func = getattr(tests, self.test, None)
+            if callable(func):
+                return func  # type: ignore[return-value]
+        return None
+
+    def get_prep(self, tests: None | ModuleType) -> None | Callable[[], str]:
+        """Find a prep function for this task."""
+        if self.name and self.prep and tests:
+            func = getattr(tests, self.prep, None)
             if callable(func):
                 return func  # type: ignore[return-value]
         return None

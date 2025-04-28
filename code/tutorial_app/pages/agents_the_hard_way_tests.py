@@ -17,6 +17,7 @@
 import sys
 from pathlib import Path
 
+from live_labs.editor import send_keys
 from live_labs.testing import isolate
 
 NAME = "agents_the_hard_way"
@@ -24,6 +25,27 @@ EDITOR_DIR = Path("/project/code").joinpath(NAME)
 PYTHON_EXE = "/usr/bin/python"
 
 # TODO test if the openai module is in single_agent.__dict__
+
+
+def prep_imports_and_api_key() -> str:
+    """Prepare the imports and api key."""
+    return send_keys(
+        r'''
+        """An example agent built from scratch."""
+
+        import json
+        import os
+
+        from cachier import cachier
+        from openai import OpenAI
+
+        API_KEY = os.environ.get("NVIDIA_API_KEY", "")
+        MODEL_URL = "https://integrate.api.nvidia.com/v1"
+        MODEL_NAME = "meta/llama-3.3-70b-instruct"
+
+
+        '''
+    )
 
 
 # dir(dir of the running code)/python exe to use(import langgraph...)

@@ -34,7 +34,7 @@ def reset_all_progress():
     """Remove all files and reset cached progress."""
     # remove artifacts
     for artifact in st.session_state.get("artifacts", []):
-        shutil.rmtree(artifact, ignore_errors=True)
+        shutil.rmtree(artifact)
 
     # remove the cached state
     with suppress(FileNotFoundError):
