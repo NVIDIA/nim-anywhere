@@ -285,17 +285,54 @@ def test_execute_tool():
         return
 
 
-# TODO
+## Update the memory
+def prep_update_memory():
+    """Write some comments."""
+    send_keys(
+        r"""
+
+
+        # Save the tool output into the memory
+        tool_result = {"role": "tool", "tool_call_id": tool_id, "name": tool_name, "content": str(tool_out)}
+        messages.append(tool_result)
+        """
+    )
+
+
+## Loop back to the model
+def prep_call_model_again():
+    """Write some comments."""
+    send_keys(
+        r"""
+
+
+        # Call the model again with the tool output
+        """
+    )
 
 
 @isolate(EDITOR_DIR, PYTHON_EXE)
-def call_model_again():
+def test_call_model_again():
     """call the model again"""
     import single_agent  # pyright: ignore[reportMissingImports]
 
-    if not hasattr(single_agent, "final_response"):
-        print(":TestFail: info_no_final_response")
+    if not hasattr(single_agent, "messages"):
+        print(":TestFail: info_no_messages")
         return
+
+    if not isinstance(single_agent.messages, list):
+        print(":TestFail: info_messages_all_wrong")
+        return
+
+    if len(single_agent.messages) == 3:  # noqa
+        print(":TestFail: info_messages_len_3")
+        return
+
+    if len(single_agent.messages) != 4:  # noqa
+        print(":TestFail: info_messages_all_wrong")
+        return
+
+    print(single_agent.messages[3])
 
 
 if __name__ == "__main__":

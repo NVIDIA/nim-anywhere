@@ -1,7 +1,7 @@
 # header data
 title: Agents the Hard Way
 waiting_msg: Let me know when you are ready.
-testing_msg: Waiting on you to finish up.
+testing_msg: Your turn! Edit the code in the editor.
 next: Let's go!
 
 welcome_msg: |
@@ -49,7 +49,7 @@ tasks:
 
       This `MODEL_URL` points to NVIDIA's hosted Model API Catalog.
 
-      Becuase we are starting with NVIDIA's hosted service, we have a lot of models to choose from.
+      Because we are starting with NVIDIA's hosted service, we have a lot of models to choose from.
       Picking where to start can be difficult.
 
       - Start with a newer open source model from a team you recognize.
@@ -131,7 +131,6 @@ tasks:
       - [Docs: Defining functions format](https://platform.openai.com/docs/guides/function-calling?api-mode=responses&example=get-weather#defining-functions)
     response: Your turn again!
     prep: prep_tools_list
-
 
   - name: Part 3 - Memory
     msg: |
@@ -254,7 +253,6 @@ tasks:
     prep: prep_extract_tool
     test: test_extract_tool
 
-
   - name: Tool Calling
     msg: |
       If you haven't noticed by now, even though the feature is called tool calling...
@@ -283,17 +281,81 @@ tasks:
     msg: |
       We just got `tool_out` back from  the tool.
       Now we can update the memory with the tool output.
-    response: ~
-    test: create_message_list
 
-  - name: Call again to let the model continue the chat
+      Next time we call the model, it will see the prompt from the user,
+      it's own request for a tool call, and the result of that tool call.
+
+      This is another one where the syntax is tricky and picky.
+      I'll type this one out, but this is the standard message format for a tool call result.
+      This format is also defined by OpenAI.
+
+      #### Reference
+      - [Docs: Chat completion docs](https://platform.openai.com/docs/api-reference/chat/create#chat-create-messages)
+    response: |
+      Our memory now looks like this:
+
+      ```json
+      [
+        {"role": "user", "content": "What is 3 plus 12?"},
+        {"role": "assistant", "tool_calls": ... },
+        {"role": "tool", "tool_call_id": "...", "name": "add", "content": "15"}
+      ]
+      ```
+    prep: prep_update_memory
+
+  - name: Loop back to the model
     msg: |
-      #aaa
-    response: ~
-    test: call_model_again
+      Now, we call the model again and save the response in memory.
 
+      :blue-badge[HINT] It is the exact same code as last time.
+
+      <details>
+        <summary>Need some help?</summary>
+
+        ```python
+        llm_response = call_llm_cached(
+            client,
+            MODEL_NAME,
+            messages,
+            tools
+        )
+        messages.append(llm_response)
+        ```
+      </details>
+    response: |
+      You got it!
+
+      Here is what the model had to say:
+
+      ```json
+      {{ result | eval | tojson(2) }}
+      ```
+    prep: prep_call_model_again
+    test: test_call_model_again
+
+closing_header: You did it!
+closing_msg: |
+  Your very first agent! Congratulations.
+
+  This simple example demonstrates the basic components of an agent and how they work together.
+
+  Of course... we made a few *convenient assumptions* along the way.
+
+  For example. What if:
+  - the agent wants more than one tool call?
+  - the agent doesn't want any?
+  - we need additional feedback from the user?
+  - we want build complex multi-agent systems?
+
+  The list goes on. This is the value of agentic frameworks.
+  All of these worries are abstracted away and you focus on writing and wiring tools.
+  There are many agentic frameworks to choose from, and many people choose to make their own.
+
+  In the next example, we will be using [LangGraph](https://www.langchain.com/langgraph) as our framework.
+
+# Test time error messages
 info_test_nonzero_exit_code: "Uh oh! Looks like your code isn't running. Check the *Terminal Output* tab."
-info_no_client: "Waiting for the `client` variable."
+info_no_client: "Create the variable named `client`."
 info_wrong_client_type: "`client` needs to be an instance of the OpenAI class."
 info_client_bad_request: |
   We got a Bad Request error. This usually happens if you give the wrong args to the `chat.completions.create` method.
@@ -301,11 +363,11 @@ info_client_bad_auth: |
   You API Key was rejected.
   Check the value you set in the workbench interface in the Project Container --> Variables configuration.
 info_test_bad_url: "No models were found at the provided URL. Make sure we are pointing to a working endpoint."
-info_no_add: "Waiting for the `add` function."
+info_no_add: "Create a function named `add`."
 info_add_not_fun: "`add` needs to be a funtion."
 info_bad_add_args: "Check the arguments to your `add` function."
 info_add_not_working: "The `add` function doesn't seem to be adding."
-info_no_messages: "Waiting for the `messages` variable."
+info_no_messages: "Create a `messages` variable to be a list of messages."
 info_messages_not_correct: "Check the contents of your `messages` variable."
 info_messages_too_short: |
   The chat history should have a langth of two. One message from the user,
@@ -319,3 +381,5 @@ info_tool_out_not_num: |
 info_no_tool_name: "`tool_name` should be set to equal the function name from the LLM response."
 info_no_tool_args: "`tool_args` should be set to equal the function arguments. Make sure to decode them with the `json` library."
 info_no_tool_id: "`tool_id` should be the tool call's id from the LLM response."
+info_messages_len_3: "Call the llm with `call_llm_cached` and append the response to `messages`."
+info_messages_all_wrong: "Make sure you append to the messages list."

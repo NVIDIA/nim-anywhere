@@ -68,4 +68,5 @@ messages.append(tool_result)
 
 
 # Prompt the model again, this time with the tool output
-final_response = call_llm_cached(client, messages, tools)
+llm_response = call_llm_cached(client, messages, tools)
+messages.append(llm_response)

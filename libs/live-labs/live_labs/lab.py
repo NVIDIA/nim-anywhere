@@ -46,6 +46,7 @@ with live_labs.Worksheet(name=NAME, autorefresh=0).with_editor(EDITOR_DIR, EDITO
 """
 
 import json
+import random
 from collections.abc import Callable
 from pathlib import Path
 from types import ModuleType
@@ -56,6 +57,7 @@ from pydantic import BaseModel, Field, PrivateAttr
 from streamlit.delta_generator import DeltaGenerator
 from streamlit_autorefresh import st_autorefresh
 from streamlit_extras.add_vertical_space import add_vertical_space
+from streamlit_extras.let_it_rain import rain
 from streamlit_extras.stateful_button import button
 
 from live_labs import editor, localization, templates, testing
@@ -63,6 +65,7 @@ from live_labs.helpers import DEFAULT_STATE_FILE, scroll_to, slugify
 
 _TYPE = TypeVar("_TYPE")
 _FREE_SCROLL_LINES = 50
+_END_EMOJIS = "🎉🎊🥳🎈🎂🎁🍾🥂🎆🎇✨🪩🎶🏆🥇🏅🎯🎤🍻💥🚀👑🕺💃🤩🌻"
 
 
 class Worksheet(BaseModel):
@@ -75,6 +78,8 @@ class Worksheet(BaseModel):
 
     completed_tasks: int = Field(0, init=False)
     total_tasks: int = Field(0, init=False)
+
+    make_it_rain: bool = Field(False, init=False)
 
     _body: DeltaGenerator | None = PrivateAttr(None)
     _base_dir: Path | None = PrivateAttr(None)
@@ -118,6 +123,9 @@ class Worksheet(BaseModel):
             self._body.__exit__(None, None, None)
         if not self.ephemeral:
             self.save_state()
+
+        if self.make_it_rain:
+            rain(random.choice(_END_EMOJIS), animation_length=1)
 
     def with_editor(self, base_dir: Path, files: list[str]) -> "Worksheet":
         """Enable the in page code editor."""
@@ -263,11 +271,11 @@ class Worksheet(BaseModel):
                 break
             self.completed_tasks += 1
         else:
-            scroll_to(task.name)
             # Print footer after last task
-            msg = messages.get("closing_msg", None)
-            if msg:
-                st.success(msg)
+            st.header(messages.get("closing_header"))
+            scroll_to(messages.get("closing_header"))
+            st.markdown(messages.get("closing_msg"))
+            self.make_it_rain = True
 
         st.session_state[f"{self.name}_completed"] = self.completed_tasks
         st.session_state[f"{self.name}_total"] = self.total_tasks
