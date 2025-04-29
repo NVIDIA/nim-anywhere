@@ -52,14 +52,13 @@ from types import ModuleType
 from typing import Any, TypeVar
 
 import streamlit as st
-from jinja2 import BaseLoader, Environment
 from pydantic import BaseModel, Field, PrivateAttr
 from streamlit.delta_generator import DeltaGenerator
 from streamlit_autorefresh import st_autorefresh
 from streamlit_extras.add_vertical_space import add_vertical_space
 from streamlit_extras.stateful_button import button
 
-from live_labs import editor, localization, testing
+from live_labs import editor, localization, templates, testing
 from live_labs.helpers import DEFAULT_STATE_FILE, scroll_to, slugify
 
 _TYPE = TypeVar("_TYPE")
@@ -248,7 +247,8 @@ class Worksheet(BaseModel):
         scs_msg = task.response
         if scs_msg is not None:
             st.write(" ")
-            rtemplate = Environment(loader=BaseLoader()).from_string(task.response or "")
+            rtemplate = templates.ENVIRONMENT.from_string(task.response or "")
+            rtemplate.render(result=result)
             st.success(rtemplate.render(result=result))
 
         return True

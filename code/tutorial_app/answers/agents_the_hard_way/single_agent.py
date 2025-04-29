@@ -45,7 +45,7 @@ messages = [{"role": "user", "content": "What is 3 plus 12?"}]
 
 
 # Prompt the model for a response to the question and update the memory
-llm_response = call_llm_cached(client, messages, tools)
+llm_response = call_llm_cached(client, MODEL_NAME, messages, tools)
 messages.append(llm_response)
 
 

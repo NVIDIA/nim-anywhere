@@ -20,7 +20,7 @@ tasks:
       1. **MODEL:** An LLM that decides which tools to use and how to respond
       1. **TOOLS:** Functions that let the LLM perform actions like math or database queries
       1. **MEMORY:** Information available to the LLM during and between conversations
-      1. **LOGIC:** The decision-making flow that determines which, if any, tools to use next
+      1. **ROUTING:** The LLM will make decisions about what to do next, we need to route messages accordingly
 
       In this exercise, we'll build a basic agent by implementing these basic components from scratch.
 
@@ -165,32 +165,55 @@ tasks:
           {"role": "user", "content": "What is 3 plus 12?"}
         ]
         ```
-
       </details>
     response: Looking good. Now let's have some fun!
     prep: prep_messages
     test: test_messages
 
-  - name: Ask the model how to proceed
+  - name: Run the agent
     msg: |
-      Next, we will use the chat completions API to ask the model what to do next.
+      We now have three of the four pieces required of an agent.
+      The last missing piece is the routing.
+      For the time being, we will forgo this piece and manually route this mesasge.
 
-      Use the `client` to create a chat completions request. Pass the `messages` and `tools` variables.
-      Save the response to a variable named `response`.
+      The agent starts by giving the memory and tool list to the model.
+      The model will reply by either requesting a tool or answering the question.
+
+      Based on the model's response, we will decide how to proceed.
+
+      Call the model using the `call_llm_cached` function.
+      The function takes four arguments:
+      - `model_client` - the OpenAI client
+      - `model_name` - the name of the model to use (check the constants from before)
+      - `message_history` - your short term memory
+      - `tool_list` - the menu of tools the model can access
+
+      Use this function to call the llm.
+      Save the result by appending it to the end of `messages`.
 
       <details>
         <summary>Need some help?</summary>
 
-        Here is an example of a minimal chat completion request.
-
         ```python
-        response = client.chat.completions.create(
-            model="meta/llama-3.3-70b-instruct",
-            messages=messages,
-            tools=tools,
+        llm_response = call_llm_cached(
+            client,
+            MODEL_NAME,
+            messages,
+            tools
         )
+        messages.append(llm_response)
         ```
       </details>
+    response: |
+      It's alive!
+      Check out the response from the model.
+      Notice that the role is assistant, content is empty, and there is a list of tool calls.
+
+      ```json
+      {{ result | eval | tojson(2) }}
+      ```
+    prep: prep_run_agent
+    test: test_run_agent
 
   - name: Route tool calls
     msg: |
@@ -241,3 +264,9 @@ info_bad_add_args: "Check the arguments to your `add` function."
 info_add_not_working: "The `add` function doesn't seem to be adding."
 info_no_messages: "Waiting for the `messages` variable."
 info_messages_not_correct: "Check the contents of your `messages` variable."
+info_messages_too_short: |
+  The chat history should have a langth of two. One message from the user,
+  and the reply from the model.
+
+info_bad_message_order: |
+  `messages` appears to be in the wrong order. The oldest messages should be first (lowest index).

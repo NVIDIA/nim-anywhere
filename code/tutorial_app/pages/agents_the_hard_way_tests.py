@@ -193,27 +193,39 @@ def test_messages():
         return
 
 
-# TODO
-@isolate(EDITOR_DIR, PYTHON_EXE)
-def payload_tool_selection():
-    """Wait for my_string to be ready."""
-    import json
+## Run the agent
+def prep_run_agent():
+    """Write a comment."""
+    send_keys(
+        r"""
 
+
+        # Prompt the model for a response to the question and update the memory
+        """
+    )
+
+
+@isolate(EDITOR_DIR, PYTHON_EXE)
+def test_run_agent():
+    """Wait for llm response."""
     import single_agent  # pyright: ignore[reportMissingImports]
 
-    if not hasattr(single_agent, "response"):
-        print(":TestFail: info_no_response")
+    if not hasattr(single_agent, "messages"):
+        print(":TestFail: info_no_messages")
         return
 
-    tool_call = single_agent.response.choices[0].message.tool_calls[0]
-    if json.loads(tool_call.function.arguments) != {"a": 3, "b": 12}:
-        print(":TestFail: info_parameters_not_correct")
+    if len(single_agent.messages) < 2:  # noqa
+        print(":TestFail: info_messages_too_short")
         return
 
-    print("Looks good!")
-    # TODO: response formatt bug
+    if single_agent.messages[1]["role"] != "assistant":
+        print(":TestFail: info_bad_message_order")
+        return
+
+    print(single_agent.messages[1])
 
 
+# TODO
 @isolate(EDITOR_DIR, PYTHON_EXE)
 def execute_tool():
     """execute the tool"""

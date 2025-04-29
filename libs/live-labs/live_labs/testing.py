@@ -50,6 +50,7 @@ def test_my_string():
 import functools
 import inspect
 import os
+import re
 import selectors
 import subprocess
 import sys
@@ -183,7 +184,8 @@ class Runner:
             raise TestFail("info_test_nonzero_exit_code")
 
         # remove the markdown code block indicators
-        return "\n".join(output_text.splitlines()[1:-1])
+        match = re.search(r"```(.*?)```", output_text, re.DOTALL)
+        return match.group(1) if match else ""
 
 
 def isolate(cwd: Path | None = None, exec: str | Path | None = None) -> Callable[[Callable[[], None]], Runner]:
