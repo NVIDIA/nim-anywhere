@@ -1,4 +1,5 @@
 """An example agent built from scratch."""
+# type: ignore
 
 import json
 import os
@@ -49,15 +50,14 @@ llm_response = call_llm_cached(client, MODEL_NAME, messages, tools)
 messages.append(llm_response)
 
 
-# Get the tool call information from the LLM response
-# Let's assume that exactly one tool has been called
-tool_call = llm_response.choices[0].message.tool_calls[0]
-tool_name = tool_call.function_name
-tool_args = json.loads(tool_call.function.arguments)
-tool_id = tool_call.id
+# Extract tool request
+tool_call = messages[-1]["tool_calls"][0]
+tool_name = tool_call["function"]["name"]
+tool_args = json.loads(tool_call["function"]["arguments"])
+tool_id = tool_call["id"]
 
 
-# Run the requested tool
+# Run the tool
 if tool_name == "add":
     tool_out = add(**tool_args)
 

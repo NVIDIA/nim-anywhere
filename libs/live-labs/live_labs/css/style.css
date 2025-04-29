@@ -30,6 +30,7 @@ p, ol, ul, dl {
 /* custom details drop downs */
 details {
   padding-left: 50px;
+  padding-bottom: 15px;
 }
 details > summary {
   font-size: 20px;

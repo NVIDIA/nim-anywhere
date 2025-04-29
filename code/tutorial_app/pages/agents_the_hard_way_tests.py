@@ -225,16 +225,67 @@ def test_run_agent():
     print(single_agent.messages[1])
 
 
-# TODO
+## Part 4 - Routing
+def prep_extract_tool():
+    """Write some comments."""
+    send_keys(
+        r"""
+
+
+        # Extract tool request
+        """
+    )
+
+
 @isolate(EDITOR_DIR, PYTHON_EXE)
-def execute_tool():
-    """execute the tool"""
+def test_extract_tool():
+    """Wait for tool execution."""
     import single_agent  # pyright: ignore[reportMissingImports]
 
-    if not hasattr(single_agent, "tool_call"):
-        print(":TestFail: info_no_tool_call")
+    # check for variable
+    for var, var_type in {"tool_name": str, "tool_args": dict, "tool_id": str}.items():
+        if not hasattr(single_agent, var):
+            print(f":TestFail: info_no_{var}")
+            return
+
+        var_val = getattr(single_agent, var)
+
+        if not isinstance(var_val, var_type):
+            print(f":TestFail: info_no_{var}")
+            return
+
+
+## Tool Calling
+def prep_execute_tool():
+    """Write some comments."""
+    send_keys(
+        r"""
+
+
+        # Run the requested tool
+        """
+    )
+
+
+@isolate(EDITOR_DIR, PYTHON_EXE)
+def test_execute_tool():
+    """Wait for tool execution."""
+    import numbers
+
+    import single_agent  # pyright: ignore[reportMissingImports]
+
+    # check for variable
+    if not hasattr(single_agent, "tool_out"):
+        print(":TestFail: info_no_tool_out")
         return
-    # how to check if a conditional statement exists?
+
+    # check variable type
+    if not isinstance(single_agent.tool_out, numbers.Number):
+        print(":TestFail: info_tool_out_not_num")
+        return
+
+
+# TODO
 
 
 @isolate(EDITOR_DIR, PYTHON_EXE)

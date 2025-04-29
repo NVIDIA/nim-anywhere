@@ -105,6 +105,9 @@ function main() {
           await new Promise(resolve => setTimeout(resolve, 125));
         }
       }
+      editor.setValue(editor.getValue() + word);
+      scrollbar.scrollTop = scrollbar.scrollHeight;
+      editor.clearSelection();
     }
 
 

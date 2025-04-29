@@ -62,6 +62,9 @@
 		"ruff.enable": true,
 		"ruff.exclude": [],
 
+
+		"mypy-type-checker.ignorePatterns": ["**/answers/*"],
+
 		// Virtual environment specific
 		"python.analysis.extraPaths": ["/project/libs/live-labs"],
 		"python.defaultInterpreterPath": "/opt/live-labs/bin/python",

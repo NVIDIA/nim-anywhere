@@ -206,8 +206,8 @@ tasks:
       </details>
     response: |
       It's alive!
-      Check out the response from the model.
-      Notice that the role is assistant, content is empty, and there is a list of tool calls.
+
+      👇 This is what we got back. 👇
 
       ```json
       {{ result | eval | tojson(2) }}
@@ -215,31 +215,74 @@ tasks:
     prep: prep_run_agent
     test: test_run_agent
 
-  - name: Route tool calls
+  - name: Part 4 - Routing
     msg: |
-      Now we inspect the response from the model. The response contains a tool call, indicating
-      that the model wants us to execute a tool and return the results.
+      Looks like the model chose to request a tool instead of answering.
+      We can tell because `content` is `null` and  a function is defined under `tool_calls`.
 
-      Write some quick logic
+      <details>
+        <summary>Tools vs Function Calling?</summary>
+
+        These terms are often used interchangeably.
+        Technically, **Function Calling** is a feature of a model.
+        This feature allows the model to request that the developer run the **Tools**.
+
+        But most of the time, these terms are simply referring to an agents ability to run functions.
+      </details>
+
+      We can see that the model has requested that we run the `add` function with the arguments 3 and 12.
+
+      Write some code to extract the requested function's name, arguments, and id from `messages[-1]`.
+      Store those values in variables called `tool_name`, `tool_args`, and `tool_id` respectively.
+
+      :blue-badge[TIP] The value of `arguments` is a string. Use the `json` library to read it.
+
+      ```python
+      tool_args = json.loads(tool_args_str)
+      ```
 
       <details>
         <summary>Need some help?</summary>
 
-        Here is a tool router logic.
-
         ```python
-        if "add" == tool_name:
-            # Get the function from the global namespace
-            result = add(**tool_args)
-            print(f"Result of {tool_name}({tool_args}): {result}")
+        tool_call = messages[-1]["tool_calls"][0]
+        tool_name = tool_call["function"]["name"]
+        tool_args = json.loads(tool_call["function"]["arguments"])
+        tool_id = tool_call["id"]
         ```
       </details>
-    response: ~
-    test: execute_tool
+    prep: prep_extract_tool
+    test: test_extract_tool
 
-  - name: Create a new message list with the tool call + response
+
+  - name: Tool Calling
     msg: |
-      #asdf
+      If you haven't noticed by now, even though the feature is called tool calling...
+      The model doesn't actually call the tool!
+
+      So let's write the code to run the tools as requested.
+
+      Check if the tool name is equal to `add`.
+      If it is, then run the add function with the requested arguments.
+
+      Save the output from the tool call to a variable called `tool_out`.
+
+      <details>
+        <summary>Need some help?</summary>
+
+        ```python
+        if tool_name == "add":
+            tool_out = add(**tool_args)
+        ```
+      </details>
+    response: Excellent! This is a portion of the heavy lifting usually handled by agent frameworks.
+    prep: prep_execute_tool
+    test: test_execute_tool
+
+  - name: Update the memory
+    msg: |
+      We just got `tool_out` back from  the tool.
+      Now we can update the memory with the tool output.
     response: ~
     test: create_message_list
 
@@ -267,6 +310,12 @@ info_messages_not_correct: "Check the contents of your `messages` variable."
 info_messages_too_short: |
   The chat history should have a langth of two. One message from the user,
   and the reply from the model.
-
 info_bad_message_order: |
   `messages` appears to be in the wrong order. The oldest messages should be first (lowest index).
+info_no_tool_out: |
+  Waiting to see the tool output in `tool_out`.
+info_tool_out_not_num: |
+  The output from your tool doesn't seem to be a number.
+info_no_tool_name: "`tool_name` should be set to equal the function name from the LLM response."
+info_no_tool_args: "`tool_args` should be set to equal the function arguments. Make sure to decode them with the `json` library."
+info_no_tool_id: "`tool_id` should be the tool call's id from the LLM response."
