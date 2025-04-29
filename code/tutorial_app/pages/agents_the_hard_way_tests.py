@@ -167,58 +167,33 @@ def prep_tools_list():
     )
 
 
-## TODO
-@isolate(EDITOR_DIR, PYTHON_EXE)
-def define_tools_list():
-    """make sure its a list"""
-    import pprint
+## Part 3 - Memory
+def prep_messages():
+    """Write a comment."""
+    send_keys(
+        r"""
 
+
+        # Initilialize some short term memory
+        """
+    )
+
+
+@isolate(EDITOR_DIR, PYTHON_EXE)
+def test_messages():
+    """create a message list"""
     import single_agent  # pyright: ignore[reportMissingImports]
 
-    def strip_descriptions(d):
-        """Recursively remove 'description' keys from a dictionary."""
-        if isinstance(d, dict):
-            return {k: strip_descriptions(v) for k, v in d.items() if k != "description"}
-        elif isinstance(d, list):
-            return [strip_descriptions(item) for item in d]
-        else:
-            return d
-
-    tools_target = {
-        "type": "function",
-        "function": {
-            "name": "add",
-            "parameters": {
-                "type": "object",
-                "properties": {"a": {"type": "integer"}, "b": {"type": "integer"}},
-                "required": ["a", "b"],
-            },
-        },
-    }
-
-    if not hasattr(single_agent, "tools"):
-        print(":TestFail: info_no_tools")
+    if not hasattr(single_agent, "messages"):
+        print(":TestFail: info_no_messages")
         return
 
-    if not isinstance(single_agent.tools, list):
-        print(":TestFail: info_tools_not_list")
+    if single_agent.messages != [{"role": "user", "content": "What is 3 plus 12?"}]:
+        print(":TestFail: info_messages_not_correct")
         return
 
-    if len(single_agent.tools) != 1:
-        print(":TestFail: info_tools_list_length")
-        return
 
-    if not isinstance(single_agent.tools[0], dict):
-        print(":TestFail: info_tools_list_dict")
-        return
-
-    if strip_descriptions(single_agent.tools[0]) != tools_target:
-        print(":TestFail: info_tools_list_content")
-        return
-
-    pprint.pprint(single_agent.tools)
-
-
+# TODO
 @isolate(EDITOR_DIR, PYTHON_EXE)
 def payload_tool_selection():
     """Wait for my_string to be ready."""
@@ -248,21 +223,6 @@ def execute_tool():
         print(":TestFail: info_no_tool_call")
         return
     # how to check if a conditional statement exists?
-
-
-@isolate(EDITOR_DIR, PYTHON_EXE)
-def create_message_list():
-    """create a message list"""
-    import single_agent  # pyright: ignore[reportMissingImports]
-
-    if not hasattr(single_agent, "messages"):
-        print(":TestFail: info_no_messages")
-        return
-
-    if single_agent.messages != [{"role": "user", "content": "What is 3 plus 12?"}]:
-        # TODO: message is not complete
-        print(":TestFail: info_messages_not_correct")
-        return
 
 
 @isolate(EDITOR_DIR, PYTHON_EXE)

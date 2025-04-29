@@ -133,22 +133,32 @@ tasks:
     prep: prep_tools_list
 
 
-  - name: Create short term memeory
+  - name: Part 3 - Memory
     msg: |
-      Our agent will need to be able to remember a few things. To keep everything simple, we can use a list for our memory.
-      Create a variable named `messages` that is a list. Our list will have a single entry that will be a dictionary
-      representing a message from the user asking, "What is 3 plus 12?". The user message, in dictionary format
-      is: `{"role": "user", "content": "What is 3 plus 12?"}`.
+      The topic of memory is complex, and we will only scratch the surface.
+      There are two types of memory, short term and long term.
+      For now, lets focus on short term memory.
 
-      Every message from the model, the user, or a tool, is added to this list for the model to use later.
+      Short term memory starts at the beginining of the conversation
+      and ends at the end of the conversation.
+      Put simply, short term memory is a log of the conversation.
+
+      For this, we will use a humble list.
+      Every line in our list will be a message in the conversation, stored in a dictionary.
+      The messages can come from the user, the assistant, or from tools.
+
+      Create an initial list called `memory`.
+      Initialize it with this message from the user:
+
+      ```python
+      {"role": "user", "content": "What is 3 plus 12?"}
+      ```
 
       #### Reference
       - [Docs: Chat completion docs](https://platform.openai.com/docs/api-reference/chat/create#chat-create-messages)
 
       <details>
         <summary>Need some help?</summary>
-
-        Here is an example of a minimal messages definition.
 
         ```python
         messages = [
@@ -157,8 +167,9 @@ tasks:
         ```
 
       </details>
-    response: ~
-    test: define_messages
+    response: Looking good. Now let's have some fun!
+    prep: prep_messages
+    test: test_messages
 
   - name: Ask the model how to proceed
     msg: |
@@ -228,3 +239,5 @@ info_no_add: "Waiting for the `add` function."
 info_add_not_fun: "`add` needs to be a funtion."
 info_bad_add_args: "Check the arguments to your `add` function."
 info_add_not_working: "The `add` function doesn't seem to be adding."
+info_no_messages: "Waiting for the `messages` variable."
+info_messages_not_correct: "Check the contents of your `messages` variable."
