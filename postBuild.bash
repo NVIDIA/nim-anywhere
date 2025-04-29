@@ -54,6 +54,8 @@ if [ -f /project/pipx.txt ]; then
     done < /project/pipx.txt
 fi
 
+
+
 # clean up
 sudo apt-get autoremove -y
 sudo rm -rf /var/cache/apt

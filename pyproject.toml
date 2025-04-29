@@ -3,7 +3,9 @@ line-length = 120
 target-version = "py310"
 
 exclude = [
-  "**/*.ipynb"
+  "**/*.ipynb",
+  "code/frontend/*",        # legacy code
+  "code/chain_server/*",    # legacy code
 ]
 
 [tool.ruff.lint]

@@ -209,7 +209,9 @@ tasks:
       👇 This is what we got back. 👇
 
       ```json
-      {{ result | eval | tojson(2) }}
+      {{ result }}
+
+       | eval | tojson(2) }}
       ```
     prep: prep_run_agent
     test: test_run_agent
@@ -273,7 +275,8 @@ tasks:
             tool_out = add(**tool_args)
         ```
       </details>
-    response: Excellent! This is a portion of the heavy lifting usually handled by agent frameworks.
+    response: |
+      Excellent! This is a portion of the heavy lifting usually handled by agent frameworks.
     prep: prep_execute_tool
     test: test_execute_tool
 
