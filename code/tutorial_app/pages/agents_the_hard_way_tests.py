@@ -333,9 +333,3 @@ def test_call_model_again():
         return
 
     print(single_agent.messages[3])
-
-
-if __name__ == "__main__":
-    sys.stdout.write("---------------\n")
-    # you can use this space for testing while you are
-    # developing your tests
