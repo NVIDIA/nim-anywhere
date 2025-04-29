@@ -118,47 +118,19 @@ tasks:
     prep: prep_adding_tool
     test: test_adding_tool
 
-  - name: Create a menu of tools
+  - name: Describe the tools
     msg: |
-      #asdf
-    response: |
-      Next, we create a list of tools and their descriptions. This metadata is
-      given to the LLM so it knows what tools it has available and how to use them.
+      Before moving on, we need create a description of the tools that the model can understand.
+      Think of this as the LLM's menu of possible helpers.
 
-      We will create a variabled named `tools` that is a list of dictionaries.
-      The dictionaries have a specific structure, defined by OpenAI, to define
-      a function. Create a single function definition in `tools` that describes
-      your `add` fucntion, its arguments, and short descriptions.
+      The syntax on this is tricky and picky, so I'll do this part.
+      The good news is this is usualy handled for you by agent frameworks.
+      This syntax is defined as part of the OpenAI API spec.
 
       #### Resources
       - [Docs: Defining functions format](https://platform.openai.com/docs/guides/function-calling?api-mode=responses&example=get-weather#defining-functions)
-
-      <details>
-        <summary>Need some help?</summary>
-
-        Here is an example of a minimal tools definition for out `add` function.
-
-         ```python
-         tools = [
-             {
-                 "type": "function",
-                 "function": {
-                     "name": "add",
-                     "description": "Add two integers.",
-                     "parameters": {
-                         "type": "object",
-                         "properties": {
-                             "a": {"type": "integer", "description": "First integer"},
-                             "b": {"type": "integer", "description": "Second integer"},
-                         },
-                         "required": ["a", "b"],
-                     },
-                 },
-             }
-         ]
-         ```
-      </details>
-    test: define_tools_list
+    response: Your turn again!
+    prep: prep_tools_list
 
 
   - name: Create short term memeory

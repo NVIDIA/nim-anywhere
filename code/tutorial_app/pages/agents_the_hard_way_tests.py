@@ -138,6 +138,35 @@ def test_adding_tool():
         return
 
 
+## Describe the Tools
+def prep_tools_list():
+    """Write out the tools list."""
+    send_keys(
+        r"""
+
+
+        # A list of tools for the LLM
+        tools = [
+            {
+                "type": "function",
+                "function": {
+                    "name": "add",
+                    "description": "Add two integers.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "a": {"type": "integer", "description": "First integer"},
+                            "b": {"type": "integer", "description": "Second integer"},
+                        },
+                        "required": ["a", "b"],
+                    },
+                },
+            }
+        ]
+        """
+    )
+
+
 ## TODO
 @isolate(EDITOR_DIR, PYTHON_EXE)
 def define_tools_list():
