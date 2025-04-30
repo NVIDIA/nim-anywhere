@@ -5,11 +5,16 @@
 
 NIM Anywhere is a starting point into discovering enterprise AI. This branch is currently under heavy construction.
 
-![NIM Anywhere Screenshot](data/hero.png)
+<center><img src="code/tutorial_app/static/robots/hero.png" width="700px"></center>
 
 # NEEDS TO BE UPDATED
 
 ## Get Started
+
+<img src="code/tutorial_app/static/robots/wave.png" width="250px" alt="robot wave" align="left" />
+
+Hello world!
+
 
 ### Prerequisites
 

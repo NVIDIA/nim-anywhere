@@ -9,7 +9,7 @@ welcome_msg: |
   Later, we will replace much of this logic with prebuilt tools, but building it ourselves helps
   us understand the fundamentals.
 
-  ![intro picture](app/static/agent-lab.png)
+  ![intro picture](app/static/robots/assembly.png)
 
 tasks:
   - name: What is an agent?
