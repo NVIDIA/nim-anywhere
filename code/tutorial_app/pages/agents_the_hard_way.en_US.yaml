@@ -1,0 +1,388 @@
+# header data
+title: Agents the Hard Way
+waiting_msg: Let me know when you are ready.
+testing_msg: Your turn! Edit the code in the editor.
+next: Let's go!
+
+welcome_msg: |
+  In this excercise, we will be building a simple AI agent from scratch.
+  Later, we will replace much of this logic with prebuilt tools, but building it ourselves helps
+  us understand the fundamentals.
+
+  ![intro picture](app/static/robots/assembly.png)
+
+tasks:
+  - name: What is an agent?
+    msg: |
+      An agent is an application that uses an LLM to make decisions and interact with the outside world.
+
+      Agents have four key parts:
+      1. **MODEL:** An LLM that decides which tools to use and how to respond
+      1. **TOOLS:** Functions that let the LLM perform actions like math or database queries
+      1. **MEMORY:** Information available to the LLM during and between conversations
+      1. **ROUTING:** The LLM will make decisions about what to do next, we need to route messages accordingly
+
+      In this exercise, we'll build a basic agent by implementing these basic components from scratch.
+
+  - name: Setup the environment
+    msg: |
+      To get us started, I'll drop is some code and explain as I go.
+
+      Like most Python code, we start by importing the necessary modules.
+      - The `openai` module is maintained by OpenAI and is used for talking to models running remotely.
+      - The `caching` module helps us cache LLM responses and conserve tokens.
+
+      The caching module is custom code, but it makes use of the `cachier` Python library.
+      Feel free to check it out by opening Visual Studio Code or JupyterLab from the Workbench interface.
+    response: |
+      Let's keep going!
+    prep: prep_imports
+
+  - name: Load the configuration
+    msg: |
+      Now I'll load our configuration as contants:
+      - `API_KEY` loads our credentials from an environment variable
+      - `MODEL_URL` points the the server hosting your model
+      - `MODEL_NAME` is the model we are going to use
+
+      Why these values?
+
+      This `MODEL_URL` points to NVIDIA's hosted Model API Catalog.
+
+      Because we are starting with NVIDIA's hosted service, we have a lot of models to choose from.
+      Picking where to start can be difficult.
+
+      - Start with a newer open source model from a team you recognize.
+      - Start with a moderate sized model (~70b parameters). You'll work on optimizing to a smaller model later.
+      - If you need features like function calling, make sure the model supports it! (More on that later).
+    response: |
+      Let's keep going!
+    prep: prep_api_key
+
+  - name: Part 1 - The Model
+    msg: |
+      The first of four critical parts for an agent is the AI model.
+
+      We will talk to the AI models on build.nvidia.com using the OpenAI API.
+      This API is the *language* that most model providers use.
+      This means we can use the `OpenAI` class to connect to most model providers. Neat!
+
+      Using the `MODEL_URL` and `API_KEY` defined above, create a new model client named `client`.
+
+      #### Resources
+      - [Docs: OpenAI Quick Start](https://github.com/openai/openai-python?tab=readme-ov-file#usage)
+      - [Docs: OpenAI Custom base URL](https://github.com/openai/openai-python?tab=readme-ov-file#configuring-the-http-client)
+      - [Example: NVIDIA hosted models](https://build.nvidia.com/nvidia/llama-3_3-nemotron-super-49b-v1)
+
+      <details>
+        <summary>Need some help?</summary>
+
+        ```python
+        client = OpenAI(
+            base_url=MODEL_URL,
+            api_key=API_KEY
+        )
+        ```
+      </details>
+    response: |
+      Great! We are now connected to the models!
+    prep: prep_define_client
+    test: test_define_client
+
+  - name: Part 2 - Tools
+    msg: |
+      Every agent has access to some tools.
+      Tools are how the model is able to interact with the world.
+
+      Tools are created by developers to connect to external services.
+      The model cannot *do* anything that it doesn't have a tool for.
+
+      Tools are simply code that is executed at the LLM's request.
+      So lets write our first tool!
+
+      Create a function, called `add`, that adds two integers, called `a` and `b`.
+
+      <details>
+        <summary>Need some help?</summary>
+
+        Here is a simple Python function for adding two numbers.
+
+        ```python
+        def add(a, b):
+          return a + b
+        ```
+
+        We can use this function as a tool by returning it from our function.
+      </details>
+    response: ~
+    prep: prep_adding_tool
+    test: test_adding_tool
+
+  - name: Describe the tools
+    msg: |
+      Before moving on, we need create a description of the tools that the model can understand.
+      Think of this as the LLM's menu of possible helpers.
+
+      The syntax on this is tricky and picky, so I'll do this part.
+      The good news is this is usualy handled for you by agent frameworks.
+      This syntax is defined as part of the OpenAI API spec.
+
+      #### Resources
+      - [Docs: Defining functions format](https://platform.openai.com/docs/guides/function-calling?api-mode=responses&example=get-weather#defining-functions)
+    response: Your turn again!
+    prep: prep_tools_list
+
+  - name: Part 3 - Memory
+    msg: |
+      The topic of memory is complex, and we will only scratch the surface.
+      There are two types of memory, short term and long term.
+      For now, lets focus on short term memory.
+
+      Short term memory starts at the beginining of the conversation
+      and ends at the end of the conversation.
+      Put simply, short term memory is a log of the conversation.
+
+      For this, we will use a humble list.
+      Every line in our list will be a message in the conversation, stored in a dictionary.
+      The messages can come from the user, the assistant, or from tools.
+
+      Create an initial list called `memory`.
+      Initialize it with this message from the user:
+
+      ```python
+      {"role": "user", "content": "What is 3 plus 12?"}
+      ```
+
+      #### Reference
+      - [Docs: Chat completion docs](https://platform.openai.com/docs/api-reference/chat/create#chat-create-messages)
+
+      <details>
+        <summary>Need some help?</summary>
+
+        ```python
+        messages = [
+          {"role": "user", "content": "What is 3 plus 12?"}
+        ]
+        ```
+      </details>
+    response: Looking good. Now let's have some fun!
+    prep: prep_messages
+    test: test_messages
+
+  - name: Run the agent
+    msg: |
+      We now have three of the four pieces required of an agent.
+      The last missing piece is the routing.
+      For the time being, we will forgo this piece and manually route this mesasge.
+
+      The agent starts by giving the memory and tool list to the model.
+      The model will reply by either requesting a tool or answering the question.
+
+      Based on the model's response, we will decide how to proceed.
+
+      Call the model using the `call_llm_cached` function.
+      The function takes four arguments:
+      - `model_client` - the OpenAI client
+      - `model_name` - the name of the model to use (check the constants from before)
+      - `message_history` - your short term memory
+      - `tool_list` - the menu of tools the model can access
+
+      Use this function to call the llm.
+      Save the result by appending it to the end of `messages`.
+
+      <details>
+        <summary>Need some help?</summary>
+
+        ```python
+        llm_response = call_llm_cached(
+            client,
+            MODEL_NAME,
+            messages,
+            tools
+        )
+        messages.append(llm_response)
+        ```
+      </details>
+    response: |
+      It's alive!
+
+      👇 This is what we got back. 👇
+
+      ```json
+      {{ result }}
+
+       | eval | tojson(2) }}
+      ```
+    prep: prep_run_agent
+    test: test_run_agent
+
+  - name: Part 4 - Routing
+    msg: |
+      Looks like the model chose to request a tool instead of answering.
+      We can tell because `content` is `null` and  a function is defined under `tool_calls`.
+
+      <details>
+        <summary>Tools vs Function Calling?</summary>
+
+        These terms are often used interchangeably.
+        Technically, **Function Calling** is a feature of a model.
+        This feature allows the model to request that the developer run the **Tools**.
+
+        But most of the time, these terms are simply referring to an agents ability to run functions.
+      </details>
+
+      We can see that the model has requested that we run the `add` function with the arguments 3 and 12.
+
+      Write some code to extract the requested function's name, arguments, and id from `messages[-1]`.
+      Store those values in variables called `tool_name`, `tool_args`, and `tool_id` respectively.
+
+      :blue-badge[TIP] The value of `arguments` is a string. Use the `json` library to read it.
+
+      ```python
+      tool_args = json.loads(tool_args_str)
+      ```
+
+      <details>
+        <summary>Need some help?</summary>
+
+        ```python
+        tool_call = messages[-1]["tool_calls"][0]
+        tool_name = tool_call["function"]["name"]
+        tool_args = json.loads(tool_call["function"]["arguments"])
+        tool_id = tool_call["id"]
+        ```
+      </details>
+    prep: prep_extract_tool
+    test: test_extract_tool
+
+  - name: Tool Calling
+    msg: |
+      If you haven't noticed by now, even though the feature is called tool calling...
+      The model doesn't actually call the tool!
+
+      So let's write the code to run the tools as requested.
+
+      Check if the tool name is equal to `add`.
+      If it is, then run the add function with the requested arguments.
+
+      Save the output from the tool call to a variable called `tool_out`.
+
+      <details>
+        <summary>Need some help?</summary>
+
+        ```python
+        if tool_name == "add":
+            tool_out = add(**tool_args)
+        ```
+      </details>
+    response: |
+      Excellent! This is a portion of the heavy lifting usually handled by agent frameworks.
+    prep: prep_execute_tool
+    test: test_execute_tool
+
+  - name: Update the memory
+    msg: |
+      We just got `tool_out` back from  the tool.
+      Now we can update the memory with the tool output.
+
+      Next time we call the model, it will see the prompt from the user,
+      it's own request for a tool call, and the result of that tool call.
+
+      This is another one where the syntax is tricky and picky.
+      I'll type this one out, but this is the standard message format for a tool call result.
+      This format is also defined by OpenAI.
+
+      #### Reference
+      - [Docs: Chat completion docs](https://platform.openai.com/docs/api-reference/chat/create#chat-create-messages)
+    response: |
+      Our memory now looks like this:
+
+      ```json
+      [
+        {"role": "user", "content": "What is 3 plus 12?"},
+        {"role": "assistant", "tool_calls": ... },
+        {"role": "tool", "tool_call_id": "...", "name": "add", "content": "15"}
+      ]
+      ```
+    prep: prep_update_memory
+
+  - name: Loop back to the model
+    msg: |
+      Now, we call the model again and save the response in memory.
+
+      :blue-badge[HINT] It is the exact same code as last time.
+
+      <details>
+        <summary>Need some help?</summary>
+
+        ```python
+        llm_response = call_llm_cached(
+            client,
+            MODEL_NAME,
+            messages,
+            tools
+        )
+        messages.append(llm_response)
+        ```
+      </details>
+    response: |
+      You got it!
+
+      Here is what the model had to say:
+
+      ```json
+      {{ result | eval | tojson(2) }}
+      ```
+    prep: prep_call_model_again
+    test: test_call_model_again
+
+closing_header: You did it!
+closing_msg: |
+  Your very first agent! Congratulations.
+
+  This simple example demonstrates the basic components of an agent and how they work together.
+
+  Of course... we made a few *convenient assumptions* along the way.
+
+  For example. What if:
+  - the agent wants more than one tool call?
+  - the agent doesn't want any?
+  - we need additional feedback from the user?
+  - we want build complex multi-agent systems?
+
+  The list goes on. This is the value of agentic frameworks.
+  All of these worries are abstracted away and you focus on writing and wiring tools.
+  There are many agentic frameworks to choose from, and many people choose to make their own.
+
+  In the next example, we will be using [LangGraph](https://www.langchain.com/langgraph) as our framework.
+
+# Test time error messages
+info_test_nonzero_exit_code: "Uh oh! Looks like your code isn't running. Check the *Terminal Output* tab."
+info_no_client: "Create the variable named `client`."
+info_wrong_client_type: "`client` needs to be an instance of the OpenAI class."
+info_client_bad_request: |
+  We got a Bad Request error. This usually happens if you give the wrong args to the `chat.completions.create` method.
+info_client_bad_auth: |
+  You API Key was rejected.
+  Check the value you set in the workbench interface in the Project Container --> Variables configuration.
+info_test_bad_url: "No models were found at the provided URL. Make sure we are pointing to a working endpoint."
+info_no_add: "Create a function named `add`."
+info_add_not_fun: "`add` needs to be a funtion."
+info_bad_add_args: "Check the arguments to your `add` function."
+info_add_not_working: "The `add` function doesn't seem to be adding."
+info_no_messages: "Create a `messages` variable to be a list of messages."
+info_messages_not_correct: "Check the contents of your `messages` variable."
+info_messages_too_short: |
+  The chat history should have a langth of two. One message from the user,
+  and the reply from the model.
+info_bad_message_order: |
+  `messages` appears to be in the wrong order. The oldest messages should be first (lowest index).
+info_no_tool_out: |
+  Waiting to see the tool output in `tool_out`.
+info_tool_out_not_num: |
+  The output from your tool doesn't seem to be a number.
+info_no_tool_name: "`tool_name` should be set to equal the function name from the LLM response."
+info_no_tool_args: "`tool_args` should be set to equal the function arguments. Make sure to decode them with the `json` library."
+info_no_tool_id: "`tool_id` should be the tool call's id from the LLM response."
+info_messages_len_3: "Call the llm with `call_llm_cached` and append the response to `messages`."
+info_messages_all_wrong: "Make sure you append to the messages list."

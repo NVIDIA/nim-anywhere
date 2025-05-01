@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """A generic settings page."""
+
 from pathlib import Path
 
 import streamlit as st
 from streamlit_extras.stateful_button import button as st_toggle_btn
-from streamlit_file_browser import st_file_browser
 
 from live_labs import MessageCatalog, Worksheet, reset_all_progress
 
@@ -25,31 +25,16 @@ MESSAGES = MessageCatalog.from_page(__file__)
 NAME = Path(__file__).stem
 
 with Worksheet(name=NAME, ephemeral=True) as worksheet:
-
-    # file browser
-    with st.container(border=True):
-        st.markdown("## Lab Results")
-        globs = [path + "/**" for path in st.session_state.get("artifacts", [])]
-        file_browser_event = st_file_browser(
-            "/project/code",
-            glob_patterns=globs,
-            extentions=["py", "yaml", "txt"],
-            show_preview=False,
-        )
-
-        if file_browser_event and file_browser_event.get("type", "") == "SELECT_FILE":
-            file = Path("/project/code").joinpath(file_browser_event["target"]["path"])
-            with file.open("rb") as ptr:
-                st.download_button(label="Download File", data=ptr, file_name=file.name)
-
     # reset progress
     with st.container(border=True):
+        st.header(MESSAGES.get("reset_header"))
+        st.warning(MESSAGES.get("reset_warning"))
         col_1, col_2, col_3 = st.columns([1, 1, 1])
         with col_1:
-            reset = st_toggle_btn("Reset your progress.", key="reset")
+            reset = st_toggle_btn("⚠️ Reset your progress.", key="reset")
         if reset:
             with col_2:
-                verify_reset = st.button("Are you sure?")
+                verify_reset = st.button("🛑 Are you sure?")
             if verify_reset:
                 reset_all_progress()
 
@@ -57,13 +42,11 @@ with Worksheet(name=NAME, ephemeral=True) as worksheet:
     col_1, col_2 = st.columns([1, 1])
 
     # information on support logs
-    with col_1:
-        with st.container(border=True):
-            st.header(MESSAGES.get("bundle_header"), divider="gray")
-            st.markdown(MESSAGES.get("bundle_msg"))
+    with col_1, st.container(border=True):
+        st.header(MESSAGES.get("bundle_header"), divider="gray")
+        st.markdown(MESSAGES.get("bundle_msg"))
 
     # information on developer forum
-    with col_2:
-        with st.container(border=True):
-            st.header(MESSAGES.get("forum_header"), divider="gray")
-            st.markdown(MESSAGES.get("forum_msg"))
+    with col_2, st.container(border=True):
+        st.header(MESSAGES.get("forum_header"), divider="gray")
+        st.markdown(MESSAGES.get("forum_msg"))

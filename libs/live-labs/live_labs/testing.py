@@ -46,15 +46,19 @@ def test_my_string():
     print("Looks good!")
 ```
 """
+
 import functools
 import inspect
+import os
+import re
 import selectors
 import subprocess
 import sys
 import time
+from collections.abc import Callable, Iterator
 from functools import partial
 from pathlib import Path
-from typing import Any, Callable, Iterator, TextIO, cast
+from typing import Any, TextIO, cast
 
 import streamlit as st
 
@@ -114,6 +118,7 @@ class Runner:
             stderr=subprocess.PIPE,
             text=True,
             cwd=self.cwd,
+            env=os.environ,
         ) as proc:
             # start the test
             assert proc.stdin is not None
@@ -131,7 +136,7 @@ class Runner:
                 sel.register(proc.stderr, selectors.EVENT_READ)
 
             # iterate  through stdout + stderr
-            yield "```"
+            yield "```\n"
             start_time = time.monotonic()
             while time.monotonic() - start_time < _TIMEOUT:
                 for key, _ in sel.select(timeout=0.1):
@@ -159,7 +164,7 @@ class Runner:
 
             else:
                 self._testfail = "info_test_timeout"
-            yield "```"
+            yield "```\n\n"
 
             # update the status
             self._rc = proc.returncode
@@ -179,8 +184,8 @@ class Runner:
             raise TestFail("info_test_nonzero_exit_code")
 
         # remove the markdown code block indicators
-        output_text = "\n".join(output_text.splitlines()[1:-1])
-        return output_text
+        match = re.search(r"```(.*?)```", output_text, re.DOTALL)
+        return match.group(1) if match else ""
 
 
 def isolate(cwd: Path | None = None, exec: str | Path | None = None) -> Callable[[Callable[[], None]], Runner]:

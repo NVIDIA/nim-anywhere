@@ -1,5 +1,6 @@
 # Ignore generated or temporary files managed by the Workbench
 .project/*
+!.project/compose.yaml
 !.project/spec.yaml
 !.project/configpacks
 
@@ -56,6 +57,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+.ruff_cache
 
 # Workbench Project Layout
 data/scratch/*

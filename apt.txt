@@ -1,12 +1,9 @@
 ca-certificates
 curl
-gettext
 jq
 less
 make
-pandoc
 pipx
 python3.10-venv
-skopeo
 unzip
 wget

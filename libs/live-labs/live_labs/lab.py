@@ -46,31 +46,26 @@ with live_labs.Worksheet(name=NAME, autorefresh=0).with_editor(EDITOR_DIR, EDITO
 """
 
 import json
+import random
+from collections.abc import Callable
 from pathlib import Path
 from types import ModuleType
-from typing import Any, Optional
+from typing import Any, TypeVar
 
 import streamlit as st
-from jinja2 import BaseLoader, Environment
 from pydantic import BaseModel, Field, PrivateAttr
 from streamlit.delta_generator import DeltaGenerator
 from streamlit_autorefresh import st_autorefresh
+from streamlit_extras.add_vertical_space import add_vertical_space
+from streamlit_extras.let_it_rain import rain
 from streamlit_extras.stateful_button import button
 
-from live_labs import editor, localization, testing
+from live_labs import editor, localization, templates, testing
+from live_labs.helpers import DEFAULT_STATE_FILE, scroll_to, slugify
 
-DEFAULT_STATE_FILE = Path("/project/data/scratch/tutorial_state.json")
-
-
-def _slugify(name: str) -> str:
-    """Convert a name into a slugged string."""
-
-    def _is_valid(char: str) -> bool:
-        """Only pass lowercase and underscores."""
-        return (ord(char) > 96 and ord(char) < 123) or ord(char) == 95
-
-    filtered_name = [x for x in name.lower().replace(" ", "_") if _is_valid(x)]
-    return "".join(filtered_name)
+_TYPE = TypeVar("_TYPE")
+_FREE_SCROLL_LINES = 50
+_END_EMOJIS = "🎉🎊🥳🎈🎂🎁🍾🥂🎆🎇✨🪩🎶🏆🥇🏅🎯🎤🍻💥🚀👑🕺💃🤩🌻"
 
 
 class Worksheet(BaseModel):
@@ -84,11 +79,13 @@ class Worksheet(BaseModel):
     completed_tasks: int = Field(0, init=False)
     total_tasks: int = Field(0, init=False)
 
-    _body: Optional[DeltaGenerator] = PrivateAttr(None)
-    _base_dir: Optional[Path] = PrivateAttr(None)
-    _files: Optional[list[str]] = PrivateAttr(None)
-    _files_data_init: Optional[list[str]] = PrivateAttr(None)
-    _stdout: Optional[DeltaGenerator] = PrivateAttr(None)
+    make_it_rain: bool = Field(False, init=False)
+
+    _body: DeltaGenerator | None = PrivateAttr(None)
+    _base_dir: Path | None = PrivateAttr(None)
+    _files: list[str] | None = PrivateAttr(None)
+    _files_data_init: list[str] | None = PrivateAttr(None)
+    _stdout: DeltaGenerator | None = PrivateAttr(None)
 
     @property
     def stdout(self) -> DeltaGenerator:
@@ -119,14 +116,18 @@ class Worksheet(BaseModel):
 
         return self
 
-    def __exit__(self, _, __, ___):
+    def __exit__(self, _: object, __: object, ___: object):
         """Cache data."""
+        add_vertical_space(_FREE_SCROLL_LINES)
         if self._body:
             self._body.__exit__(None, None, None)
         if not self.ephemeral:
             self.save_state()
 
-    def with_editor(self, base_dir: Path, files: list[str]):
+        if self.make_it_rain:
+            rain(random.choice(_END_EMOJIS), animation_length=1)
+
+    def with_editor(self, base_dir: Path, files: list[str]) -> "Worksheet":
         """Enable the in page code editor."""
         self._base_dir = base_dir
         self._files = files
@@ -134,7 +135,8 @@ class Worksheet(BaseModel):
 
         if not base_dir.exists():
             base_dir.mkdir()
-            artifacts = st.session_state.get("artifacts", []) + [str(base_dir)]
+            artifacts = st.session_state.get("artifacts", [])
+            artifacts.append(str(base_dir))
             st.session_state["artifacts"] = artifacts
 
         for idx, file in enumerate(self._files):
@@ -152,7 +154,7 @@ class Worksheet(BaseModel):
         try:
             with self.state_file.open("r", encoding="UTF-8") as ptr:
                 loaded_state = json.load(ptr)
-        except (IOError, OSError):
+        except OSError:
             loaded_state = {}
 
         st.session_state.update(loaded_state)
@@ -165,7 +167,7 @@ class Worksheet(BaseModel):
         last_state_json = state_dict.pop("last_state", "{}")  # dont recurse and save last state
         # dont save autorefresh runtime var
         # dont save session scoped variables (*_derived)
-        remove_keys = ["autorefresh"] + [key for key in state_dict.keys() if key.endswith("_derived")]
+        remove_keys = ["autorefresh"] + [key for key in state_dict if key.endswith("_derived")]
         _ = [state_dict.pop(key, None) for key in remove_keys]
         state_json = json.dumps(state_dict)
 
@@ -175,7 +177,7 @@ class Worksheet(BaseModel):
                 ptr.write(state_json)
             st.session_state["last_state"] = state_json
 
-    def run_test(self, fun) -> tuple[bool, None | str, None | Any]:
+    def run_test(self, fun: Callable[[], _TYPE]) -> tuple[bool, None | str, None | _TYPE]:
         """Cache the state of a test once it passes."""
         cached_state: tuple[bool, None | str, None | Any]
         state: tuple[bool, None | str, None | Any]
@@ -200,19 +202,30 @@ class Worksheet(BaseModel):
         return state
 
     def print_task(
-        self, task: localization.Task, test_suite: None | ModuleType, messages: localization.MessageCatalog
+        self,
+        task: localization.Task,
+        test_suite: None | ModuleType,
+        messages: localization.MessageCatalog,
     ) -> bool:
         """Write tasks out to screen.
 
         Returns boolean to indicate if task printing should continue."""
 
         st.write("### " + task.name)
+
         st.markdown(task.msg, unsafe_allow_html=True)
         # html is allowed to enable <details> blocks
 
         # Lookup a test from the test module.
         test = task.get_test(test_suite)
+        prep = task.get_prep(test_suite)
         result: str | None = ""
+        slug = slugify(task.name)
+
+        # run prep function
+        if prep and not st.session_state.get(f"{self.name}_task_{slug}_prep"):
+            result = prep()
+            st.session_state[f"{self.name}_task_{slug}_prep"] = True
 
         if test:
             # continue task based on test function
@@ -227,20 +240,23 @@ class Worksheet(BaseModel):
 
         else:
             # continue task based on user input
-            slug = _slugify(task.name)
-            col1, col2 = st.columns([3, 1])
-            with col1:
-                st.write("**" + messages.get("waiting_msg", "") + "**")
-            with col2:
-                done = button(messages.get("next"), key=f"{self.name}_task_{slug}")
-            if not done:
-                return False
+            st.write("")
+            with st.empty():
+                col1, col2 = st.columns([3, 1])
+                with col1:
+                    st.write("**" + messages.get("waiting_msg", "") + "**")
+                with col2:
+                    done = button(messages.get("next"), key=f"{self.name}_task_{slug}")
+                if not done:
+                    return False
+                st.write("")  # Hide the "next" button
 
         # show success message after completion
         scs_msg = task.response
         if scs_msg is not None:
             st.write(" ")
-            rtemplate = Environment(loader=BaseLoader()).from_string(task.response or "")
+            rtemplate = templates.ENVIRONMENT.from_string(task.response or "")
+            rtemplate.render(result=result)
             st.success(rtemplate.render(result=result))
 
         return True
@@ -250,13 +266,16 @@ class Worksheet(BaseModel):
         self.total_tasks += len(messages.tasks)
         for task in messages.tasks:
             if not self.print_task(task, test_suite, messages):
+                if self.completed_tasks > 0:
+                    scroll_to(task.name)
                 break
             self.completed_tasks += 1
         else:
             # Print footer after last task
-            msg = messages.get("closing_msg", None)
-            if msg:
-                st.success(msg)
+            st.header(messages.get("closing_header"))
+            scroll_to(messages.get("closing_header"))
+            st.markdown(messages.get("closing_msg"))
+            self.make_it_rain = True
 
         st.session_state[f"{self.name}_completed"] = self.completed_tasks
         st.session_state[f"{self.name}_total"] = self.total_tasks

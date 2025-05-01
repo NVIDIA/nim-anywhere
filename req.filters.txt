@@ -1,4 +1,0 @@
-# these are packages that will be excluded from the built container.
-jupyterlab
-grandalf
-watchfiles

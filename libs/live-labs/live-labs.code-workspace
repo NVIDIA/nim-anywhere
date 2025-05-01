@@ -5,13 +5,9 @@
 		}
 	],
 	"settings": {
-		"pylint.importStrategy": "useBundled",
-		"python.analysis.extraPaths": ["/project/libs/live-labs"],
-		  // file explorer configuration
-		  "files.exclude": {
-			"**/.git": true,
-			"**/.svn": true,
-			"**/.hg": true,
+		// file explorer configuration
+		"files.exclude": {
+			".git": true,
 			"**/CVS": true,
 			"**/.DS_Store": true,
 			"**/Thumbs.db": true,
@@ -19,64 +15,62 @@
 			"**/__pycache__": true,
 			"**/.mypy_cache": true,
 			"**/.ipynb_checkpoints": true,
-			"**/.terraform": true,
-		  },
+			".project": true,
+			".vscode": true,
+			".github": true,
+			"**/.ruff_cache": true,
+		},
 
+		// global editor settings
+		"files.eol": "\n",
+		"editor.tabSize": 4,
+		"editor.insertSpaces": true,
+		"files.insertFinalNewline": true,
+		"remote.autoForwardPorts": false,
 
-		  // global editor settings
-		  "files.eol": "\n",
-		  "editor.tabSize": 4,
-		  "editor.insertSpaces": true,
-		  "files.insertFinalNewline": true,
-		  // remove this line to automatically forward ports
-		  // in general, workbench will manage this already
-		  "remote.autoForwardPorts": false,
-
-
-		  // bash scripting configuration
-		  "[shellscript]": {
+		// bash scripting configuration
+		"[shellscript]": {
 			"editor.tabSize": 4,
-			"editor.insertSpaces": false,
-		  },
+			"editor.insertSpaces": false
+		},
 
-
-		  // css style sheet configuration
-		  "[css]": {
+		// css style sheet configuration
+		"[css]": {
 			"editor.suggest.insertMode": "replace",
 			"editor.tabSize": 2
-		  },
+		},
 
-		  // js configuration
-		  "[javascript]": {
+		// js configuration
+		"[javascript]": {
 			"editor.maxTokenizationLineLength": 2500,
-			"editor.tabSize": 2,
-		  },
+			"editor.tabSize": 2
+		},
 
-		  // Python environment configuration
-		  "python.terminal.activateEnvironment": true,
-		  "python.defaultInterpreterPath": ".venv/bin/python",
-		  "isort.args":["--profile", "black"],
-		  "isort.check": true,
-		  "[python]": {
-			"editor.defaultFormatter": "ms-python.black-formatter",
+		// Python environment configuration
+		"python.terminal.activateEnvironment": true,
+		// "python.defaultInterpreterPath": "/usr/bin/python3",
+
+		// Ruff as formatter
+		"[python]": {
+			"editor.defaultFormatter": "charliermarsh.ruff",
 			"editor.codeActionsOnSave": {
-			  "source.organizeImports": "explicit"
+				"source.organizeImports": "explicit",
+				"source.fixAll": "explicit"
 			},
-			//  Comment out this settings to disable auto-formatting
 			"editor.formatOnSave": true
-		  },
+		},
+		"ruff.enable": true,
+		"ruff.exclude": [],
 
-		  "black-formatter.args": [
-			"--line-length",
-			"120"
-		  ],
-		  "pylint.severity": {
-			"refactor": "Information",
-		  },
-
-		  "explorer.fileNesting.enabled": true,
-		  "explorer.fileNesting.patterns": {
+		// Virtual environment specific
+		"python.defaultInterpreterPath": ".venv/bin/python",
+		"explorer.fileNesting.enabled": true,
+		"explorer.fileNesting.patterns": {
 			"*.py": "${capture}.*.yaml, ${capture}_tests.py"
-		  }
+		},
+		"workbench.colorCustomizations": {
+			"titleBar.activeBackground": "#e0218a"
+		},
+		"window.title": "lib/live_labs ${dirty}${activeEditorShort}${separator}${rootName}${separator}${profileName}${separator}${appName}"
 	}
 }

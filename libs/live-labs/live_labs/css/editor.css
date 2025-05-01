@@ -28,50 +28,47 @@ In the editor column, the tabs are styled to be a bit easier on the eyes.
 
 [data-testid="stMainBlockContainer"] {
   height: 100%;
-  /* overflow: hidden; */
   >[data-testid="stVerticalBlockBorderWrapper"] {
     height: 100%;
-    >div {
+    >[data-testid="stVerticalBlock"] {
       height: 100%;
-      >[data-testid="stVerticalBlock"] {
+      >[data-testid="stHorizontalBlock"] {
         height: 100%;
-        >[data-testid="stHorizontalBlock"] {
+        overflow: hidden;
+
+        /* style the worksheet side */
+        >[data-testid="stColumn"]:first-child {
           height: 100%;
-
-          /* style the worksheet side */
-          >[data-testid="stColumn"]:first-child {
+          >[data-testid="stVerticalBlockBorderWrapper"] {
             height: 100%;
-            >[data-testid="stVerticalBlockBorderWrapper"] {
+            height: 100%;
+            >[data-testid="stVerticalBlock"] {
               height: 100%;
-              >div {
-                height: 100%;
-                >[data-testid="stVerticalBlock"] {
-                  height: 100%;
-                  overflow: scroll;
-                  margin-bottom: 1.5em;
-                }
-              }
+              overflow: scroll;
+              scroll-behavior: smooth;
+              margin-bottom: 1.5em;
             }
           }
-
-          /* style the editor side */
-          >[data-testid="stColumn"]:last-child {
-            [data-testid="stTabs"]:first-of-type {
-              p {
-                font-size: 18px;
-              }
-              [data-baseweb="tab"]:last-of-type {
-                color: #5d1682;
-                margin-left: auto;
-                p {
-                  font-weight: 900;
-                }
-              }
-            }
-          }
-
         }
+
+        /* style the editor side */
+        >[data-testid="stColumn"]:last-child {
+          [data-testid="stTabs"]:first-of-type {
+            p {
+              font-size: 18px;
+            }
+            [data-baseweb="tab"]:last-of-type {
+              color: #5d1682;
+              margin-left: auto;
+              p {
+                font-weight: 900;
+              }
+            }
+          }
+        }
+
       }
     }
+
   }
 }

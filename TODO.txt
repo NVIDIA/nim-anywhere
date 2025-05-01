@@ -1,0 +1,19 @@
+# NIM Anywhere Next
+
+## Basic Retrieval Lessons
+- [ ] Getting started with llms
+- [ ] singe doc rag
+- [ ] naive rag
+- [ ] advanced rag
+- [ ] enterprise rag -> point to the rag 2.0 blueprint
+
+## AI Agent Lessons
+- [x] Build an agent the hard way
+- [ ] Build your first agent
+
+## CI/CD
+- [ ] Look for dead links in tutorials and sidebar
+- [ ] run all labs against answers
+
+## Misc
+- [ ] Update readme

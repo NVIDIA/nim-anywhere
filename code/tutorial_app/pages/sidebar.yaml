@@ -14,5 +14,7 @@ navbar:
       - label: "🏠 Overview"
         target: "overview"
         show_progress: False
-      - label: "📎Editor Test"
-        target: editor_test
+  - label: Build Agents with NVIDIA
+    children:
+      - label: "📎Agents the Hard Way"
+        target: agents_the_hard_way

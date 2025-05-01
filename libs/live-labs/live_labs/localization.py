@@ -25,8 +25,9 @@ MESSAGES = live_labs.MessageCatalog.from_page(__file__)
 ```
 """
 
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable, cast
+from types import ModuleType
 
 import streamlit as st
 from pydantic import BaseModel, ConfigDict, Field
@@ -42,19 +43,29 @@ class Task(BaseModel):
     msg: str
     response: None | str = None
     test: None | str = None
+    prep: None | str = None
 
-    def get_test(self, tests: Any) -> None | Callable[[], str]:
+    def get_test(self, tests: None | ModuleType) -> None | Callable[[], str]:
         """Find a test for this task."""
         if self.name and self.test and tests:
-            out = cast(Callable[[], str], getattr(tests, self.test, None))
-            return out
+            func = getattr(tests, self.test, None)
+            if callable(func):
+                return func  # type: ignore[return-value]
+        return None
+
+    def get_prep(self, tests: None | ModuleType) -> None | Callable[[], str]:
+        """Find a prep function for this task."""
+        if self.name and self.prep and tests:
+            func = getattr(tests, self.prep, None)
+            if callable(func):
+                return func  # type: ignore[return-value]
         return None
 
 
 class MessageCatalog(BaseModel):
     """Representation of a localization catalog files."""
 
-    __pydantic_extra__: dict[str, None | str | list[Task]] = Field(init=False)  # type: ignore
+    __pydantic_extra__: dict[str, None | str | list[Task]] = Field(init=False)
     model_config = ConfigDict(extra="allow")
 
     tasks: list[Task] = []
@@ -62,7 +73,7 @@ class MessageCatalog(BaseModel):
     @classmethod
     def from_yaml(cls, path: Path) -> "MessageCatalog":
         """Load the message catalog data from yaml."""
-        with open(path, "r", encoding="UTF-8") as ptr:
+        with path.open(encoding="UTF-8") as ptr:
             yml = ptr.read()
 
         return parse_yaml_raw_as(cls, yml)
@@ -81,8 +92,10 @@ class MessageCatalog(BaseModel):
                 return cls.from_yaml(catalog_path)
         return cls()
 
-    def get(self, key: str, default_value: Any = None) -> Any:
+    def get(self, key: str, default_value: None | str = None) -> str:
         """Get a value from this class."""
+        if default_value is None:
+            default_value = f":red-badge[{key}]"
         try:
             return getattr(self, key)
         except AttributeError:

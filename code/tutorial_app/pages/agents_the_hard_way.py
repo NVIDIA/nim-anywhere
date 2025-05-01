@@ -19,12 +19,19 @@ from pathlib import Path
 import live_labs
 import streamlit as st
 
-TESTS = None
+from pages import agents_the_hard_way_tests as TESTS
 
 MESSAGES = live_labs.MessageCatalog.from_page(__file__)
 NAME = Path(__file__).stem
 
-with live_labs.Worksheet(name=NAME) as worksheet:
+EDITOR_DIR = Path("/project/code").joinpath(NAME)
+EDITOR_FILES = ["single_agent.py"]
+# name of the editor file
+
+with live_labs.Worksheet(name=NAME, autorefresh=0).with_editor(EDITOR_DIR, EDITOR_FILES) as worksheet:
     # Header
     st.title(MESSAGES.get("title"))
     st.write(MESSAGES.get("welcome_msg"))
+
+    # Print Tasks
+    worksheet.live_lab(MESSAGES, TESTS)

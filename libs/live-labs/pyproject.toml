@@ -16,7 +16,6 @@ dependencies = [
         "streamlit-ace",
         "streamlit-bridge",
         "streamlit-javascript",
-        "streamlit_file_browser",
 ]
 
 [project.optional-dependencies]
@@ -32,41 +31,51 @@ requires = [
 [tool.setuptools.package-data]
 live_labs = ["css/*.css", "js/*.js"]
 
-# Pylint Configuration
-[tool.pylint.MAIN]
-load-plugins = "pylint.extensions.bad_builtin"
+[tool.ruff]
+line-length = 120
+target-version = "py310"
 
-[tool.pylint.'MESSAGES CONTROL']
-disable=["raw-checker-failed",
-         "bad-inline-option",
-        "locally-disabled",
-        "file-ignored",
-        "suppressed-message",
-        "useless-suppression",
-        "deprecated-pragma",
-        "use-symbolic-message-instead",
-        "wrong-spelling-in-comment",
-        "redefined-builtin",
-        "unsupported-binary-operation",
-        "duplicate-code",
-        "no-member"]
-enable=["c-extension-no-member", "broad-exception-caught"]
+exclude = [
+  "**/*.ipynb"
+]
 
-[tool.pylint.FORMAT]
-max-line-length=120
-max-module-lines=500
-max-args=8
+[tool.ruff.lint]
+select = [
+  "E",    # pycodestyle (formatting errors)
+  "F",    # pyflakes (logical errors, like unused imports)
+  "B",    # bugbear (common Python gotchas)
+  "I",    # isort (import sorting)
+  "UP",   # pyupgrade (modernize Python syntax)
+  "C4",   # comprehensions (bad comprehensions, dict/set/list comprehensions issues)
+  "RET",  # flake8-return checks
+  "T10",  # flake8-pdb (ban interactive debugger in real code)
+  # "T20",  # flake8-print (ban print statements in real code)
+  "SIM",  # flake8-simplify (simplify if-else, etc)
+  "PTH",  # flake8-pathlib (encourage pathlib usage)
+  "PYI",  # flake8-pyi
+  "PL",   # pylint rules subset (e.g., overly complex functions)
+  "RUF",  # Ruff-specific rules
+  "ANN",  # Type annotations
+  "ARG",  # Function arguments
+  "FIX",  # Forbid common FIXME comments
+]
+ignore = [
+  "ANN401", # Allow the use of the Any type
+]
+unfixable = [
+  "F401", # Dont remove unused imports
+]
 
-[tool.pylint.DEPRECATED_BUILTINS]
-bad-functions=["print", "input"]
+[tool.ruff.lint.flake8-annotations]
+allow-star-arg-any = true # suppress ANN401 for dynamically typed *args and **kwargs arguments.
+mypy-init-return = true  # allow the omission of a return type hint for __init__ if at least one argument is annotated.
+suppress-none-returning = true # allow the return type to implicitly be None.
 
-# Flake8 Configuration
-[tool.flake8]
-max-line-length = 120
-ignore = ["E203", "W503"]
-enable = ["W504"]
+[tool.ruff.lint.isort]
+force-single-line = false
+known-first-party = []
+known-third-party = []
 
-# mypy Configuration
 [tool.mypy]
 strict = false
 implicit_optional = true

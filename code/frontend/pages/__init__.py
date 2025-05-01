@@ -15,8 +15,6 @@
 
 """A collection of pages available to views."""
 
-import gradio as gr
-
 from .chat import page as chat
 from .control import page as control
 

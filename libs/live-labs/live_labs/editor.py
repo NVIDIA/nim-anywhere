@@ -20,7 +20,10 @@ st_editor is called to create a new set of ACE editors with tabs.
 It can only be called once per page and should probably not be called outside of the Worksheet class.
 """
 
+import json
+from collections.abc import Generator
 from pathlib import Path
+from textwrap import dedent
 
 import streamlit as st
 from streamlit.delta_generator import DeltaGenerator
@@ -28,6 +31,7 @@ from streamlit_ace import st_ace
 from streamlit_javascript import st_javascript
 
 _JS_CODE = Path(__file__).parent.joinpath("js", "editor.js").read_text("UTF-8").strip()
+_JS_SEND_KEYS_CODE = Path(__file__).parent.joinpath("js", "editor.send_keys.js").read_text("UTF-8").strip()
 _CSS = Path(__file__).parent.joinpath("css", "editor.css").read_text("UTF-8").strip()
 
 
@@ -56,10 +60,6 @@ def _new_ace_ide(base_dir: Path, key: str, value: str) -> None:
 
 def st_editor(base_dir: Path, files: list[str], init_data: list[str]) -> DeltaGenerator:
     """Add an editor to the page."""
-    with st.container(height=1, border=False):
-        st_javascript(_JS_CODE)
-        st.html(f"<style>{_CSS}</style>")
-
     with st.container():
         tab_names = [f":material/data_object: {fname}" for fname in files] + [":material/terminal: Terminal Output"]
         editor_tabs = st.tabs(tab_names)
@@ -67,4 +67,32 @@ def st_editor(base_dir: Path, files: list[str], init_data: list[str]) -> DeltaGe
             with file_tab:
                 _new_ace_ide(base_dir, files[file_idx], init_data[file_idx])
 
+    with st.container(height=1, border=False):
+        st_javascript(_JS_CODE)
+        st.html(f"<style>{_CSS}</style>")
+
     return editor_tabs[-1]
+
+
+def _sanitize_text(text: str) -> Generator[str]:
+    """Internal generator for removing happy accidents from strings."""
+    text = dedent(text)
+
+    for idx, line in enumerate(text.splitlines()):
+        clean_line = line.rstrip()
+        if idx > 0 or line:
+            yield clean_line
+
+
+def send_keys(text: str) -> bool:
+    """Write the text to the on screen editor."""
+    if isinstance(text, bytes):
+        text = text.decode("UTF-8")
+
+    text = "\n".join(_sanitize_text(text))
+
+    code = _JS_SEND_KEYS_CODE.replace("ARG", json.dumps(text))
+    with st.container(height=1, border=False):
+        st_javascript(code)
+
+    return True

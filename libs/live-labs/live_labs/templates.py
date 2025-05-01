@@ -12,19 +12,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Excercise page layout."""
+"""Custom filters for Jinja parsing."""
 
-from pathlib import Path
+import ast
+import json
+from typing import Any
 
-import live_labs
-import streamlit as st
+from jinja2 import BaseLoader, Environment
 
-TESTS = None
 
-MESSAGES = live_labs.MessageCatalog.from_page(__file__)
-NAME = Path(__file__).stem
+def from_json(value: str) -> Any:
+    """Convert a JSON string to an object."""
+    return json.loads(str(value))
 
-with live_labs.Worksheet(name=NAME) as worksheet:
-    # Header
-    st.title(MESSAGES.get("title"))
-    st.write(MESSAGES.get("welcome_msg"))
+
+def eval(value: str) -> Any:
+    """Parse the string and return the value."""
+    return ast.literal_eval(value)
+
+
+ENVIRONMENT = Environment(loader=BaseLoader())
+ENVIRONMENT.filters["from_json"] = from_json
+ENVIRONMENT.filters["eval"] = eval

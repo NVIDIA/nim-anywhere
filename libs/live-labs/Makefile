@@ -27,3 +27,7 @@ clean:
 clean-venv:
 	rm -rf .venv
 clean-all: clean clean-venv
+
+inject-into-tutorial:
+	sudo /opt/live-labs/bin/pip uninstall -y live-labs
+	sudo /opt/live-labs/bin/pip install -e /project/libs/live-labs/

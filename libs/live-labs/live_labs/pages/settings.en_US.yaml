@@ -14,6 +14,9 @@
 # limitations under the License.
 title: Settings
 
+reset_header: Reset your progress
+reset_warning: This will erase the code you've written and your saved progress. It might not be recoverable.
+
 bundle_header: Logs and Support Bundles
 bundle_msg: |
   A **Support Bundle** is a collection of logs that capture the state of your AI Workbench. To create a support bundle to send in for troubleshooting, first open the AI Workbench CLI (use the WSL distro if on Windows)

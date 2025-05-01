@@ -18,9 +18,9 @@
 import logging
 import os
 from enum import Enum
-from typing import Annotated
+from typing import Annotated, ClassVar
 
-from confz import BaseConfig, EnvSource, FileSource
+from confz import BaseConfig, ConfigSource, EnvSource, FileSource
 from pydantic import Field, FilePath, HttpUrl, field_validator
 
 _ENV_VAR_PREFIX = "APP_"
@@ -77,7 +77,7 @@ class Configuration(BaseConfig):
     log_level: Annotated[LogLevels, Field(LogLevels.INFO, description=LogLevels.__doc__)]
 
     # sources where config is looked for
-    CONFIG_SOURCES = [
+    CONFIG_SOURCES: ClassVar[list[ConfigSource]] = [
         FileSource(file="./frontend-config.yaml", optional=True),
         FileSource(file="./frontend-config.yml", optional=True),
         FileSource(file="./frontend-config.json", optional=True),
