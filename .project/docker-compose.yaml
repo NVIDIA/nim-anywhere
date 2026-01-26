@@ -1,0 +1,25 @@
+services:
+  llm-nim:
+    image: nvcr.io/nim/meta/llama-3.1-8b-instruct:latest
+    environment:
+      - NGC_API_KEY=${NGC_API_KEY}
+      - NIM_DISABLE_CUDA_GRAPH=1
+      - NIM_VLLM_FLAGS=--enforce-eager
+      - NIM_MAX_MODEL_LEN=16384
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  embed-nim:
+    image: nvcr.io/nim/nvidia/llama-3.2-nemoretriever-300m-embed-v1:latest
+    environment:
+      - NGC_API_KEY=${NGC_API_KEY}
+      - NIM_DISABLE_CUDA_GRAPH=1
+    ports:
+      - "8001:8000"

@@ -1,3 +1,4 @@
+# spec.yaml
 specVersion: v2
 specMinorVersion: 2
 meta:
@@ -34,6 +35,20 @@ environment:
         entrypoint_script: ""
         labels:
             - cuda12.2
+#environment:
+    # ... keep your existing base image settings ...
+    variables:
+        - name: NVIDIA_LLM_URL
+          value: "http://host.docker.internal:8000/v1"
+        - name: NVIDIA_EMBED_URL
+          value: "http://host.docker.internal:8001/v1"
+        - name: NIM_MAX_MODEL_LEN
+          value: "16384"
+# Since you're on Spark, ensure the key is passed for local auth
+        - name: NGC_API_KEY
+          value: " "          
+    # This points AI Workbench to your docker-compose file for sidecar NIMs
+    compose_file_path: "docker-compose.yaml"
         apps:
             - name: jupyterlab
               type: jupyterlab
@@ -150,10 +165,14 @@ execution:
             proxy:
                 trim_prefix: false
             url: http://localhost:8501
+#    resources:
+#        gpu:
+#            requested: 0
+#        sharedMemoryMB: 1024
     resources:
         gpu:
-            requested: 0
-        sharedMemoryMB: 1024
+            requested: 1
+        sharedMemoryMB: 16384  # Increased for Spark's unified memory usage        
     secrets:
         - variable: NGC_API_KEY
           description: NGC Personal Key from https://org.ngc.nvidia.com/setup/personal-keys

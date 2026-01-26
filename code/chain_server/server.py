@@ -13,6 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Use the environment variables we set in spec.yaml
+llm = ChatNVIDIA(
+    base_url=os.getenv("NVIDIA_LLM_URL"),
+    model=os.getenv("LLM_MODEL_NAME"),
+    temperature=0.1
+)
+
+embedder = NVIDIAEmbeddings(
+    base_url=os.getenv("NVIDIA_EMBED_URL"),
+    model=os.getenv("EMBEDDING_MODEL_NAME")
+)
+
 """The definition of the NVIDIA Conversational RAG API server."""
 
 import os

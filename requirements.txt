@@ -17,3 +17,4 @@ redis==5.2.1
 sse-starlette==2.2.1
 uvicorn==0.34.0
 watchfiles==1.0.3
+pydantic==2.10.6
