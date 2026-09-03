@@ -25,6 +25,8 @@ from fastapi.responses import (
 from fastapi.staticfiles import StaticFiles
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
+from nim_anywhere_security import AuthenticationMiddleware
+
 from . import pages, view
 from .common import ASSETS_DIR, STATIC_DIR
 from .configuration import config
@@ -34,6 +36,7 @@ INDEX_FILE = ASSETS_DIR.joinpath("index.html")
 
 # %% create the web server
 app = FastAPI()
+app.add_middleware(AuthenticationMiddleware)
 
 # %% define and mount the views
 views: list[view.View] = [

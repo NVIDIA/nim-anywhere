@@ -48,6 +48,7 @@ The variable names will be in the form: `APP_FIELD__SUB_FIELD`
 Values specified as environment variables will take precedence over all values from files.
 
 """
+
 import logging
 import os
 from enum import Enum
@@ -86,6 +87,17 @@ class MilvusConfig(BaseModel):
         description="The host machine running Milvus vector DB.",
     )
     collection_name: str = Field("collection_1", description="The name of the Milvus collection.")
+    token: Optional[str] = Field(
+        None,
+        description="Milvus authentication token in username:password format.",
+    )
+
+    def connection_args(self) -> dict[str, str]:
+        """Build authenticated Milvus connection arguments."""
+        arguments = {"uri": self.url}
+        if self.token:
+            arguments["token"] = self.token
+        return arguments
 
 
 class LLMModelConfig(BaseModel):
@@ -145,7 +157,7 @@ class EmbeddingModelConfig(BaseModel):
     ]
 
 
-class Configuration(BaseConfig):
+class Configuration(BaseConfig):  # type: ignore[metaclass]
     """Configuration for this microservice."""
 
     # configuration fields

@@ -22,7 +22,7 @@ to help our partners and customers build effective RAG pipeline with
 ease.
 
 NIM Anywhere contains all the tooling required to start integrating NIMs
-for RAG. It natively scales out to full-sized labs and up to production 
+for RAG. It natively scales out to full-sized labs and up to production
 environments. This is great news for building a RAG architecture and
 easily adding NIMs as needed. If you're unfamiliar with RAG, it
 dynamically retrieves relevant external information during inference
@@ -399,14 +399,15 @@ section.
 
 ## Configure this project
 
-The project must be configured to use your NGC personal key.
+The project must be configured with an application secret and your NGC
+personal key.
 
 <details>
 <summary>
 <b>Expand this section for a details on configuring this project.</b>
 </summary>
 
-1.  Before running for the first time, your NGC personal key must be
+1.  Before running for the first time, the project secrets must be
     configured in Workbench. This is done using the *Environment* tab
     from the left-hand panel.
 
@@ -415,6 +416,15 @@ The project must be configured to use your NGC personal key.
 2.  Scroll down to the **Secrets** section and find the *NGC_API_KEY*
     entry. Press *Configure* and provide the personal key for NGC that
     was generated earlier.
+
+3.  Configure *NIM_ANYWHERE_API_KEY* with a random secret of at least 32
+    characters. For example, generate one with `openssl rand -hex 32`.
+    This key protects the frontend, chain server, tutorial, sessions,
+    and Redis. Do not commit it to the repository.
+
+    The frontend uses HTTP Basic authentication with `nim-anywhere` as
+    the username and this secret as the password. The tutorial asks for
+    the secret directly.
 
 </details>
 
@@ -504,8 +514,12 @@ without GPUs.
 
 5.  Once the *Chain Server* is up, the *Chat Frontend* can be started.
     Starting the interface will automatically open it in a browser
-    window. If you are running any local NIMs, you can edit the config
-    to connect to them via the *Chat Frontend*
+    window. Sign in with `nim-anywhere` as the username and your
+    *NIM_ANYWHERE_API_KEY* as the password. If you are running any local
+    NIMs, you can select their preconfigured model names through the
+    *Chat Frontend*. Service URLs, credentials, and data-store addresses
+    can only be changed in the project configuration, not through the
+    web UI.
 
 ![NIM Anywhere Frontend](.static/_static/na_frontend.png)
 
@@ -653,6 +667,11 @@ milvus:
     # ENV Variables: APP_MILVUS__COLLECTION_NAME
     # Type: string
     collection_name: collection_1
+
+    # Milvus authentication token in username:password format.
+    # ENV Variables: APP_MILVUS__TOKEN
+    # Type: string, null
+    token: ~
 
 
 log_level: 

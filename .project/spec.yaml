@@ -101,7 +101,7 @@ execution:
         - name: Chat Frontend
           type: custom
           class: webapp
-          start_command: export PROXY_PREFIX && cd /project/code && uvicorn --log-level info --reload frontend.server:app --reload-dir frontend --port 7070 --host 0.0.0.0 --timeout-graceful-shutdown 10
+          start_command: export PROXY_PREFIX NIM_ANYWHERE_API_KEY && cd /project/code && uvicorn --log-level info --reload frontend.server:app --reload-dir frontend --port 7070 --host 0.0.0.0 --timeout-graceful-shutdown 10
           health_check_command: curl localhost:7070/healthz > /dev/null
           stop_command: ps aux | grep frontend.server:app | grep -v grep | awk '{print $2}' | xargs kill
           user_msg: ""
@@ -117,7 +117,7 @@ execution:
         - name: Chain Server
           type: custom
           class: webapp
-          start_command: export PROXY_PREFIX && export NGC_API_KEY && cd /project/code && APP_LOG_LEVEL=DEBUG uvicorn --log-level info chain_server.server:app --port 3030 --host 0.0.0.0 --timeout-graceful-shutdown 10 --reload-exclude 'frontend/*' --reload-exclude 'evaluation/*' --reload-include '*.html' --reload-include '*.css' --reload-include '*.yaml' --reload-include '*.js' --reload --reload-include reload
+          start_command: export PROXY_PREFIX NGC_API_KEY NIM_ANYWHERE_API_KEY && cd /project/code && APP_LOG_LEVEL=DEBUG uvicorn --log-level info chain_server.server:app --port 3030 --host 0.0.0.0 --timeout-graceful-shutdown 10 --reload-exclude 'frontend/*' --reload-exclude 'evaluation/*' --reload-include '*.html' --reload-include '*.css' --reload-include '*.yaml' --reload-include '*.js' --reload --reload-include reload
           health_check_command: ps aux |grep -v grep | grep chain_server.server:app
           stop_command: ps aux | grep chain_server.server:app | grep -v grep | awk '{print $2}' | xargs kill
           user_msg: ""
@@ -135,7 +135,7 @@ execution:
           class: webapp
           start_command: |-
             cd /project/code/tutorial_app && \
-            export PROXY_PREFIX && \
+            export PROXY_PREFIX NIM_ANYWHERE_API_KEY && \
             streamlit run app.py --server.baseUrlPath=$PROXY_PREFIX
           health_check_command: curl -I http://localhost:8501
           stop_command: |
@@ -157,6 +157,8 @@ execution:
     secrets:
         - variable: NGC_API_KEY
           description: NGC Personal Key from https://org.ngc.nvidia.com/setup/personal-keys
+        - variable: NIM_ANYWHERE_API_KEY
+          description: A random 32+ character secret used to authenticate the apps and Redis (for example, openssl rand -hex 32)
     mounts:
         - type: project
           target: /project/

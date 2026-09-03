@@ -46,9 +46,13 @@ def test_my_string():
     print("Looks good!")
 ```
 """
+
 import functools
 import inspect
+import os
 import selectors
+import shutil
+import signal
 import subprocess
 import sys
 import time
@@ -59,6 +63,9 @@ from typing import Any, Callable, Iterator, TextIO, cast
 import streamlit as st
 
 _TIMEOUT = 10
+_SANDBOX_USER = "live-labs-sandbox"
+_SANDBOX_PYTHON = "/opt/live-labs/bin/python"
+_PRLIMIT = "/usr/bin/prlimit"
 
 
 class TestFail(Exception):
@@ -91,8 +98,35 @@ class Runner:
         fun_src = "\n".join(fun_lines)
 
         # append a call to it under __main__
-        self._src = f"{fun_src}\n\nif __name__ == '__main__':\n    {fun.__name__}()"
+        self._src = (
+            f"import sys as _live_labs_sys\n_live_labs_sys.path.insert(0, {self.cwd!r})\n\n"
+            f"{fun_src}\n\nif __name__ == '__main__':\n    {fun.__name__}()"
+        )
         functools.update_wrapper(self, fun)
+
+    def _sandbox_command(self) -> list[str]:
+        """Build the fixed command allowed by the least-privilege sudoers rule."""
+        sudo = shutil.which("sudo")
+        if not sudo or not Path(_PRLIMIT).is_file() or not Path(_SANDBOX_PYTHON).is_file():
+            raise TestFail("info_test_sandbox_unavailable")
+        return [
+            _PRLIMIT,
+            "--cpu=6:6",
+            f"--as={512 * 1024 * 1024}:{512 * 1024 * 1024}",
+            f"--fsize={10 * 1024 * 1024}:{10 * 1024 * 1024}",
+            "--nofile=64:64",
+            "--nproc=16:16",
+            "--core=0:0",
+            "--",
+            sudo,
+            "-n",
+            "-u",
+            _SANDBOX_USER,
+            "--",
+            _SANDBOX_PYTHON,
+            "-I",
+            "-",
+        ]
 
     def execute(self) -> Iterator[str]:
         """Run the stored function in a subprocess and stream stdout/stderr.
@@ -108,12 +142,19 @@ class Runner:
         self._rc = None
 
         with subprocess.Popen(
-            [self.exec, "-"],
+            self._sandbox_command(),
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
             cwd=self.cwd,
+            env={
+                "HOME": "/nonexistent",
+                "LANG": "C.UTF-8",
+                "PATH": "/usr/bin:/bin",
+                "PYTHONIOENCODING": "utf-8",
+            },
+            start_new_session=True,
         ) as proc:
             # start the test
             assert proc.stdin is not None
@@ -159,6 +200,11 @@ class Runner:
 
             else:
                 self._testfail = "info_test_timeout"
+                try:
+                    os.killpg(proc.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                proc.wait()
             yield "```"
 
             # update the status

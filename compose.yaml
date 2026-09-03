@@ -12,7 +12,7 @@ services:
             - driver: nvidia
               capabilities: ["gpu"]
               count: 1
-    ipc: host
+    shm_size: "16gb"
     environment:
       - NGC_API_KEY=${NGC_API_KEY}
     volumes:
@@ -37,7 +37,7 @@ services:
             - driver: nvidia
               capabilities: ["gpu"]
               count: 1
-    ipc: host
+    shm_size: "16gb"
     environment:
       - NGC_API_KEY=${NGC_API_KEY}
     volumes:
@@ -61,7 +61,7 @@ services:
             - driver: nvidia
               capabilities: ["gpu"]
               count: 1
-    ipc: host
+    shm_size: "16gb"
     environment:
       - NGC_API_KEY=${NGC_API_KEY}
     volumes:
@@ -77,12 +77,11 @@ services:
 
   milvus:
     image: "milvusdb/milvus:v2.4.6"
-    security_opt:
-      - seccomp:unconfined
     environment:
       - ETCD_USE_EMBED=true
       - ETCD_DATA_DIR=/var/lib/milvus/etcd
       - COMMON_STORAGETYPE=local
+      - COMMON_SECURITY_AUTHORIZATIONENABLED=true
     volumes:
       - milvus:/var/lib/milvus
     healthcheck:
@@ -97,15 +96,17 @@ services:
 
   redis:
     image: "redis:7"
+    environment:
+      - REDIS_PASSWORD=${NIM_ANYWHERE_API_KEY:?Set NIM_ANYWHERE_API_KEY to a 32+ character secret}
     volumes:
       - redis:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD-SHELL", "REDISCLI_AUTH=$$REDIS_PASSWORD redis-cli ping | grep -q PONG"]
       interval: 30s
       start_period: 30s
       timeout: 5s
       retries: 5
-    command: "redis-server --save 20 1 --loglevel warning"
+    command: ["sh", "-c", "exec redis-server --save 20 1 --loglevel warning --requirepass \"$$REDIS_PASSWORD\""]
     networks:
       - default
 
@@ -116,4 +117,3 @@ volumes:
   milvus:
   redis:
   nim-cache:
-

@@ -39,6 +39,7 @@ closing_msg: "Congratulations! You have completed this exercise."
 # the helpers in the testing module may return one of these errors
 info_test_nonzero_exit_code: "Uh oh! I'm not able to run your code. Check the **Terminal Output** tab for details."
 info_test_timeout: "Your code seems to be taking too long to run."
+info_test_sandbox_unavailable: "The protected code runner is unavailable. Ask the project owner to rebuild the environment."
 
 # custom testing messages
 # if you add manual tests, you can add your own messages here

@@ -3,6 +3,9 @@
 from pathlib import Path
 
 import live_labs
+from live_labs.auth import require_authentication
+
+require_authentication()
 
 # Load the page data
 app_shell_yaml = Path(__file__).parent.joinpath("pages", "sidebar.yaml")
