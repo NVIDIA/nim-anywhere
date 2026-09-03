@@ -44,7 +44,7 @@ Since you can either pull NIMs and run them locally, or utilize the endpoints fr
 
 1. Once the compose services have been started, navigate to the **Environment** > **Applications** tab. Now, the *Chain Server* can safely be started. This contains the custom LangChain code for performing our reasoning chain. By default, it will use the local Milvus and Redis, but use *ai.nvidia.com* for LLM, Embedding, and Reranking model inferencing.
 
-1. Once the *Chain Server*  is up, the *Chat Frontend* can be started. Starting the interface will automatically open it in a browser window. If you are running any local NIMs, you can edit the config to connect to them via the *Chat Frontend*
+1. Once the *Chain Server* is up, the *Chat Frontend* can be started. Starting the interface will automatically open it in a browser window. Sign in with `nim-anywhere` as the username and your *NIM_ANYWHERE_API_KEY* as the password. If you are running any local NIMs, you can select their preconfigured model names through the *Chat Frontend*. Service URLs, credentials, and data-store addresses can only be changed in the project configuration, not through the web UI.
 
   ![NIM Anywhere Frontend](_static/na_frontend.png)
 

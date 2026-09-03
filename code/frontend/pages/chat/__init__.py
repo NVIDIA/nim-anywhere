@@ -15,13 +15,13 @@
 
 """The gradio chat app in the frontend."""
 
-import uuid
 from pathlib import Path
 from typing import AsyncGenerator, Any
 
 import gradio as gr
 from httpx import ConnectError, HTTPStatusError
 from langserve import RemoteRunnable
+from nim_anywhere_security import bearer_headers, create_session_id
 
 from ...common import IMG_DIR, THEME, USE_KB_INITIAL, USE_RERANKER_INITIAL
 from ...configuration import config
@@ -38,7 +38,7 @@ _JS_FILE = Path(__file__).parent.joinpath("scripts.js")
 with open(_JS_FILE, "r", encoding="UTF-8") as js_file:
     _HEAD = "<script>" + js_file.read() + "</script>"
 _ONLOAD = "async()=>{ registerHandlers(); chatResize(); }"
-_CHAIN: RemoteRunnable[dict[str, Any], str] = RemoteRunnable(str(config.chain_url))
+_CHAIN: RemoteRunnable[dict[str, Any], str] = RemoteRunnable(str(config.chain_url), headers=bearer_headers())
 
 
 # web ui definition
@@ -65,8 +65,8 @@ with gr.Blocks(theme=THEME, css=_CSS, head=_HEAD) as page:
 
     @page.load(outputs=session_id)
     def sid_generator() -> str:
-        """Generate a new session id."""
-        return str(uuid.uuid4())
+        """Generate a new signed session id."""
+        return create_session_id()
 
     @gr.on(
         triggers=[msg.submit, submit.click],

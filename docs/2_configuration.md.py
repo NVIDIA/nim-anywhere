@@ -61,8 +61,7 @@ def to_yaml(schema, level=0, env_var_prefixes=[("APP_", "__")]):
 environment = jinja2.Environment(loader=jinja2.BaseLoader, autoescape=True)
 environment.filters["to_yaml"] = to_yaml
 
-doc_page = environment.from_string(
-    """
+doc_page = environment.from_string("""
 
 # {{docstring}}
 
@@ -80,8 +79,7 @@ The chat frontend has a few configuration options as well. They can be set in th
 {{ fe_schema | to_yaml }}
 ```
 
-"""
-)
+""")
 
 env_var_prefixes = [
     (source.prefix, source.nested_separator)

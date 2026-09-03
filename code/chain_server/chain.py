@@ -26,6 +26,7 @@ from langchain_core.runnables import RunnablePassthrough, chain
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_milvus.vectorstores.milvus import Milvus
 from langchain_nvidia_ai_endpoints import ChatNVIDIA, NVIDIAEmbeddings, NVIDIARerank
+from nim_anywhere_security import validate_session_id
 from pydantic import BaseModel
 
 from . import prompts
@@ -40,7 +41,7 @@ embedding_model = NVIDIAEmbeddings(
 )
 vector_store = Milvus(
     embedding_function=embedding_model,
-    connection_args={"uri": app_config.milvus.url},
+    connection_args=app_config.milvus.connection_args(),
     collection_name=app_config.milvus.collection_name,
     auto_id=True,
 )
@@ -125,9 +126,15 @@ class ChainInputs(BaseModel):
 ChainOutputs = str
 
 
+def _get_message_history(session_id: str) -> RedisChatMessageHistory:
+    """Return history only for an unmodified server-signed session id."""
+    validated_session_id = validate_session_id(session_id)
+    return RedisChatMessageHistory(validated_session_id, url=str(app_config.redis_dsn))
+
+
 my_chain = RunnableWithMessageHistory(
     my_chain,
-    lambda session_id: RedisChatMessageHistory(session_id, url=str(app_config.redis_dsn)),
+    _get_message_history,
     input_messages_key="question",
     output_messages_key="output",
     history_messages_key="history",

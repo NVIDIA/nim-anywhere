@@ -23,6 +23,8 @@ from fastapi.responses import PlainTextResponse, RedirectResponse
 from langserve import add_routes
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
+from nim_anywhere_security import AuthenticationMiddleware
+
 from . import errors
 from .chain import my_chain  # type: ignore
 
@@ -34,6 +36,7 @@ app = FastAPI(
     root_path=PROXY_PREFIX or "",
     middleware=[Middleware(errors.ErrorHandlerMiddleware)],
 )
+app.add_middleware(AuthenticationMiddleware)
 
 
 add_routes(

@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """A generic settings page."""
+
 from pathlib import Path
 
 import streamlit as st
@@ -20,6 +21,7 @@ from streamlit_extras.stateful_button import button as st_toggle_btn
 from streamlit_file_browser import st_file_browser
 
 from live_labs import MessageCatalog, Worksheet, reset_all_progress
+from live_labs.paths import confined_file
 
 MESSAGES = MessageCatalog.from_page(__file__)
 NAME = Path(__file__).stem
@@ -38,9 +40,17 @@ with Worksheet(name=NAME, ephemeral=True) as worksheet:
         )
 
         if file_browser_event and file_browser_event.get("type", "") == "SELECT_FILE":
-            file = Path("/project/code").joinpath(file_browser_event["target"]["path"])
-            with file.open("rb") as ptr:
-                st.download_button(label="Download File", data=ptr, file_name=file.name)
+            try:
+                file = confined_file(
+                    Path("/project/code"),
+                    file_browser_event.get("target", {}).get("path"),
+                    {"py", "yaml", "txt"},
+                )
+            except (OSError, ValueError):
+                st.error("The selected file is invalid or outside the lab directory.")
+            else:
+                with file.open("rb") as ptr:
+                    st.download_button(label="Download File", data=ptr, file_name=file.name)
 
     # reset progress
     with st.container(border=True):

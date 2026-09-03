@@ -27,6 +27,8 @@ from streamlit.delta_generator import DeltaGenerator
 from streamlit_ace import st_ace
 from streamlit_javascript import st_javascript
 
+from live_labs.paths import confined_write_path
+
 _JS_CODE = Path(__file__).parent.joinpath("js", "editor.js").read_text("UTF-8").strip()
 _CSS = Path(__file__).parent.joinpath("css", "editor.css").read_text("UTF-8").strip()
 
@@ -50,7 +52,7 @@ def _new_ace_ide(base_dir: Path, key: str, value: str) -> None:
 
     if last_code_hash != code_hash:
         st.session_state["code_change_derived"] = True
-        base_dir.joinpath(key).write_text(code)
+        confined_write_path(base_dir, key, {"py"}).write_text(code, encoding="UTF-8")
         st.session_state[f"{key}_hash"] = code_hash
 
 

@@ -16,10 +16,8 @@
 """The control panel web app."""
 
 from pathlib import Path
-import shutil
-import glob
-from typing import List
 import time
+import tempfile
 
 import os
 import gradio as gr
@@ -37,6 +35,14 @@ from chain_server.configuration import config as chain_config
 from ... import mermaid
 from ...common import IMG_DIR, THEME, USE_KB_INITIAL, USE_RERANKER_INITIAL
 from ...configuration import config
+from .security import (
+    UnsafeConfigurationChange,
+    editable_configuration,
+    merge_editable_configuration,
+    milvus_string_equality,
+    validate_document_selection,
+    validate_pdf_filename,
+)
 
 # load custom style and scripts
 _CSS_FILE = Path(__file__).parent.joinpath("style.css")
@@ -81,8 +87,7 @@ _UNDO_IMG = IMG_DIR.joinpath("undo.png")
 _HISTORY_IMG = IMG_DIR.joinpath("history.png")
 _UPLOAD_IMG = IMG_DIR.joinpath("upload-button.png")
 _PSEUDO_FILE_NAME = "config.yaml 🟢"
-with open(config.chain_config_file, "r", encoding="UTF-8") as config_file:
-    _STARTING_CONFIG = config_file.read()
+_STARTING_CONFIG = yaml.safe_dump(editable_configuration(chain_config), sort_keys=False)
 
 # connect to our milvus DB
 embedding_model = NVIDIAEmbeddings(
@@ -94,7 +99,7 @@ embedding_model = NVIDIAEmbeddings(
 
 vector_store = Milvus(
     embedding_function=embedding_model,
-    connection_args={"uri": chain_config.milvus.url},
+    connection_args=chain_config.milvus.connection_args(),
     collection_name=chain_config.milvus.collection_name,
     auto_id=True,
 )
@@ -141,20 +146,25 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
         # upload file button
         upload_btn = gr.UploadButton("Upload PDFs", icon=str(_UPLOAD_IMG), file_types=[".pdf"], file_count="multiple")
 
-        def refresh_button_callback():
-            """Refesh docs button action"""
-
+        def get_document_names() -> list[str]:
+            """Read the bounded set of document names currently visible in Milvus."""
             # grab the first 100 documents in the knowledge base
             results = vector_store.similarity_search("a", k=100)
-            document_names = []
+            document_names: list[str] = []
             for result in results:
-                doc_name = result.metadata.get("source", "Unnamed Document")  # default value 'Unnamed Document'
-                doc_name = doc_name.split("/")[-1]  # extract file name from path
-                document_names.append(doc_name)
+                doc_name = result.metadata.get("simple_file_name")
+                if not doc_name:
+                    doc_name = Path(result.metadata.get("source", "Unnamed Document")).name
+                if isinstance(doc_name, str) and doc_name not in document_names:
+                    document_names.append(doc_name)
+            return document_names
+
+        def refresh_button_callback():
+            """Refresh docs button action."""
 
             return gr.CheckboxGroup(
                 label="Uploaded Documents",
-                choices=document_names,
+                choices=get_document_names(),
                 elem_classes="checkbox-group",
                 visible=True,
                 value=[],
@@ -177,9 +187,11 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
 
         # %% common helpers
         def read_chain_config() -> str:
-            """Read the chain config file."""
+            """Read only the non-sensitive fields exposed by the control panel."""
             with open(config.chain_config_file, "r", encoding="UTF-8") as cf:
-                return cf.read()
+                config_data = yaml.safe_load(cf) or {}
+            validated_config = ChainConfiguration.model_validate(config_data)
+            return yaml.safe_dump(editable_configuration(validated_config), sort_keys=False)
 
         # %% updates a checkbox to be off and non-interactive
         def toggle_checkbox_interactivity(use_kb_value):
@@ -217,22 +229,37 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
         # %% save button actions
         @save_btn.click(inputs=editor)
         def save_chain_config(config_txt: str) -> None:
-            """Save the user's config file."""
+            """Save allowlisted settings without exposing or overwriting secrets and service URLs."""
             # validate yaml
             try:
-                config_data = yaml.safe_load(config_txt)
+                requested_config = yaml.safe_load(config_txt)
             except Exception as err:
                 raise SyntaxError(f"Error validating YAML syntax:\n{err}") from err
 
-            # validate configuration
+            # Merge only fields that are safe to change from a network-facing UI.
             try:
-                _ = ChainConfiguration.model_validate(config_data)
+                with open(config.chain_config_file, "r", encoding="UTF-8") as cf:
+                    current_config = yaml.safe_load(cf) or {}
+                merged_config = merge_editable_configuration(current_config, requested_config)
+                validated_config = ChainConfiguration.model_validate(merged_config)
+            except UnsafeConfigurationChange as err:
+                raise PermissionError(str(err)) from err
             except Exception as err:
                 raise SyntaxError(f"Error validating configuration content:\n{err}") from err
 
-            # save configuration
-            with open(config.chain_config_file, "w", encoding="UTF-8") as cf:
-                cf.write(config_txt)
+            # Serialize the validated model rather than the user's raw YAML. Do not materialize an
+            # environment-provided API key into the file, but preserve one that was already file-backed.
+            serialized_config = validated_config.model_dump(mode="json", exclude={"nvidia_api_key"})
+            if "nvidia_api_key" in current_config:
+                serialized_config["nvidia_api_key"] = current_config["nvidia_api_key"]
+
+            config_path = Path(config.chain_config_file)
+            with tempfile.NamedTemporaryFile(
+                "w", encoding="UTF-8", dir=config_path.parent, prefix=f".{config_path.name}.", delete=False
+            ) as cf:
+                yaml.safe_dump(serialized_config, cf, sort_keys=False)
+                temporary_path = Path(cf.name)
+            os.replace(temporary_path, config_path)
 
         save_btn.click(None, js=_SAVE_CHANGES_JS)
 
@@ -267,7 +294,7 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
             # Upload files
             for file in files:
                 full_file_path = str(file.name)
-                file_name = file.name.split("/")[-1]  # Extract file name from path
+                file_name = validate_pdf_filename(full_file_path)
                 try:
                     upload_document(full_file_path, file_name)
                 except Exception as err:
@@ -304,8 +331,10 @@ with gr.Blocks(theme=THEME, css=_CSS, head=mermaid.HEAD) as page:
         def confirm_delete_callback(selected_docs):
             """Confirm Delete Button Action (actually deletes docs)"""
 
-            for filename in selected_docs:
-                expr = f"simple_file_name == '{filename}'"
+            current_documents = get_document_names()
+            filenames = validate_document_selection(selected_docs, current_documents)
+            for filename in filenames:
+                expr = milvus_string_equality("simple_file_name", filename)
                 try:
                     vector_store.delete(expr=expr)
                 except Exception as err:
