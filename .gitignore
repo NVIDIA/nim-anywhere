@@ -61,3 +61,9 @@ cover/
 data/scratch/*
 data/dataset
 !data/scratch/.gitkeep
+
+# Local Nemotron Chat data and secrets
+apps/nemotron-chat/data/*
+!apps/nemotron-chat/data/.gitkeep
+.env
+apps/nemotron-chat/data/memories.json
