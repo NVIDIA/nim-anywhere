@@ -34,3 +34,34 @@ GitHub Desktop serve para clonar, versionar e publicar os arquivos; ele não exe
 ## Limites de segurança
 
 Somente arquivos de texto com extensões permitidas são listados, e o servidor impede caminhos fora de `NEMOTRON_WORKSPACE_DIR`. O modo agente conversa e produz planos, mas não executa comandos no computador. Memórias são locais e não entram no Git.
+
+## Orquestração local (primeiro incremento)
+
+O módulo `orchestration.py` é uma camada local, sem dependências adicionais, entre a
+interface e uma futura integração com o **NeMo Agent Toolkit**. O toolkit é opcional:
+ele não é instalado silenciosamente nem é necessário para o chat atual.
+
+`POST /api/tools/plan` recebe uma lista de ferramentas permitidas e apenas devolve um
+plano com `plan_id`; nada é executado. O plano deve ser aprovado explicitamente com
+`POST /api/tools/execute`, enviando `{"plan_id":"...", "approved":true}` (o endpoint
+`/api/tools/code-run/approve` é um alias explícito para o mesmo fluxo). Os planos são
+de uso único e expiram em 15 minutos.
+
+As ferramentas iniciais são:
+
+- `list_files` e `read_files`: leitura limitada à pasta `NEMOTRON_WORKSPACE_DIR` e às
+  extensões de texto já permitidas;
+- `pubmed_search`: placeholder seguro, sem rede ou credenciais;
+- `extraction_report_plan`: registra apenas a intenção de planejamento;
+- `python_syntax_check`: única execução permitida, usando somente
+  `python -m py_compile` em um arquivo `.py` existente dentro de
+  `apps/nemotron-chat`.
+
+Não há shell arbitrário, escrita em arquivos selecionados, acesso ao TCC pela rotina
+de execução, ou retorno de chaves/tokens. Exemplo de plano:
+
+```json
+{"tools":[{"name":"python_syntax_check","args":{
+  "command":"python -m py_compile","file":"server.py"
+}}]}
+```

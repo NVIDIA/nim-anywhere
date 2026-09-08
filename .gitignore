@@ -66,3 +66,4 @@ data/dataset
 apps/nemotron-chat/data/*
 !apps/nemotron-chat/data/.gitkeep
 .env
+apps/nemotron-chat/data/memories.json

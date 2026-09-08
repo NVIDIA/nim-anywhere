@@ -11,6 +11,7 @@ import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
+from orchestration import execute_plan, propose_tools
 
 ROOT = Path(__file__).resolve().parent
 PUBLIC = ROOT / "public"
@@ -78,7 +79,6 @@ def workspace_path() -> Path:
 def read_memories() -> list[dict[str, str]]:
     if not MEMORY_FILE.exists():
         return []
-    http_request.headers["Authorization"] = "Bearer " + key
     try:
         value = json.loads(MEMORY_FILE.read_text(encoding="utf-8"))
         return value if isinstance(value, list) else []
@@ -173,8 +173,15 @@ class Handler(BaseHTTPRequestHandler):
             elif route == "/api/memories":
                 memory = save_memory(body)
                 json_response(self, 201, memory)
+            elif route == "/api/tools/plan":
+                json_response(self, 200, propose_tools(body))
+            elif route in {"/api/tools/execute", "/api/tools/code-run/approve"}:
+                result = execute_plan(body.get("plan_id", ""), body.get("approved"), workspace_path)
+                json_response(self, 200, result)
             else:
                 json_response(self, 404, {"error": "Não encontrado"})
+        except PermissionError as error:
+            json_response(self, 403, {"error": str(error)})
         except (ValueError, KeyError, json.JSONDecodeError) as error:
             json_response(self, 400, {"error": str(error)})
         except RuntimeError as error:
@@ -257,8 +264,10 @@ def call_model(request: dict) -> dict:
                 "warning": model_warning,
             }
         except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as error:
-            detail = error.read().decode("utf-8", errors="replace") if isinstance(error, urllib.error.HTTPError) else str(error)
-            failures.append(detail)
+            if isinstance(error, urllib.error.HTTPError):
+                failures.append(f"HTTP {error.code}")
+            else:
+                failures.append(type(error).__name__)
     raise RuntimeError(f"Nenhuma chave disponível para {provider_name}: {' | '.join(failures)}")
 
 
