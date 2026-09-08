@@ -16,6 +16,8 @@ Abra `http://127.0.0.1:8787`. Para Hugging Face, use `$env:HF_TOKEN = "hf_seu-to
 
 Opcionalmente, copie `.env.example` para `.env` dentro de `apps\nemotron-chat` e preencha as variáveis. O servidor carrega esse arquivo automaticamente; ele é ignorado pelo Git. Variáveis já definidas no Windows têm prioridade.
 
+Modelos NVIDIA configurados: `nvidia/nemotron-3-ultra-550b-a55b`, `nvidia/nemotron-3-super-120b-a12b` e `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning`.
+
 ### Várias chaves e roteamento
 
 Para um grupo de pesquisadores, configure um pool JSON por provedor. O servidor usa cada chave por três chamadas, passa para a próxima e retorna à primeira em loop. Se a chave selecionada falhar, tenta imediatamente as demais:

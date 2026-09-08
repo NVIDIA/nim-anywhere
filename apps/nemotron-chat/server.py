@@ -43,7 +43,7 @@ PROVIDERS = {
         "models": [
             "nvidia/nemotron-3-ultra-550b-a55b",
             "nvidia/nemotron-3-super-120b-a12b",
-            "nvidia/nemotron-3.5-lightning-30b-a3b",
+            "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
         ],
     },
     "huggingface": {
