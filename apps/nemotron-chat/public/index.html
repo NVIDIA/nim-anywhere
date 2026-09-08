@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nemotron Chat local</title>
+  <style>
+    :root{color-scheme:dark;--bg:#111318;--panel:#1a1d24;--line:#303642;--text:#f4f6f8;--muted:#9aa4b2;--accent:#76b900}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px system-ui,sans-serif}
+    #app{height:100vh;display:flex}.side{width:280px;padding:20px;background:var(--panel);border-right:1px solid var(--line);overflow:auto}
+    h1{font-size:20px;margin:0 0 18px}.label{display:block;color:var(--muted);font-size:11px;margin:16px 0 6px}
+    select,input,textarea,button{font:inherit;color:inherit;background:#12151a;border:1px solid var(--line);border-radius:8px;padding:9px}
+    select,input{width:100%}button{cursor:pointer}button.primary{background:var(--accent);color:#071000;border:0;font-weight:700}
+    .mode{display:flex;gap:8px}.mode button{flex:1}.mode .selected{border-color:var(--accent);color:var(--accent)}
+    .hint{color:var(--muted);font-size:12px;line-height:1.5}.files label{display:block;padding:4px 0;color:var(--muted);font-size:11px}
+    main{flex:1;display:flex;flex-direction:column;min-width:0}.top{padding:16px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}
+    #messages{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:14px}.msg{max-width:760px;padding:12px 15px;border-radius:12px;line-height:1.55;white-space:pre-wrap}
+    .user{align-self:flex-end;background:#273b12}.assistant{align-self:flex-start;background:var(--panel);border:1px solid var(--line)}.composer{padding:16px 22px;border-top:1px solid var(--line);display:flex;gap:10px}
+    textarea{flex:1;resize:none;min-height:44px;max-height:140px}.composer button{min-width:90px}.error{color:#ff9c9c;padding:8px 22px}.memory{display:flex;gap:6px}.memory button{font-size:12px;padding:5px}.small{font-size:11px;color:var(--muted)}
+  </style>
+</head>
+<body>
+<div id="app">
+  <aside class="side">
+    <h1>Nemotron Chat</h1>
+    <div class="mode"><button id="chatMode" class="selected">Chat</button><button id="agentMode">Agente</button></div>
+    <label class="label" for="provider">Provedor</label><select id="provider"><option value="nvidia">NVIDIA Build</option><option value="huggingface">Hugging Face</option></select>
+    <label class="label" for="model">Modelo</label><select id="model"></select>
+    <label class="label"><input id="thinking" type="checkbox"> Raciocínio (NVIDIA)</label>
+    <p class="hint">A chave permanece no servidor local. Configure NVIDIA_API_KEY ou HF_TOKEN no terminal antes de iniciar.</p>
+    <label class="label">Arquivos da pasta autorizada</label><div id="files" class="files">Carregando...</div>
+    <label class="label">Memórias salvas</label><div id="memories" class="files"></div>
+  </aside>
+  <main><header class="top"><strong id="title">Chat</strong><span id="workspace" class="small"></span></header>
+    <section id="messages"><div class="msg assistant">Configure a chave no terminal e envie uma mensagem. Você pode selecionar arquivos para pesquisa.</div></section>
+    <div id="error" class="error"></div>
+    <form id="composer" class="composer"><textarea id="input" placeholder="Digite sua mensagem..."></textarea><button class="primary">Enviar</button></form>
+  </main>
+</div>
+<script>
+const $=id=>document.getElementById(id); let config, mode="chat", history=[];
+function refreshModels(){const p=config.providers[$("provider").value]; $("model").innerHTML=p.models.map(x=>`<option>${x}</option>`).join("")}
+function add(role,text){const el=document.createElement("div");el.className=`msg ${role}`;el.textContent=text;$("messages").append(el);$("messages").scrollTop=$("messages").scrollHeight;return el}
+function selectedFiles(){return [...document.querySelectorAll("#files input:checked")].map(x=>x.value)}
+function showError(text){$("error").textContent=text}
+function renderMemories(){ $("memories").innerHTML=""; (config.memories||[]).forEach(m=>{const d=document.createElement("div");d.className="memory";d.innerHTML=`<span>${m.title}</span><button type="button">usar</button>`;d.querySelector("button").onclick=()=>{ $("input").value=m.text };$("memories").append(d)})}
+async function boot(){config=await fetch("/api/config").then(r=>r.json());if(config.error)throw Error(config.error);$("workspace").textContent=config.workspace;refreshModels();const files=await fetch("/api/files").then(r=>r.json());$("files").innerHTML=files.files.map(f=>`<label><input type="checkbox" value="${f}"> ${f}</label>`).join("")||"Nenhum arquivo compatível";renderMemories()}
+$("provider").onchange=refreshModels;$("chatMode").onclick=()=>{mode="chat";$("title").textContent="Chat";$("chatMode").className="selected";$("agentMode").className=""};
+$("agentMode").onclick=()=>{mode="agent";$("title").textContent="Agente";$("agentMode").className="selected";$("chatMode").className=""};
+$("composer").onsubmit=async e=>{e.preventDefault();const input=$("input"),text=input.value.trim();if(!text)return;input.value="";add("user",text);history.push({role:"user",content:text});const wait=add("assistant","Pensando...");$("composer").querySelector("button").disabled=true;showError("");
+try{const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider:$("provider").value,model:$("model").value,mode,thinking:$("thinking").checked,messages:history,files:selectedFiles()})});const data=await r.json();if(!r.ok)throw Error(data.error||"Erro desconhecido");wait.textContent=data.message.content||"(sem resposta)";if(data.message.reasoning)wait.textContent+="\n\nRaciocínio:\n"+data.message.reasoning;const save=document.createElement("button");save.type="button";save.textContent="Salvar memória";save.onclick=async()=>{const result=await fetch("/api/memories",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({title:"Pesquisa "+new Date().toLocaleDateString("pt-BR"),text:data.message.content})});if(!result.ok)showError((await result.json()).error||"Não foi possível salvar");else{config.memories.push(await result.json());renderMemories();save.textContent="Memória salva"}};wait.append(" ",save);history.push({role:"assistant",content:data.message.content})}catch(err){wait.remove();showError(err.message)}finally{$("composer").querySelector("button").disabled=false}};
+boot().catch(err=>showError(err.message));
+</script>
+</body>
+</html>
