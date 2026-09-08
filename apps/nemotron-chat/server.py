@@ -15,6 +15,24 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parent
 PUBLIC = ROOT / "public"
 MEMORY_FILE = ROOT / "data" / "memories.json"
+
+
+def load_env_file() -> None:
+    env_file = ROOT / ".env"
+    if not env_file.is_file():
+        return
+    for line in env_file.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        name, value = line.split("=", 1)
+        name = name.strip()
+        value = value.strip().strip("\"'")
+        if name and name not in os.environ:
+            os.environ[name] = value
+
+
+load_env_file()
 PORT = int(os.getenv("NEMOTRON_PORT", "8787"))
 ALLOWED_EXTENSIONS = {".txt", ".md", ".py", ".js", ".ts", ".json", ".yaml", ".yml", ".html", ".css"}
 PROVIDERS = {
@@ -60,6 +78,7 @@ def workspace_path() -> Path:
 def read_memories() -> list[dict[str, str]]:
     if not MEMORY_FILE.exists():
         return []
+    http_request.headers["Authorization"] = "Bearer " + key
     try:
         value = json.loads(MEMORY_FILE.read_text(encoding="utf-8"))
         return value if isinstance(value, list) else []
@@ -182,8 +201,11 @@ def call_model(request: dict) -> dict:
         raise ValueError("Provedor inválido")
     keys = ordered_keys(provider_name, get_key_pool(provider_name, provider))
     model = request.get("model") or provider["default_model"]
-    if model not in provider["models"]:
-        raise ValueError("Modelo não permitido para este provedor")
+    if not isinstance(model, str) or not model.strip():
+        raise ValueError("Informe um identificador de modelo")
+    model_warning = None if model in provider["models"] else (
+        f"Modelo '{model}' não está na lista local; a API do provedor fará a validação."
+    )
     messages = request.get("messages")
     if not isinstance(messages, list) or not messages:
         raise ValueError("Envie pelo menos uma mensagem")
@@ -194,6 +216,13 @@ def call_model(request: dict) -> dict:
     if request.get("mode") == "agent":
         system += " Organize a resposta como conversa de agente, com plano e próximos passos."
     context = collect_context(request.get("files", []))
+    memories = request.get("memories", [])
+    if isinstance(memories, list):
+        context += "".join(
+            f"\n--- Memória: {memory.get('title', 'Sem título')} ---\n{memory.get('text', '')}"
+            for memory in memories
+            if isinstance(memory, dict) and memory.get("text")
+        )[:40000]
     if context:
         messages = [{"role": "system", "content": system + "\nArquivos selecionados:" + context}] + messages
     else:
@@ -205,10 +234,8 @@ def call_model(request: dict) -> dict:
         "temperature": 0.4,
     }
     if request.get("thinking") and provider_name == "nvidia":
-        payload["extra_body"] = {
-            "chat_template_kwargs": {"enable_thinking": True},
-            "reasoning_budget": min(int(request.get("reasoning_budget", 8192)), 16384),
-        }
+        payload["chat_template_kwargs"] = {"enable_thinking": True}
+        payload["reasoning_budget"] = min(int(request.get("reasoning_budget", 8192)), 16384)
     failures = []
     for key in keys:
         http_request = urllib.request.Request(
@@ -224,7 +251,11 @@ def call_model(request: dict) -> dict:
                 failures.append(result["error"].get("message", "erro retornado pela API"))
                 continue
             message = result.get("choices", [{}])[0].get("message", {})
-            return {"content": message.get("content", ""), "reasoning": message.get("reasoning_content")}
+            return {
+                "content": message.get("content", ""),
+                "reasoning": message.get("reasoning_content"),
+                "warning": model_warning,
+            }
         except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as error:
             detail = error.read().decode("utf-8", errors="replace") if isinstance(error, urllib.error.HTTPError) else str(error)
             failures.append(detail)
